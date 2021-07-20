@@ -3,6 +3,8 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
+backend/src/main/resources/application.properties
+
 # Node artifact files
 node_modules/
 dist/
