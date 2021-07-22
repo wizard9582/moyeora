@@ -1,11 +1,12 @@
 <template>
-  
+  <div></div>
 </template>
 
 <script>
 export default {
-    name:"FilterPopup",
-    
+    name: 'GamePage',
+    components: {
+    }
 }
 </script>
 

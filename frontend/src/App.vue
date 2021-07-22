@@ -1,15 +1,22 @@
 <template>
-
+  <div>
+    <router-view />
+  </div>
 </template>
 
 <script>
+import WelcomePage from "./views/welcome-page.vue";
+import HomePage from "./views/home-page.vue";
+import GamePage from "./views/game-page.vue";
 
 export default {
-  name: 'App',
-  components: {
-    
-  }
-}
+  name: "App",
+  Components: {
+    WelcomePage,
+    HomePage,
+    GamePage,
+  },
+};
 </script>
 
 <style>
