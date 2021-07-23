@@ -1,0 +1,23 @@
+{      
+    "welcome" : {
+        "name" : "Welcome",       
+        "hidden" : false,
+        "path" : "/",
+        "icon" : "el-icon-s-home",
+        "children" : []
+    },
+    "home" : {
+      "name" : "홈",       
+      "hidden" : false,
+      "path" : "/home",
+      "icon" : "el-icon-s-home",
+      "children" : []
+    },
+    "game" : {
+      "name" : "게임",
+      "hidden" : false,
+      "path" : "/game",
+      "icon" : "el-icon-s-order",
+      "children" : []
+    }
+  }
