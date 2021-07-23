@@ -1,12 +1,10 @@
 <template>
-  <div>
-      <h1>Hello</h1>
-  </div>
+  <div>SignupPop</div>
 </template>
 
 <script>
 export default {
-    name:'WelcomeSection',
+    name:'SignupPop',
 }
 </script>
 

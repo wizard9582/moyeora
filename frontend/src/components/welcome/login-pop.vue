@@ -1,11 +1,10 @@
 <template>
-  
+  <div>LoginPop</div>
 </template>
 
 <script>
 export default {
-    name:"HomeSecion",
-    
+    name:'LoginPop',
 }
 </script>
 

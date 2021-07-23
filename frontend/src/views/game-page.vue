@@ -1,5 +1,5 @@
 <template>
-  <div></div>
+  <div>GamePage</div>
 </template>
 
 <script>

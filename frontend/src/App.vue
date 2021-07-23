@@ -1,17 +1,20 @@
 <template>
   <div>
     <router-view />
+    <welcome-page></welcome-page>
+    <home-page></home-page>
+    <game-page></game-page>
   </div>
 </template>
 
 <script>
-import WelcomePage from "./views/welcome-page.vue";
-import HomePage from "./views/home-page.vue";
-import GamePage from "./views/game-page.vue";
+import WelcomePage from "@/views/welcome-page.vue"
+import HomePage from "@/views/home-page.vue";
+import GamePage from "@/views/game-page.vue";
 
 export default {
   name: "App",
-  Components: {
+  components: {
     WelcomePage,
     HomePage,
     GamePage,

@@ -4,7 +4,7 @@
 
 <script>
 export default {
-    name:"NoticeSectionss",
+    name:"HomeSection",
     
 }
 </script>
