@@ -1,9 +1,9 @@
 <template>
   <div>
     <router-view />
-    <welcome-page></welcome-page>
+    <!-- <welcome-page></welcome-page>
     <home-page></home-page>
-    <game-page></game-page>
+    <game-page></game-page> -->
   </div>
 </template>
 

@@ -1,5 +1,5 @@
 <template>
-
+    <el-main>Notice</el-main>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  
+    <el-main>Home</el-main>
 </template>
 
 <script>

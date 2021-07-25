@@ -1,11 +1,11 @@
 <template>
-    <el-main>Board</el-main>
+    <el-main>User</el-main>
 </template>
 
 <script>
 export default {
-    name:"BoardSection",
-    
+    name:"UserSection",
+
 }
 </script>
 
