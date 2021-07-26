@@ -187,7 +187,6 @@ const plugins = [
     ElNotification,
 ]
 
-
 const app = createApp(App);
 app.use(ElementPlus);
 app.use(VueAxios, axios);

@@ -1,10 +1,8 @@
 <template>
-  <div>
-    <router-view />
-    <!-- <welcome-page></welcome-page>
-    <home-page></home-page>
-    <game-page></game-page> -->
-  </div>
+  <router-view />
+  <!-- <welcome-page></welcome-page>
+  <home-page></home-page>
+  <game-page></game-page> -->
 </template>
 
 <script>

@@ -1,59 +1,74 @@
 <template>
   <el-container>
-    <main-header></main-header>
+    <el-aside>
+      <side-bar></side-bar>
+    </el-aside>
     <el-container>
-      <!-- <side-bar width="200px"></side-bar> -->
-      <el-aside>
-        <side-bar></side-bar>
-      </el-aside>
-      <el-container>
+        <main-header></main-header>
         <router-view></router-view>
-        <main-footer></main-footer>
-      </el-container>
+        <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
     </el-container>
   </el-container>
 </template>
 
 <script>
 import MainHeader from "../components/main/header.vue";
-import MainFooter from "../components/main/footer.vue";
+import SideBar from '../components/main/side-bar.vue';
 import CreateRoomPop from '../components/home/pop/createRoom-pop.vue';
 import FilterPop from '../components/home/pop/filter-pop.vue';
 import RoomPwPop from '../components/home/pop/roomPW-pop.vue';
-import SideBar from '../components/main/side-bar.vue';
+import HomeSection from '../components/home/home-section.vue';
 
 export default {
     name: 'HomePage',
     components: {
       MainHeader,
-      MainFooter,
       CreateRoomPop,
       FilterPop,
       RoomPwPop,
       SideBar,
+      HomeSection,
     },
 };
-
 </script>
 
 <style>
+@import "https://unpkg.com/element-plus/lib/theme-chalk/index.css";
+
 .el-header{
-  line-height: 100px;
+  position: fixed;
+  top: 0;
+	left: 0;
+  width: 100%;
+  height: 70px;
+  /* border: solid; */
+  background: white;
+}
+.el-aside {
+  position: fixed;
+  top: 70px;
+	left: 0;
+  width: 120px;
+  height: 100%;
+  /* border: solid; */
+  background: whitesmoke;
+}
+.el-main {
+  background-color: #e8eef3;
+  color: #333;
+  text-align: center;
+}
+
+body > .el-container {
+  margin-bottom: 40px;
 }
 .el-footer {
   background-color: #E9EEF3;
   color: #333;
   text-align: center;
-  line-height: 500px;
-}
-
-.el-aside {
-  width: 100px;
-    line-height: 1000px;
-}
-
-.el-main {
-
+  width: 100%;
+  height: 200px;
+  line-height: 150px;
 }
 /* 차후 main.css로 통합? */
 </style>

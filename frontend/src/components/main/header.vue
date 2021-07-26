@@ -1,16 +1,19 @@
 <template>
   <el-header>
-    <a href="/home">
-      <img :src="require('@/assets/img-logo.png')" alt="IceBreaking logo" width="80" height="80"/>
+    <a href="/home" class="logo">
+      <!-- <img :src="require('@/assets/img-logo.png')" alt="IceBreaking logo" width="70" height="50"/> -->
+      <img :src="require('@/assets/img-vue.png')" alt="IceBreaking logo" width="50" height="50"/>
     </a>
-    <div class="menu-wrapper">
-      <el-button type="primary" v-on:click="clickOnBell">
-        <img :src="require('@/assets/img-bell.png')" alt="IceBreaking bell" width="50" height="50"/>
-      </el-button>
-      <el-button type="primary" v-on:click="clickOnUser">
-        <img :src="require('@/assets/img-user.png')" alt="IceBreaking user" width="50" height="50"/>
-      </el-button>
-    </div>
+    <ul class="nav">
+      <li>
+        <el-badge :value="6">
+          <el-button icon="el-icon-bell" circle v-on:click="clickOnBell" ></el-button>
+        </el-badge>
+      </li>
+      <li>
+        <el-button icon="el-icon-user" circle v-on:click="clickOnUser" ></el-button>
+      </li>
+    </ul>
   </el-header>
 </template>
 
@@ -30,23 +33,17 @@ export default {
 </script>
 
 <style>
-.el-row {
-  margin-bottom: 20px;
-}
-.el-col {
-  border-radius: 4px;
-}
-.main-header {
-  position: fixed;
-  top: 0;
-}
-.logo-wrapper {
-  margin: 0;
+.logo {
   float: left;
+  margin-top: 10px;
 }
-.menu-wrapper {
-  display: inline-block;
-  vertical-align: top;
-  position: relative;
+.nav{
+  float: right;
+  list-style: none;
+  margin-right: 5px;
+}
+.nav li{
+  float: left;
+  margin: 5px;
 }
 </style>
