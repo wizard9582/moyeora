@@ -4,11 +4,11 @@
       <i class="el-icon-menu"/>
       <span>Game</span>
     </el-menu-item>
-    <el-menu-item>
+    <el-menu-item @click="clickRoomPop">
       <i class="el-icon-plus"/>
       <span>Room</span>
     </el-menu-item>
-    <el-menu-item>
+    <el-menu-item @click="clickSettingPop">
       <i class="el-icon-setting"/>
       <span>Setting</span>
     </el-menu-item>

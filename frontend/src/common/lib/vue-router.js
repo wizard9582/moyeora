@@ -21,12 +21,14 @@ const routes = [
     children: [
       {path: "", component: HomeSection},
       {path: "user", component: UserSection},
+      {path: "board/list", component: BoardSection},
+      {path: "notice/list", component: NoticeSection},
       {path: "board/:no", component: BoardSection},
       {path: "notice/:no", component: NoticeSection},
     ],
   },
   {
-    path: "/game",
+    path: "/game/:no",
     name: "Game",
     component: GamePage,
   },
