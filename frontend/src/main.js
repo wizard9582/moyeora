@@ -2,7 +2,7 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./common/lib/vue-router";
 import ElementPlus from "./common/lib/element-plus";
-import store from "./store";
+import store from "./common/lib/store";
 import VueAxios from "./common/lib/axios";
 import axios from "./common/lib/axios";
 
