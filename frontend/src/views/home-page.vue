@@ -1,7 +1,11 @@
 <template>
   <el-container>
     <el-aside>
-      <side-bar></side-bar>
+      <side-bar
+        @openFilterPopup="onOpenFilterPopup"
+        @openRoomPopup="onOpenRoomPopup"
+        @openSettingPopup="onOpenSettingPopup"
+      ></side-bar>
     </el-aside>
     <el-container>
         <main-header></main-header>
@@ -9,26 +13,84 @@
         <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
     </el-container>
   </el-container>
+  <filter-pop
+    :open="filterPopupOpen"
+    @closeFilterPopup="onCloseFilterPopup"
+  />
+  <create-room-pop
+    :open="roomPopupOpen"
+    @closeRoomPopup="onCloseRoomPopup"
+  />
+  <room-pw-pop
+    :open="pwPopupOpen"
+    @closePwPopup="onClosePwPopup"
+  />
+  <setting-pop
+    :open="settingPopupOpen"
+    @closeSettingPopup="onCloseSettingPopup"
+  />
 </template>
 
 <script>
 import MainHeader from "../components/main/header.vue";
 import SideBar from '../components/main/side-bar.vue';
+import SettingPop from '../components/home/pop/setting-pop.vue';
 import CreateRoomPop from '../components/home/pop/createRoom-pop.vue';
 import FilterPop from '../components/home/pop/filter-pop.vue';
 import RoomPwPop from '../components/home/pop/roomPW-pop.vue';
 import HomeSection from '../components/home/home-section.vue';
+import NoticeSection from '../components/home/notice-section.vue';
+import BoardSection from '../components/home/board-section.vue';
+import UserSection from '../components/home/user-section.vue';
 
 export default {
     name: 'HomePage',
     components: {
       MainHeader,
+      SideBar,
+      SettingPop,
       CreateRoomPop,
       FilterPop,
       RoomPwPop,
-      SideBar,
       HomeSection,
+      NoticeSection,
+      BoardSection,
+      UserSection
     },
+data () {
+    return {
+      settingPopupOpen: false,
+      pwPopupOpen: false,
+      filterPopupOpen: false,
+      roomPopupOpen: false,
+    }
+  },
+  methods: {
+    onOpenSettingPopup () {
+      this.settingPopupOpen = true
+    },
+    onCloseSettingPopup () {
+      this.settingPopupOpen = false
+    },
+    onOpenFilterPopup () {
+      this.filterPopupOpen = true
+    },
+    onCloseFilterPopup () {
+      this.filterPopupOpen = false
+    },
+    onOpenRoomPopup () {
+      this.roomPopupOpen = true
+    },
+    onCloseRoomPopup () {
+      this.roomPopupOpen = false
+    },
+    onOpenPwPopup () {
+      this.pwPopupOpen = true
+    },
+    onClosePwPopup () {
+      this.pwPopupOpen = false
+    }
+  }
 };
 </script>
 

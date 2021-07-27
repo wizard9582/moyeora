@@ -38,7 +38,7 @@ export default {
 
   setup(props, { emit }) {
     const store = useStore()
-    const CreateRoomForm = ref(null)
+    const createRoomForm = ref(null)
 
     const state = reactive({
       formLabelWidth: '120px',
@@ -65,7 +65,7 @@ export default {
     })
     // 비밀방 비밀번호 체크 수정해야함
     const checkValidation = function() {
-      CreateRoomForm.value.validate((valid) => {
+      createRoomForm.value.validate((valid) => {
         if (valid && (!form.lock)) {
           state.btnDisabled = false
         } else {
@@ -109,11 +109,11 @@ export default {
       state.form.password = ''
       state.form.desc = ''
       state.btnDisabled = true
-      CreateRoomForm.value.resetFields()
-      emit('closeCreateRoomPopup')
+      createRoomForm.value.resetFields()
+      emit('onCloseRoomPopup')
     }
 
-    return { CreateRoomForm, state, clickCreateRoom, handleClose, checkValidation}
+    return { createRoomForm, state, clickCreateRoom, handleClose, checkValidation}
   }
 }
 </script>
