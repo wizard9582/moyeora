@@ -1,7 +1,6 @@
 <template>
-  <el-header>
+  <el-header v-if="isLoggedIn()" class="main-header" :height="'70px'">
     <a href="/home" class="logo">
-      <!-- <img :src="require('@/assets/img-logo.png')" alt="IceBreaking logo" width="70" height="50"/> -->
       <img :src="require('@/assets/img-vue.png')" alt="IceBreaking logo" width="50" height="50"/>
     </a>
     <ul class="nav">
@@ -14,15 +13,15 @@
         <el-button icon="el-icon-user" circle v-on:click="clickOnUser" ></el-button>
       </li>
     </ul>
-    <!-- <el-header v-if="!isLoggedIn()" class="main-header" :height="'70px'">
-      <div class="main-logo" @click="clickLogo">
-        <img :src="require('@/assets/img-vue.png')" alt="IceBreaking logo" width="50" height="50"/>
-      </div>
-      <div class="button-wrapper">
-        <el-button icon="el-icon-circle-plus-outline" @click="clickSignup">회원 가입</el-button>
-        <el-button icon="el-icon-key" type="primary" @click="clickLogin">로그인</el-button>
-      </div>
-    </el-header> -->
+  </el-header>
+  <el-header v-if="!isLoggedIn()" class="main-header" :height="'70px'">
+    <div class="main-logo" @click="clickLogo">
+      <img :src="require('@/assets/img-vue.png')" alt="IceBreaking logo" width="50" height="50"/>
+    </div>
+    <div class="button-wrapper">
+      <el-button icon="el-icon-circle-plus-outline" @click="clickSignup">회원 가입</el-button>
+      <el-button icon="el-icon-key" type="primary" @click="clickLogin">로그인</el-button>
+    </div>
   </el-header>
 </template>
 
@@ -91,12 +90,14 @@ export default {
   float: left;
   margin: 5px;
 }
+
 .main-header {
   padding: 10px 20px;
   border-bottom: 2px solid lightgray;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: fixed;
 }
 
 .main-logo,

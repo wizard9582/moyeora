@@ -59,7 +59,6 @@ export default {
 <style>
 
 .el-footer {
-  background-color: #E9EEF3;
   color: #333;
   text-align: center;
   width: 100%;
