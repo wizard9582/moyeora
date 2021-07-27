@@ -1,11 +1,11 @@
 <template>
-  
+    <el-main>User</el-main>
 </template>
 
 <script>
 export default {
-    name:"Footer",
-    
+    name:"UserSection",
+
 }
 </script>
 

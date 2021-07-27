@@ -1,10 +1,10 @@
 <template>
-  
+    <div>filter</div>
 </template>
 
 <script>
 export default {
-    name:"FilterPopup",
+    name:"FilterPop",
     
 }
 </script>

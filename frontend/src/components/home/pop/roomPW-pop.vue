@@ -1,10 +1,10 @@
 <template>
-  
+    <div>roomPW</div>
 </template>
 
 <script>
 export default {
-    name:"RoomPWPopup",
+    name:"RoomPWPop",
     
 }
 </script>

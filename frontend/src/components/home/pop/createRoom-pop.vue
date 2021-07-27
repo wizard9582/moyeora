@@ -1,10 +1,10 @@
 <template>
-  
+    <div>createRoom</div>
 </template>
 
 <script>
 export default {
-    name:"CreateRoomPopup",
+    name:"CreateRoomPop",
     
 }
 </script>

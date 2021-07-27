@@ -1,5 +1,5 @@
 <template>
-  
+    <el-main>Board</el-main>
 </template>
 
 <script>
