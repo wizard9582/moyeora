@@ -5,12 +5,23 @@
     </a>
     <ul class="nav">
       <li>
-        <el-badge :value="6">
-          <el-button icon="el-icon-bell" circle v-on:click="clickOnBell" ></el-button>
-        </el-badge>
+        <el-dropdown trigger="click">
+          <el-badge :value="6">
+            <el-button icon="el-icon-bell" circle></el-button>
+          </el-badge>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item icon="el-icon-circle-check">Action 1</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-circle-check">Action 2</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-circle-check">Action 3</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-circle-check">Action 4</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-circle-check">Action 5</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </li>
       <li>
-        <el-button icon="el-icon-user" circle v-on:click="clickOnUser" ></el-button>
+        <el-button icon="el-icon-user" circle @click="clickOnUser" ></el-button>
       </li>
     </ul>
   </el-header>
@@ -63,15 +74,14 @@ export default {
         name: 'home'
       })
     }
-
-    const clickOnBell = () => {
-      console.log('bell')
-    }
     const clickOnUser = () => {
-      console.log('user')
+      //console.log('user')
+      router.push({
+      name: 'home/user'
+      })
     }
 
-    return { state, isLoggedIn, clickLogin, clickSignup, clickLogout, clickOnBell, clickOnUser }
+    return { state, isLoggedIn, clickLogin, clickSignup, clickLogout, clickOnUser }
   }
 }
 </script>
