@@ -109,8 +109,7 @@ export default {
       state.form.password = ''
       state.form.desc = ''
       state.btnDisabled = true
-      createRoomForm.value.resetFields()
-      emit('onCloseRoomPopup')
+      emit('closeRoomPopup')
     }
 
     return { createRoomForm, state, clickCreateRoom, handleClose, checkValidation}

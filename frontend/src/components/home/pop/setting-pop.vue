@@ -10,12 +10,13 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item prop="fontSize" label="글씨 크기" :label-width="state.formLabelWidth">
-        <el-input-number v-model="state.form.fontSize" :min="8" :max="16"></el-input-number>
+        <el-slider v-model="state.form.fontSize" :min="8" :max="16"></el-slider>
+        <!-- <el-input-number v-model="state.form.fontSize" :min="8" :max="16"></el-input-number> -->
       </el-form-item>
       <el-form-item prop="alarm" label="알람설정" :label-width="state.formLabelWidth">
         <el-radio-group v-model="state.form.alarm" size="small">
-          <el-radio label="true" border>알람 켜기</el-radio>
-          <el-radio label="false" border>알람 끄기</el-radio>
+          <el-radio label="on" border>알람 켜기</el-radio>
+          <el-radio label="off" border>알람 끄기</el-radio>
         </el-radio-group>
       </el-form-item>
     </el-form>
@@ -34,7 +35,7 @@ import { useStore } from 'vuex'
 
 export default {
   name:'SettingPop',
-props: {
+  props: {
     open: {
       type: Boolean,
       default: false,
@@ -48,9 +49,9 @@ props: {
     const state = reactive({
       formLabelWidth: '120px',
       form: {
-        theme: 1,
+        theme: "기본테마",
         fontSize: 10,
-        alarm: false,
+        alarm: "off",
         align: 'left'
       },
       popupVisible: computed(() => props.open),

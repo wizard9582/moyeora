@@ -1,5 +1,6 @@
 <template>
   <el-main>
+    <div class="space"></div>
     <ul class="gameroom-list">
       <li v-for="i in 12" class="gameroom-list-item" :key="i">
         <game-room :roomdata="roomdata[i]"></game-room>
@@ -38,6 +39,10 @@ export default {
 }
 </script>
 <style>
+.space{
+  height: 100px;
+  width: 100%;
+}
 .gameroom-list {
   padding-left: 100px;
   max-height: calc(100% - 35px);
