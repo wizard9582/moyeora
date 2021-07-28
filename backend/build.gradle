@@ -99,6 +99,7 @@ processResources {
 }
 
 //이클립스인 경우를 위한 QueryDSL 설정. IntelliJ는 불필요. [시작]
+
 def querydslDir = 'src/main/generated'
 querydsl {
     library = "com.querydsl:querydsl-apt"
@@ -121,6 +122,7 @@ compileQuerydsl {
 configurations {
     querydsl.extendsFrom compileClasspath
 }
+ 
 //[끝]
 
 dependencies {
