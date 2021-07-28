@@ -39,12 +39,7 @@ export default {
 }
 </script>
 <style>
-.space{
-  height: 100px;
-  width: 100%;
-}
 .gameroom-list {
-  padding-left: 100px;
   max-height: calc(100% - 35px);
 }
 

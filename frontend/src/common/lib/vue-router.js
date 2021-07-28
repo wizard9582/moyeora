@@ -7,6 +7,8 @@ import HomeSection from "@/components/home/home-section.vue";
 import UserSection from "@/components/home/user-section.vue";
 import BoardSection from "@/components/home/board-section.vue";
 import NoticeSection from "@/components/home/notice-section.vue";
+import BoardList from "@/components/home/board-list.vue";
+import NoticeList from "@/components/home/notice-list.vue";
 
 const routes = [
   {
@@ -20,9 +22,9 @@ const routes = [
     component: HomePage,
     children: [
       {path: "", component: HomeSection},
-      {path: "user", component: UserSection},
-      {path: "board/list", component: BoardSection},
-      {path: "notice/list", component: NoticeSection},
+      {path: "user/:id", component: UserSection},
+      {path: "board/list", component: BoardList},
+      {path: "notice/list", component: NoticeList},
       {path: "board/:no", component: BoardSection},
       {path: "notice/:no", component: NoticeSection},
     ],

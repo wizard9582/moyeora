@@ -7,7 +7,7 @@
       <el-form-item prop="lock" label="비밀방 설정" :label-width="state.formLabelWidth">
         <el-checkbox v-model="state.form.lock"></el-checkbox>
       </el-form-item>
-      <el-form-item v-if="state.pwRequired" prop="password" label="비밀번호" :label-width="state.formLabelWidth">
+      <el-form-item v-if="state.form.lock" prop="password" label="비밀번호" :label-width="state.formLabelWidth">
         <el-input v-model="state.form.password" autocomplete="off" show-password></el-input>
       </el-form-item>
       <el-form-item prop="desc" label="방 설명" :label-width="state.formLabelWidth">
