@@ -3,10 +3,11 @@
     <el-form :model="state.form" :rules="state.rules" ref="settingForm" :label-position="state.form.align" @change="checkValidation" v-loading.lock="state.popupLoading">
       <el-form-item prop="theme" label="테마" :label-width="state.formLabelWidth">
         <el-radio-group v-model="state.form.theme">
-          <el-radio-button label="기본테마"></el-radio-button>
-          <el-radio-button label="어둠의자식"></el-radio-button>
-          <el-radio-button label="사이버펑크"></el-radio-button>
-          <el-radio-button label="레트로감성"></el-radio-button>
+          <el-radio label="기본테마"></el-radio>
+          <el-radio label="어둠의자식"></el-radio>
+          <el-radio label="레트로펑크"></el-radio>
+          <el-radio label="여름감성"></el-radio>
+          <el-radio label="핑크 핫"></el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item prop="fontSize" label="글씨 크기" :label-width="state.formLabelWidth">
