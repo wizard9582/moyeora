@@ -43,9 +43,9 @@ export default {
 <style>
 .gameFilter-list-item {
   min-width: 200px;
-  max-width: 25%;
+  max-width: 20%;
   min-height: 200px;
-  max-height: 25%;
+  max-height: 20%;
   display: inline-block;
   cursor: pointer;
   margin: 10px;

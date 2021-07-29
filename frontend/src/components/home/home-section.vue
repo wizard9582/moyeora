@@ -42,19 +42,16 @@ export default {
 .gameroom-list {
   max-height: calc(100% - 35px);
 }
-
 @media (min-width: 701px) and (max-width: 1269px) {
   .gameroom-list {
     min-width: 700px;
   }
 }
-
 @media (min-width: 1270px) {
   .gameroom-list {
     min-width: 1021px;
   }
 }
-
 .gameroom-list .gameroom-list-item {
   min-width: 320px;
   max-width: 25%;

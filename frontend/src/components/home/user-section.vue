@@ -1,13 +1,12 @@
 <template>
     <div class="anchor">
-      <div class="anchor-item"><a href="#home">내 정보</a></div>
-      <div class="anchor-item"><a href="#myInfo">내 전적</a></div>
-      <div class="anchor-item"><a href="#statistic">최근 게임</a></div>
-      <div class="anchor-item"><a href="#recentGame">랭킹</a></div>
-      <div class="anchor-item"><a href="#ranking">친구</a></div>
+      <div class="anchor-item"><a href="#myInfo">내 정보</a></div>
+      <div class="anchor-item"><a href="#statistic">내 전적</a></div>
+      <div class="anchor-item"><a href="#recentGame">최근 게임</a></div>
+      <div class="anchor-item"><a href="#ranking">랭킹</a></div>
+      <div class="anchor-item"><a href="#friend">친구</a></div>
     </div>
     <el-main>
-      <div id="home"></div>
       <div class="space"></div>
       <div class="info">
         <div class="sub-title">내 정보</div>
@@ -289,6 +288,7 @@ export default {
 .info .info-item .friend-list .friend-list-item{
   display: inline-block;
   text-align: center;
+  min-width: 150px;
   width: 20%;
   margin-bottom: 15px;
 }
@@ -308,6 +308,8 @@ export default {
 }
 .anchor .anchor-item{
   height: 20%;
+  padding-left: 15px;
+  padding-right: 15px;
   text-align: center;
   line-height: 40px;
 }

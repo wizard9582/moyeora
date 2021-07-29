@@ -4,6 +4,12 @@
       <el-form-item prop="title" label="방제" :label-width="state.formLabelWidth">
         <el-input v-model="state.form.title" autocomplete="off"></el-input>
       </el-form-item>
+      <el-form-item label="게임" :label-width="state.formLabelWidth">
+        <el-select v-model="value" placeholder="Select">
+          <el-option v-for="item in games" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled">
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item prop="lock" label="비밀방 설정" :label-width="state.formLabelWidth">
         <el-checkbox v-model="state.form.lock"></el-checkbox>
       </el-form-item>
@@ -28,6 +34,31 @@ import { useStore } from 'vuex'
 
 export default {
   name:'CreateRoomPop',
+
+data() {
+      return {
+        games: [{
+          value: 'video',
+          label: '화상회의'
+        }, {
+          value: 'mafia',
+          label: '마피아',
+        }, {
+          value: 'puzzle',
+          label: '퍼즐',
+          disabled: true
+        }, {
+          value: 'catch-mind',
+          label: '캐치마인드',
+          disabled: true
+        }, {
+          value: 'word-mafia',
+          label: '단어마피아',
+          disabled: true
+        }],
+        value: ''
+      }
+    },
 
   props: {
     open: {
@@ -75,32 +106,7 @@ export default {
     }
 
     const clickCreateRoom = function () {
-      // if (state.checkIdValidation) {
-      //   state.popupLoading = true;
-      //   state.btnDisabled = true;
-      //   setTimeout(() => {
-      //     state.popupLoading = false;
-      //     state.btnDisabled = false;
-      //     // 로그인 클릭 시 validate 체크 후 그 결과 값에 따라, 로그인 API 호출 또는 경고창 표시
-      //     signupForm.value.validate((valid) => {
-      //       if (valid) {
-      //         console.log('submit')
-      //         store.dispatch('root/requestRegister', { id: state.form.id, password: state.form.password, name: state.form.name, department: state.form.department, position: state.form.position })
-      //         .then(function () {
-      //           emit('closeSignupPopup')
-      //           alert('회원 가입이 완료되었습니다.')
-      //         })
-      //         .catch(function () {
-      //           alert('회원 가입에 실패하였습니다.')
-      //         })
-      //       } else {
-      //         alert('Validate error!')
-      //       }
-      //     });
-      //   }, 1000);
-      // } else {
-      //   alert('이미 존재하는 아이디입니다.')
-      // }
+
     }
 
     const handleClose = function () {
