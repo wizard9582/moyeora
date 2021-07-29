@@ -16,7 +16,7 @@ export default {
   props:{
     playerData:{
       type: Object,
-      default: {playerId: '1', playerName: 'Player1', job: 'citizen', dead: true},
+      default: {playerId: '1', playerName: 'Player1', job: 'citizen', dead: false},
     }
   },
   setup(props, {emit}) {

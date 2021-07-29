@@ -1,8 +1,15 @@
 <template>
   <div class="player-list">
     <el-row :gutter="20">
-      <el-col :span="6" v-for="idx in playerList.length" :key="idx">
-        <MafiaPlayer/>
+      <el-col :span="state.colSize">
+        <el-row :gutter="20">
+          <el-col :span="6" v-for="idx in playerList.length" :key="idx">
+            <MafiaPlayer/>
+          </el-col>
+        </el-row>
+      </el-col>
+      <el-col v-if="chatVisible" :span="state.chatSize" class="chat">
+        <GameChat/>
       </el-col>
     </el-row>
   </div>
@@ -10,11 +17,19 @@
 
 <script>
 import MafiaPlayer from '@/components/game/mafia/mafia-player.vue'
+import GameChat from '@/components/game/game-chat.vue'
+import { watch, reactive, computed, ref } from 'vue'
 
 export default {
   name: "MafiaSection",
   components: {
     MafiaPlayer,
+    GameChat,
+  },
+  props: {
+    openChat: {
+      type: Boolean,
+    },
   },
   data () {
     return {
@@ -31,10 +46,38 @@ export default {
         {playerId: '10', playerName: 'Player10', job: 'police', dead: false},
       ]
     }
+  },
+  setup(props, {emit}) {
+    const chatVisible = ref(computed(() => props.openChat))
+
+    const state = reactive({
+      colSize: 24,
+      chatSize: 0,
+    })
+
+    const changeSize = () => {
+      if (props.openChat) {
+        state.colSize = 16
+        state.chatSize = 8
+      } else {
+        state.colSize = 24
+        state.chatSize = 0
+      }
+    }
+
+    // props로 넘어온 데이터가 변하면 size를 바꿔준다
+    watch(chatVisible, () => {
+      changeSize()
+    })
+
+    return { state, chatVisible }
   }
 }
 </script>
 
 <style>
+.chat {
+  background-color: lightgoldenrodyellow;
+}
 
 </style>

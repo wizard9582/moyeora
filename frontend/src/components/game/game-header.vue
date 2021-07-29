@@ -7,7 +7,6 @@
       <span>김싸피의 마피아게임</span>
     </div>
     <div class="button-wrapper">
-      <el-button icon="el-icon-close" @click="clickGameClose"></el-button>
       <el-button icon="el-icon-message" @click="clickInvite"></el-button>
       <el-button icon="el-icon-bell" circle @click="clickOnBell" ></el-button>
       <el-button icon="el-icon-user" circle @click="clickOnUser" ></el-button>
@@ -26,11 +25,6 @@ export default {
       console.log('invite')
     }
 
-    const clickGameClose = () => {
-      emit('openGameClosePopup')
-      console.log('close')
-    }
-
     const clickOnBell = () => {
       console.log('bell')
     }
@@ -39,7 +33,7 @@ export default {
       console.log('user')
     }
 
-    return { clickInvite, clickGameClose, clickOnBell, clickOnUser }
+    return { clickInvite, clickOnBell, clickOnUser }
   }
 }
 </script>
@@ -53,6 +47,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   position: fixed;
+  z-index: 9999;
 }
 
 .main-logo,
