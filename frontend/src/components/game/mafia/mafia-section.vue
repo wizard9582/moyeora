@@ -57,8 +57,8 @@ export default {
 
     const changeSize = () => {
       if (props.openChat) {
-        state.colSize = 16
-        state.chatSize = 8
+        state.colSize = 18
+        state.chatSize = 6
       } else {
         state.colSize = 24
         state.chatSize = 0
@@ -77,7 +77,10 @@ export default {
 
 <style>
 .chat {
-  background-color: lightgoldenrodyellow;
+  background-color: white;
 }
 
+/* .el-col {
+  height: 100%;
+} */
 </style>
