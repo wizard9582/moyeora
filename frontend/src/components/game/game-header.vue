@@ -1,11 +1,13 @@
 <template>
   <el-header class="game-header">
-    <div class="main-logo">
+    <div class="game-info">
       <img :src="require('@/assets/img-vue.png')" alt="IceBreaking logo" width="50" height="50"/>
+      <div>
+        <span class="gameroom-desc">김싸피의 마피아게임</span>
+        <span><i class="el-icon-user-solid"></i> 10/10</span>
+      </div>
     </div>
-    <div class="gameroom-desc">
-      <span>김싸피의 마피아게임</span>
-    </div>
+    <span class="game-timer">0:0</span>
     <div class="button-wrapper">
       <el-button icon="el-icon-message" @click="clickInvite"></el-button>
       <el-button icon="el-icon-bell" circle @click="clickOnBell" ></el-button>
@@ -39,7 +41,6 @@ export default {
 </script>
 
 <style>
-
 .game-header {
   padding: 10px 20px;
   border-bottom: 2px solid lightgray;
@@ -50,8 +51,23 @@ export default {
   z-index: 9999;
 }
 
-.main-logo,
-.button-wrapper {
-  display: inline;
+.game-info {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.gameroom-desc {
+  padding: 0px 15px;
+}
+
+.game-timer {
+  width: 100px;
+  padding: 6px 0px;
+  text-align: center;
+  border-radius: 6px;
+  font-size: 20px;
+  background-color: #e8eef3;
+}
+
 </style>
