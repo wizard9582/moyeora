@@ -96,7 +96,10 @@ data () {
 
 <style>
 @import "https://unpkg.com/element-plus/lib/theme-chalk/index.css";
-
+.space{
+  height: 100px;
+  width: 100%;
+}
 .el-header{
   position: fixed;
   top: 0;
@@ -105,6 +108,8 @@ data () {
   height: 70px;
   /* border: solid; */
   background: white;
+  z-index: 1;
+  opacity: 0.9;
 }
 .el-aside {
   position: fixed;
@@ -116,9 +121,12 @@ data () {
   background: whitesmoke;
 }
 .el-main {
+  width: 100% - 100px;
+  margin-left: 100px;
   background-color: #e8eef3;
   color: #333;
   text-align: center;
+  z-index: -1;
 }
 
 body > .el-container {

@@ -6,7 +6,7 @@
           <el-skeleton-item variant="image" style="width: 100%; height: 150px" />
         </template>
       </el-skeleton>
-      </div>
+    </div>
     <div class="title-wrapper">
       <span class="title">{{ roomdata.title }}&nbsp;&nbsp;</span>
       <i v-if="roomdata.lock" class="el-icon-lock"></i>&nbsp;
