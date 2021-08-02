@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.api.request.RoomPostReq;
 import com.ssafy.api.service.RoomService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -37,7 +38,7 @@ public class RoomController {
 	RoomService roomService;
 	
 	// 회의방 비밀번호 모음집
-	static Map<Integer, String> passwordZip = new HashMap<>();
+	static Map<Long, String> passwordZip = new HashMap<>();
 	
 	static Date currTime;
 	
@@ -51,13 +52,24 @@ public class RoomController {
     })
 	public ResponseEntity<? extends BaseResponseBody> createRoom(
 			@ApiIgnore Authentication authentication, 
-			@RequestBody @ApiParam(value="생성할 방 정보", required = true) Conference conf) {
+			@RequestBody @ApiParam(value="생성할 방 정보", required = true) RoomPostReq req) {
 		
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		Conference conf = new Conference();
 		conf.setOwnerId(userDetails.getUser());
 		conf.setActive(true);
 		conf.setCallStartTime(new Timestamp(System.currentTimeMillis()));
-		roomService.createRoom(conf);
+		
+		conf.setConferenceCategory(req.getCategory());
+		conf.setDescription(req.getDescription());
+		conf.setPrivate(req.isPrivate());
+		conf.setTitle(req.getTitle());
+		
+		Conference newRoom = roomService.createRoom(conf);
+		
+		if(req.isPrivate()) {
+			passwordZip.put(newRoom.getId(), req.getPassword());
+		}
 		
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
