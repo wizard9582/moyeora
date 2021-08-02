@@ -3,6 +3,7 @@ package com.ssafy.api.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.db.entity.Conference;
 import com.ssafy.db.repository.RoomRepository;
 import com.ssafy.db.repository.RoomRepositorySupport;
 
@@ -16,4 +17,9 @@ public class RoomServiceImpl implements RoomService {
 	
 	@Autowired
 	RoomRepositorySupport roomRepositorySupport;
+
+	@Override
+	public Conference createRoom(Conference conf) {
+		return roomRepository.save(conf);
+	}
 }
