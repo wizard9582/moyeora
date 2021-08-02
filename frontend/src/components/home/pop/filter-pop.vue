@@ -1,7 +1,7 @@
 <template>
   <el-dialog class="gameFilter" title="게임선택" v-model="state.popupVisible" @close="handleClose">
     <ul class="gameFilter-list">
-      <li v-for="i in 12" class="gameFilter-list-item" :key="i">
+      <li v-for="i in 9" class="gameFilter-list-item" :key="i">
         <div>
           <el-skeleton-item variant="image" style="width: 100%; height: 200px" />
         </div>

@@ -108,7 +108,6 @@ data () {
   height: 70px;
   /* border: solid; */
   background: white;
-  z-index: 1;
   opacity: 0.9;
 }
 .el-aside {
@@ -126,7 +125,6 @@ data () {
   background-color: #e8eef3;
   color: #333;
   text-align: center;
-  z-index: -1;
 }
 
 body > .el-container {

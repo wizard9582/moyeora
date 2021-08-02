@@ -8,14 +8,15 @@
       </el-skeleton>
     </div>
     <div class="title-wrapper">
-      <span class="title">{{ roomdata.title }}&nbsp;&nbsp;</span>
-      <i v-if="roomdata.lock" class="el-icon-lock"></i>&nbsp;
-      <el-tag size="small">{{ roomdata.member }}/10</el-tag>&nbsp;
-      <el-tag v-if="roomdata.roomstate==='accessable'" size="small" class="accessable">접속가능</el-tag>
-      <el-tag v-if="roomdata.roomstate==='wating'" size="small" class="wating">대기중</el-tag>
-      <el-tag v-if="roomdata.roomstate==='playing'" size="small" class="playing">게임중</el-tag>
+      <span class="title">{{ roomData.title }}&nbsp;&nbsp;</span>
+      <i v-if="roomData.lock" class="el-icon-lock"></i>&nbsp;
+      <el-tag v-if="roomData.state==='accessable'" size="small" class="accessable">접속가능</el-tag>
+      <el-tag v-else-if="roomData.state==='wating'" size="small" class="wating">대기중</el-tag>
+      <el-tag v-else-if="roomData.state==='playing'" size="small" class="playing">게임중</el-tag>
+      <el-tag v-else size="small" class="empty">빈 방</el-tag>&nbsp;
+      <el-tag size="small">{{ roomData.member }}/10</el-tag>
       <div class="bottom">
-        <span>{{ roomdata.desc }}</span>
+        <span>{{ roomData.desc }}</span>
       </div>
     </div>
   </el-card>
@@ -38,11 +39,15 @@
   color: white;
 }
 .el-card .title-wrapper .wating{
-  background: gray;
+  background: blue;
   color: white;
 }
 .el-card .title-wrapper .playing{
   background: tomato;
+  color: white;
+}
+.el-card .title-wrapper .empty{
+  background: gray;
   color: white;
 }
 .el-card .title-wrapper .title {
@@ -61,34 +66,11 @@
 export default {
   name: "GameRoom",
     props:{
-      roomdata:{
+      roomData:{
         type: Object,
-        default: {title: "싸피아게임0", member: 6, lock: true, roomstate: "accessable", desc: "너만 오면 고"},
+        default: {title: "빈 방", member: 0, lock: true, state: "empty", desc: "빈 방입니다."},
       }
     },
-    // props:{
-    //   title: {
-    //     type: String,
-    //     default: "싸피아게임"
-    //   },
-    //   member: {
-    //     type: Number,
-    //     default: 6
-    //   },
-    //   lock: {
-    //     type: Boolean,
-    //     default: true
-    //   },
-    //   roomstate: {
-    //     type: String,
-    //     default: "wating"
-    //   },
-    //   desc: {
-    //     type: String,
-    //     default: "너만 오면 고"
-    //   }
-    // },
-
   setup () {},
 }
 </script>
