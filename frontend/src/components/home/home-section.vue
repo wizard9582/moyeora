@@ -1,7 +1,7 @@
 <template>
   <el-main>
     <div class="space"></div>
-    <el-button type="primary" icon="el-icon-refresh-left" @click="clickRefresh">새로고침</el-button>
+    <el-button class="btn-refresh" type="primary" icon="el-icon-refresh-left" @click="clickRefresh">새로고침</el-button>
     <ul class="gameroom-list">
       <li v-for="item in this.listData" class="gameroom-list-item" :key="item.title">
         <game-room :roomData=item @click="clickRoom(item.title)"></game-room>
@@ -97,7 +97,7 @@ export default {
 </script>
 <style>
 
-.el-button{
+.btn-refresh{
   position: fixed;
   top: 80px;
   right: 50px;
