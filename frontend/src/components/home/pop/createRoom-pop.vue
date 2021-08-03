@@ -5,7 +5,7 @@
         <el-input v-model="state.form.title" autocomplete="off"></el-input>
       </el-form-item>
       <el-form-item label="게임" :label-width="state.formLabelWidth">
-        <el-select v-model="value" placeholder="Select">
+        <el-select v-model="state.form.type" placeholder="Select">
           <el-option v-for="item in games" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled">
           </el-option>
         </el-select>
@@ -56,7 +56,6 @@ data() {
           label: '단어마피아',
           disabled: true
         }],
-        value: ''
       }
     },
 
@@ -75,6 +74,7 @@ data() {
       formLabelWidth: '120px',
       form: {
         title: '',
+        type: '',
         lock: false,
         password: '',
         desc: '',
@@ -83,21 +83,28 @@ data() {
       rules: {
         title: [
           { required: true, message: '필수 입력 항목입니다.', trigger: 'change' },
-          { max: 15, message: '최대 15자까지 입력 가능합니다.', trigger: 'change' }
+          { max: 20, message: '최대 20자까지 입력 가능합니다.', trigger: 'change' }
+        ],
+        type: [
+          { required: true, message: '필수 선택 항목입니다.', trigger: 'change' },
         ],
         desc: [
           { required: false, message: '설명을 입력해주세요', trigger: 'change' },
           { max: 30, message: '최대 30자까지 입력 가능합니다.', trigger: 'change' }
         ],
+        password: [
+          { required: false, message: '비밀번호를 입력해주세요', trigger: 'change' },
+          { min: 4, max: 10, message: '최대 10자까지 입력 가능합니다.', trigger: 'change' }
+        ],
       },
       btnDisabled: true,
-      pwRequired: false,
       popupVisible: computed(() => props.open),
     })
     // 비밀방 비밀번호 체크 수정해야함
     const checkValidation = function() {
+
       createRoomForm.value.validate((valid) => {
-        if (valid && (!form.lock)) {
+        if (valid && state.form.type!=null) {
           state.btnDisabled = false
         } else {
           state.btnDisabled = true
@@ -106,11 +113,25 @@ data() {
     }
 
     const clickCreateRoom = function () {
-
+      createRoomForm.value.validate((valid) => {
+        if (valid) {
+          store.dispatch('root/requestCreateRoom', { title: state.form.title, type: state.form.type, lock: state.form.lock, password: state.form.password, desc: state.form.desc})
+          .then(function () {
+            //생성된 방으로 이동하는 router push
+            //emit('closeSignupPopup')
+          })
+          .catch(function () {
+            alert('방 생성이 완료되었습니다.')
+          })
+        } else {
+          alert('Validate error!')
+        }
+      });
     }
 
     const handleClose = function () {
       state.form.title = ''
+      state.form.type = ''
       state.form.lock = false
       state.form.password = ''
       state.form.desc = ''

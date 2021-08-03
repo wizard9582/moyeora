@@ -74,8 +74,8 @@ export default {
       if(this.type === "all"){
         this.filteredData = this.roomData;
       }else{
-        roomData.forEach(item => {
-          if(item.type === "this.type"){
+        this.roomData.forEach(item => {
+          if(item.type === this.type){
             this.filteredData.push(item);
           }
         });
