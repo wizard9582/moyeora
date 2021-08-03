@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.api.request.RoomPostReq;
+import com.ssafy.api.response.RoomRes;
 import com.ssafy.api.service.RoomService;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
@@ -50,7 +51,7 @@ public class RoomController {
         @ApiResponse(code = 404, message = "사용자 없음"),
         @ApiResponse(code = 500, message = "서버 오류")
     })
-	public ResponseEntity<? extends BaseResponseBody> createRoom(
+	public ResponseEntity<RoomRes> createRoom(
 			@ApiIgnore Authentication authentication, 
 			@RequestBody @ApiParam(value="생성할 방 정보", required = true) RoomPostReq req) {
 		
@@ -71,6 +72,6 @@ public class RoomController {
 			passwordZip.put(newRoom.getId(), req.getPassword());
 		}
 		
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		return ResponseEntity.status(200).body(RoomRes.of(conf));
 	}
 }
