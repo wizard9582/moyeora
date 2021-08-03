@@ -6,17 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.ssafy.api.service.RoomServiceImpl;
-import com.ssafy.common.model.response.BaseResponseBody;
-import com.ssafy.db.entity.Conference;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +19,6 @@ import com.ssafy.api.request.RoomPostReq;
 import com.ssafy.api.response.RoomRes;
 import com.ssafy.api.service.RoomService;
 import com.ssafy.common.auth.SsafyUserDetails;
-import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.db.entity.Conference;
 
 import io.swagger.annotations.Api;
@@ -34,7 +26,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import springfox.documentation.annotations.ApiIgnore;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
@@ -48,6 +39,10 @@ public class RoomController {
 	@Autowired
 	RoomService roomService;
 
+	// 회의방 비밀번호 모음집
+	static Map<Long, String> passwordZip = new HashMap<>();
+	static Date currTime;
+	
 	@GetMapping("/roomList")
 	@ApiOperation(value = "회의 방 전체 조회", notes = "생성된 방들의 정보를 응답한다.")
 	@ApiResponses({
@@ -59,10 +54,6 @@ public class RoomController {
 	public ResponseEntity<List<Conference>> getRoomInfo() {
 		return ResponseEntity.status(200).body(roomService.findRooms());
 	}
-	// 회의방 비밀번호 모음집
-	static Map<Long, String> passwordZip = new HashMap<>();
-
-	static Date currTime;
 	
 	@PostMapping()
 	@ApiOperation(value = "회의 방 생성", notes = "<strong>title과 description</strong>을 작성하여 회의방을 생성한다.")
