@@ -20,13 +20,11 @@ public class Conference extends BaseEntity{
 	@JoinColumn(name="owner_id")
     User ownerId;
     
-    @ManyToOne
-    @JoinColumn(name="conference_category")
-    ConferenceCategory conferenceCategory;
+    String conferenceCategory;
     Timestamp callStartTime;
     Timestamp callEndTime;
-    String thumbnailUrl;
     String title;
     String description;
     boolean isActive;
+    boolean isPrivate;
 }
