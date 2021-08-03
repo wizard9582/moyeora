@@ -4,10 +4,11 @@ import com.ssafy.db.entity.Conference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.db.entity.Conference;
 import com.ssafy.db.repository.RoomRepository;
 import com.ssafy.db.repository.RoomRepositorySupport;
 
-import javax.transaction.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,11 @@ public class RoomServiceImpl implements RoomService {
 	
 	@Autowired
 	RoomRepositorySupport roomRepositorySupport;
+
+	@Override
+	public Conference createRoom(Conference conf) {
+		return roomRepository.save(conf);
+	}
 
 
 	@Override

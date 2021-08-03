@@ -9,6 +9,8 @@ import java.util.List;
  */
 public interface RoomService {
 
+	Conference createRoom(Conference conf);
+
     List<Conference> findRooms();
 
 }
