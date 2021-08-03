@@ -14,19 +14,19 @@
     </el-container>
   </el-container>
   <filter-pop
-    :open="filterPopupOpen"
+    :open="state.filterPopupOpen"
     @closeFilterPopup="onCloseFilterPopup"
   />
   <create-room-pop
-    :open="roomPopupOpen"
+    :open="state.roomPopupOpen"
     @closeRoomPopup="onCloseRoomPopup"
   />
   <room-pw-pop
-    :open="pwPopupOpen"
+    :open="state.pwPopupOpen"
     @closePwPopup="onClosePwPopup"
   />
   <setting-pop
-    :open="settingPopupOpen"
+    :open="state.settingPopupOpen"
     @closeSettingPopup="onCloseSettingPopup"
   />
 </template>
@@ -42,6 +42,8 @@ import HomeSection from '../components/home/home-section.vue';
 import NoticeSection from '../components/home/notice-section.vue';
 import BoardSection from '../components/home/board-section.vue';
 import UserSection from '../components/home/user-section.vue';
+import { reactive} from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
     name: 'HomePage',
@@ -57,39 +59,43 @@ export default {
       BoardSection,
       UserSection
     },
-data () {
-    return {
+  setup () {
+    const router = useRouter()
+    const state = reactive({
       settingPopupOpen: false,
       pwPopupOpen: false,
       filterPopupOpen: false,
       roomPopupOpen: false,
+    })
+    const onOpenSettingPopup = function(){
+      state.settingPopupOpen = true
     }
-  },
-  methods: {
-    onOpenSettingPopup () {
-      this.settingPopupOpen = true
-    },
-    onCloseSettingPopup () {
-      this.settingPopupOpen = false
-    },
-    onOpenFilterPopup () {
-      this.filterPopupOpen = true
-    },
-    onCloseFilterPopup () {
-      this.filterPopupOpen = false
-    },
-    onOpenRoomPopup () {
-      this.roomPopupOpen = true
-    },
-    onCloseRoomPopup () {
-      this.roomPopupOpen = false
-    },
-    onOpenPwPopup () {
-      this.pwPopupOpen = true
-    },
-    onClosePwPopup () {
-      this.pwPopupOpen = false
+    const onCloseSettingPopup = function(){
+      state.settingPopupOpen = false
     }
+    const onOpenFilterPopup = function(){
+      state.filterPopupOpen = true
+    }
+    const onCloseFilterPopup = function(choosed){
+      state.filterPopupOpen = false
+      if(choosed!='no'){
+        router.push("/home/" + choosed)
+      }
+    }
+    const onOpenRoomPopup = function(){
+      state.roomPopupOpen = true
+    }
+    const onCloseRoomPopup = function(){
+      state.roomPopupOpen = false
+    }
+    const onOpenPwPopup = function(){
+      state.pwPopupOpen = true
+    }
+    const onClosePwPopup = function(){
+      state.pwPopupOpen = false
+    }
+    return {state, onOpenSettingPopup, onCloseSettingPopup, onOpenFilterPopup, onCloseFilterPopup,
+            onOpenRoomPopup, onCloseRoomPopup, onOpenPwPopup, onClosePwPopup}
   }
 };
 </script>
