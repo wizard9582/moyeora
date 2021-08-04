@@ -14,21 +14,11 @@
 <script>
 import GameRoom from '@/components/home/game-room.vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex'
 export default {
     name:"HomeSection",
     components:{
       GameRoom,
-    },
-    methods:{
-      handleCurrentChange(val) {
-        console.log(this.index);
-        this.page = val;
-        this.listData = this.filteredData.slice((this.page-1)*8, this.page*8 );
-      },
-      clickRefresh() {
-        console.log("refresh")
-        this.$router.go();
-      }
     },
     data(){
       return{
@@ -62,14 +52,36 @@ export default {
           {title: "싸피아게임23", type:"mafia", member: 6, lock: true, state: "accessable", desc: "너만 오면 고"},
           {title: "싸피아게임24", type:"mafia", member: 9, lock: true, state: "playing", desc: "너만 오면 고"},
           {title: "싸피아게임25", type:"mafia", member: 6, lock: true, state: "accessable", desc: "너만 오면 고"},
+
         ],
         filteredData: [],
         listData: [],
-      };
+      }
     },
+    setup(){
+
+      const clickRoom = function(room) {
+        console.log("click" + room)
+      }
+      return {clickRoom }
+    },
+
     created(){
+      const store = useStore()
+      const router = useRouter()
+
       this.type = this.$route.params.type;
-      //roomData 받아오는 axios 요청
+      //roomData 받아오는 axios 요청 아래 부분만 묶어서 주석 풀면 됨
+
+      // store.dispatch('root/requestRoomList')
+      // .then(function (result) {
+      //   //data 타입, 형태 맞춰서 확인
+      //   //console.log(result.data)
+      //   this.listData = result.data
+      // })
+      // .catch(function (err) {
+      //   alert(err)
+      // })
 
       if(this.type === "all"){
         this.filteredData = this.roomData;
@@ -86,13 +98,19 @@ export default {
         this.index ++;
       }
     },
-    setup(){
-      const router = useRouter()
-      const clickRoom = function(room) {
-        console.log("click" + room)
+
+    methods:{
+      handleCurrentChange(val) {
+        console.log(this.index);
+        this.page = val;
+        this.listData = this.filteredData.slice((this.page-1)*8, this.page*8 );
+      },
+      clickRefresh() {
+        console.log("refresh")
+        this.$router.go();
       }
-      return { clickRoom}
     },
+
 }
 </script>
 <style>

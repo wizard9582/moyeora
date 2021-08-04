@@ -6,7 +6,7 @@
       </el-form-item>
       <el-form-item label="게임" :label-width="state.formLabelWidth">
         <el-select v-model="state.form.type" placeholder="Select">
-          <el-option v-for="item in games" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled">
+          <el-option v-for="item in state.games" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled">
           </el-option>
         </el-select>
       </el-form-item>
@@ -35,30 +35,6 @@ import { useStore } from 'vuex'
 export default {
   name:'CreateRoomPop',
 
-data() {
-      return {
-        games: [{
-          value: 'video',
-          label: '화상회의'
-        }, {
-          value: 'mafia',
-          label: '마피아',
-        }, {
-          value: 'puzzle',
-          label: '퍼즐',
-          disabled: true
-        }, {
-          value: 'catch-mind',
-          label: '캐치마인드',
-          disabled: true
-        }, {
-          value: 'word-mafia',
-          label: '단어마피아',
-          disabled: true
-        }],
-      }
-    },
-
   props: {
     open: {
       type: Boolean,
@@ -80,6 +56,8 @@ data() {
         desc: '',
         align: 'left'
       },
+      games: [{value: 'video',label: '화상회의'}, {value: 'mafia',label: '마피아'}, {value: 'puzzle',label: '퍼즐',disabled: true},
+              {value: 'catch-mind', label: '캐치마인드', disabled: true }, { value: 'word-mafia', label: '단어마피아', disabled: true }],
       rules: {
         title: [
           { required: true, message: '필수 입력 항목입니다.', trigger: 'change' },
@@ -102,7 +80,6 @@ data() {
     })
     // 비밀방 비밀번호 체크 수정해야함
     const checkValidation = function() {
-
       createRoomForm.value.validate((valid) => {
         if (valid && state.form.type!=null) {
           state.btnDisabled = false
@@ -121,10 +98,11 @@ data() {
             //emit('closeSignupPopup')
           })
           .catch(function () {
-            alert('방 생성이 완료되었습니다.')
+
           })
         } else {
-          alert('Validate error!')
+          alert('에러 발생!')
+          //alert 혹은 에러 page 이동
         }
       });
     }
@@ -145,5 +123,4 @@ data() {
 </script>
 
 <style>
-
 </style>

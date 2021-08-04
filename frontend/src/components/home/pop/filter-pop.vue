@@ -24,7 +24,7 @@ export default {
     const state = reactive({
       formLabelWidth: '120px',
       popupVisible: computed(() => props.open),
-      imgsrc: ["img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png",],
+      imgsrc: ["img-vue.png","img-logo-chat.png","img-logo-mafia.png","img-logo-puzzle.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png",],
       type: ["zero","all","mafia","puzzle","1","2","3","4","5","6",],
     })
 
@@ -41,6 +41,9 @@ export default {
 </script>
 
 <style>
+.gameFilter-list {
+  border: 5px solid;
+}
 .gameFilter-list-item {
   min-width: 200px;
   max-width: 20%;
