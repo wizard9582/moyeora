@@ -21,6 +21,7 @@ import { ref, computed } from 'vue'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 import { useRoute } from 'vue-router'
+import { useStore } from 'vuex'
 
 let scope = '';
 
@@ -41,11 +42,12 @@ export default {
     };
     const route = useRoute();
     const roomId = route.params.no;
+
     return { count, disabled, load, roomId };
   },
   data() {
     return {
-      userName: "ssafy",
+      userName: "",
       //roomId : roomNum,
       message: "",
       recvList: [],
@@ -92,6 +94,15 @@ export default {
     },  
 
     connect() {
+      const store = useStore();
+      store.dispatch('root/requestUserInfo')
+        .then(function (result) {
+            scope.userName = result.data.userId;
+        })
+        .catch(function (err) {
+          alert(err)
+        })
+
       const serverURL = "https://localhost:8443/websocket"
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
