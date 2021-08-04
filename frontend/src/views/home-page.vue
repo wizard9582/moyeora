@@ -9,7 +9,7 @@
     </el-aside>
     <el-container>
       <main-header></main-header>
-      <router-view></router-view>
+      <router-view :key="$route.fullPath"/>
       <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
     </el-container>
   </el-container>
@@ -30,6 +30,8 @@ import HomeSection from '../components/home/home-section.vue';
 import NoticeSection from '../components/home/notice-section.vue';
 import BoardSection from '../components/home/board-section.vue';
 import UserSection from '../components/home/user-section.vue';
+import { reactive} from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
     name: 'HomePage',
@@ -45,39 +47,43 @@ export default {
       BoardSection,
       UserSection
     },
-data () {
-    return {
+  setup () {
+    const router = useRouter()
+    const state = reactive({
       settingPopupOpen: false,
       pwPopupOpen: false,
       filterPopupOpen: false,
       roomPopupOpen: false,
+    })
+    const onOpenSettingPopup = function(){
+      state.settingPopupOpen = true
     }
-  },
-  methods: {
-    onOpenSettingPopup () {
-      this.settingPopupOpen = true
-    },
-    onCloseSettingPopup () {
-      this.settingPopupOpen = false
-    },
-    onOpenFilterPopup () {
-      this.filterPopupOpen = true
-    },
-    onCloseFilterPopup () {
-      this.filterPopupOpen = false
-    },
-    onOpenRoomPopup () {
-      this.roomPopupOpen = true
-    },
-    onCloseRoomPopup () {
-      this.roomPopupOpen = false
-    },
-    onOpenPwPopup () {
-      this.pwPopupOpen = true
-    },
-    onClosePwPopup () {
-      this.pwPopupOpen = false
+    const onCloseSettingPopup = function(){
+      state.settingPopupOpen = false
     }
+    const onOpenFilterPopup = function(){
+      state.filterPopupOpen = true
+    }
+    const onCloseFilterPopup = function(choosed){
+      state.filterPopupOpen = false
+      if(choosed!='no'){
+        router.push("/home/" + choosed)
+      }
+    }
+    const onOpenRoomPopup = function(){
+      state.roomPopupOpen = true
+    }
+    const onCloseRoomPopup = function(){
+      state.roomPopupOpen = false
+    }
+    const onOpenPwPopup = function(){
+      state.pwPopupOpen = true
+    }
+    const onClosePwPopup = function(){
+      state.pwPopupOpen = false
+    }
+    return {state, onOpenSettingPopup, onCloseSettingPopup, onOpenFilterPopup, onCloseFilterPopup,
+            onOpenRoomPopup, onCloseRoomPopup, onOpenPwPopup, onClosePwPopup}
   }
 };
 </script>
@@ -96,7 +102,6 @@ data () {
   height: 70px;
   /* border: solid; */
   background: white;
-  /* z-index: 1; */
   opacity: 0.9;
 }
 .el-aside {
@@ -114,7 +119,6 @@ data () {
   background-color: #e8eef3;
   color: #333;
   text-align: center;
-  /* z-index: -1; */
 }
 
 body > .el-container {
