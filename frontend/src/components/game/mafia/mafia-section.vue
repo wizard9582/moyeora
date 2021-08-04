@@ -4,11 +4,16 @@
       <el-col :span="state.colSize">
         <el-row :gutter="20">
           <el-col :span="6" v-for="idx in playerList.length" :key="idx">
-            <MafiaPlayer/>
+            <div id="room">
+              <h2 id="room-header"></h2>
+              <div id="participants"></div>
+              <input type="button" id="button-leave" @mouseup="leaveRoom" value="Leave room" />
+            </div>
+            <!-- <MafiaPlayer/> -->
           </el-col>
         </el-row>
       </el-col>
-      <el-col v-if="chatVisible" :span="state.chatSize" class="chat">
+      <el-col v-show="chatVisible" :span="state.chatSize" class="chat">
         <GameChat/>
       </el-col>
     </el-row>
@@ -19,6 +24,8 @@
 import MafiaPlayer from '@/components/game/mafia/mafia-player.vue'
 import GameChat from '@/components/game/game-chat.vue'
 import { watch, reactive, computed, ref } from 'vue'
+import { useRoute } from 'vue-router'
+import { register, leaveRoom } from '@/common/lib/conferenceroom'
 
 export default {
   name: "MafiaSection",
@@ -48,11 +55,13 @@ export default {
     }
   },
   setup(props, {emit}) {
+    const route = useRoute()
     const chatVisible = ref(computed(() => props.openChat))
 
     const state = reactive({
       colSize: 24,
       chatSize: 0,
+      roomNum: route.params.no,
     })
 
     const changeSize = () => {
@@ -64,6 +73,8 @@ export default {
         state.chatSize = 0
       }
     }
+
+    register(state.roomNum)
 
     // props로 넘어온 데이터가 변하면 size를 바꿔준다
     watch(chatVisible, () => {

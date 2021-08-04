@@ -1,6 +1,8 @@
 import { Participant } from './participant';
 import { sendMessage, ws } from './webSocket';
 import kurentoUtils from 'kurento-utils'
+import axios from 'axios';
+import router from './vue-router';
 
 var participants = {};
 var name;
@@ -39,22 +41,36 @@ ws.onmessage = function(message) {
 	}
 }
 
-function register(roomNum, userName) {
-	name = userName
-    // name = document.getElementById('name').value;
-	// var room = document.getElementById('roomName').value;
-	var room = roomNum
+function register(roomNum) {
+  const authToken = localStorage.getItem('jwt')
+  const headers = {
+    'Authorization': 'Bearer ' + authToken
+  }
+  const URL = 'https://localhost:8443' + '/api/v1/users/me'
 
-	// document.getElementById('room-header').innerText = 'ROOM ' + room;
-	// document.getElementById('join').style.display = 'none';
-	// document.getElementById('room').style.display = 'block';
+  axios.get(URL, { headers: headers })
+    .then((result) => {
+      name = result.data.userId
+      // name = document.getElementById('name').value;
+      // var room = document.getElementById('roomName').value;
+      var room = roomNum
 
-	var message = {
-		id : 'joinRoom',
-		name : name,
-		room : room,
-	}
-	sendMessage(message);
+      // document.getElementById('room-header').innerText = 'ROOM ' + room;
+      // document.getElementById('join').style.display = 'none';
+      // document.getElementById('room').style.display = 'block';
+
+      var message = {
+        id: 'joinRoom',
+        name: name,
+        room: room,
+      }
+      sendMessage(message);
+      console.log(result)
+    })
+    .catch((error) => {
+      console.log(error)
+      router.push({ name: 'Welcome' })
+    })
 }
 
 function onNewParticipant(request) {
