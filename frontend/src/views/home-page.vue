@@ -8,27 +8,15 @@
       ></side-bar>
     </el-aside>
     <el-container>
-        <main-header></main-header>
-        <router-view :key="$route.fullPath"/>
-        <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
+      <main-header></main-header>
+      <router-view :key="$route.fullPath"/>
+      <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
     </el-container>
   </el-container>
-  <filter-pop
-    :open="state.filterPopupOpen"
-    @closeFilterPopup="onCloseFilterPopup"
-  />
-  <create-room-pop
-    :open="state.roomPopupOpen"
-    @closeRoomPopup="onCloseRoomPopup"
-  />
-  <room-pw-pop
-    :open="state.pwPopupOpen"
-    @closePwPopup="onClosePwPopup"
-  />
-  <setting-pop
-    :open="state.settingPopupOpen"
-    @closeSettingPopup="onCloseSettingPopup"
-  />
+  <filter-pop :open="filterPopupOpen" @closeFilterPopup="onCloseFilterPopup" />
+  <create-room-pop :open="roomPopupOpen" @closeRoomPopup="onCloseRoomPopup" />
+  <room-pw-pop :open="pwPopupOpen" @closePwPopup="onClosePwPopup" />
+  <setting-pop :open="settingPopupOpen" @closeSettingPopup="onCloseSettingPopup" />
 </template>
 
 <script>
@@ -102,14 +90,14 @@ export default {
 
 <style>
 @import "https://unpkg.com/element-plus/lib/theme-chalk/index.css";
-.space{
+.space {
   height: 100px;
   width: 100%;
 }
-.el-header{
+.el-header {
   position: fixed;
   top: 0;
-	left: 0;
+  left: 0;
   width: 100%;
   height: 70px;
   /* border: solid; */
@@ -119,7 +107,7 @@ export default {
 .el-aside {
   position: fixed;
   top: 70px;
-	left: 0;
+  left: 0;
   width: 120px;
   height: 100%;
   /* border: solid; */
@@ -127,7 +115,7 @@ export default {
 }
 .el-main {
   width: 100% - 100px;
-  margin-left: 100px;
+  /* margin-left: 100px; */
   background-color: #e8eef3;
   color: #333;
   text-align: center;
@@ -137,7 +125,7 @@ body > .el-container {
   margin-bottom: 40px;
 }
 .el-footer {
-  background-color: #E9EEF3;
+  background-color: #e9eef3;
   color: #333;
   text-align: center;
   width: 100%;

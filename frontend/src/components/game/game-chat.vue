@@ -8,15 +8,21 @@
         class="list"
         v-infinite-scroll="load"
         infinite-scroll-disabled="disabled">
-        <li v-for="i in count" class="list-item" :key="i">{{ i }}</li>
+        <li v-for="i in recvList" class="list-item" :key="i">{{ i.fromName }} >> {{ i.toName }} : <br> {{ i.message }}</li>
       </ul>
     </div>
-    <el-input type="textarea" :rows="2" placeholder="Press Enter for send message." v-model="textarea"></el-input>
+    <el-input placeholder="모두에게" v-model="toName"></el-input>
+    <el-input type="textarea" :rows="2" placeholder="Press Enter for send message." v-model="message" @keyup="sendMessage"></el-input>
   </div>
 </template>
 
 <script>
 import { ref, computed } from 'vue'
+import Stomp from 'webstomp-client'
+import SockJS from 'sockjs-client'
+import { useRoute } from 'vue-router'
+
+let scope = '';
 
 export default {
   name: 'GameChat',
@@ -33,7 +39,95 @@ export default {
         loading.value = false;
       }, 100);
     };
-    return { count, disabled, load };
+    const route = useRoute();
+    const roomId = route.params.no;
+    return { count, disabled, load, roomId };
+  },
+  data() {
+    return {
+      userName: "ssafy",
+      //roomId : roomNum,
+      message: "",
+      recvList: [],
+      toName: "",
+    }
+  },
+  methods: {
+    sendMessage (e) {
+      if(e.keyCode === 13 && this.userName !== '' && this.message !== ''){
+        if(this.toName == '')
+          this.sendToRoom()
+        else
+          this.sendToPerson()
+        this.message = ''
+        this.toName = ''
+      }
+    },    
+    
+    sendToRoom() {
+      console.log("Send message To Room "+ this.roomId +" :" + this.message);
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = { 
+          roomId: this.roomId,
+          fromName: this.userName,
+          toName: this.toName,
+          message: this.message 
+        };
+        this.stompClient.send("/pub/chat/room/"+ this.roomId, JSON.stringify(msg), {});
+      }
+    },  
+
+    sendToPerson() {
+      console.log("Send message To Perseon "+ this.toName +" : " + this.message);
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = { 
+          roomId: this.roomId,
+          fromName: this.userName,
+          toName: this.toName,
+          message: this.message 
+        };
+        this.stompClient.send("/pub/chat/room/"+ this.roomId + "/" + this.toName, JSON.stringify(msg), {});
+        this.recvList.push(msg)
+      }
+    },  
+
+    connect() {
+      const serverURL = "https://localhost:8443/websocket"
+      let socket = new SockJS(serverURL);
+      this.stompClient = Stomp.over(socket);
+      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
+      this.stompClient.connect(
+        {},
+        frame => {
+          // 소켓 연결 성공
+          this.connected = true;
+          console.log('소켓 연결 성공', frame);
+
+          this.stompClient.subscribe("/sub/chat/room/"+this.roomId, chat => {
+            let mess = JSON.parse(chat.body)
+            mess.toName = '모두'
+            scope.recvList.push(mess)
+          });
+          this.stompClient.subscribe('/sub/chat/room/'+this.roomId+'/'+this.userName, function (chat) {
+            scope.recvList.push(JSON.parse(chat.body));
+          });
+          // for문을 사용하여 참가자 아이디 별로 구독할지, 전체 구독으로 사용자에 따른 
+          this.stompClient.subscribe('/sub/vote/room/'+this.roomId+'/'+this.userName, function (chat) {
+            console.log("투표 받았다")
+          });
+        },
+        error => {
+          // 소켓 연결 실패
+          console.log('소켓 연결 실패', error);
+          this.connected = false;
+        }
+      );        
+    },
+
+  },
+  created() {
+    this.connect()
+    scope = this;
   },
 }
 </script>

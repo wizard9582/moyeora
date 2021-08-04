@@ -28,7 +28,7 @@ public class QConference extends EntityPathBase<Conference> {
 
     public final DateTimePath<java.sql.Timestamp> callStartTime = createDateTime("callStartTime", java.sql.Timestamp.class);
 
-    public final QConferenceCategory conferenceCategory;
+    public final StringPath conferenceCategory = createString("conferenceCategory");
 
     public final StringPath description = createString("description");
 
@@ -37,9 +37,9 @@ public class QConference extends EntityPathBase<Conference> {
 
     public final BooleanPath isActive = createBoolean("isActive");
 
-    public final QUser ownerId;
+    public final BooleanPath isPrivate = createBoolean("isPrivate");
 
-    public final StringPath thumbnailUrl = createString("thumbnailUrl");
+    public final QUser ownerId;
 
     public final StringPath title = createString("title");
 
@@ -61,7 +61,6 @@ public class QConference extends EntityPathBase<Conference> {
 
     public QConference(Class<? extends Conference> type, PathMetadata metadata, PathInits inits) {
         super(type, metadata, inits);
-        this.conferenceCategory = inits.isInitialized("conferenceCategory") ? new QConferenceCategory(forProperty("conferenceCategory")) : null;
         this.ownerId = inits.isInitialized("ownerId") ? new QUser(forProperty("ownerId")) : null;
     }
 
