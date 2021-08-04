@@ -17,7 +17,7 @@ const routes = [
     component: WelcomePage,
   },
   {
-    path: "/home",
+    path: "/home/:type",
     name: "Home",
     component: HomePage,
     children: [

@@ -1,10 +1,8 @@
 <template>
   <el-dialog class="gameFilter" title="게임선택" v-model="state.popupVisible" @close="handleClose">
     <ul class="gameFilter-list">
-      <li v-for="i in 12" class="gameFilter-list-item" :key="i">
-        <div>
-          <el-skeleton-item variant="image" style="width: 100%; height: 200px" />
-        </div>
+      <li v-for="i in 9" class="gameFilter-list-item" @click="clickGame(i)" :key="i">
+        <img :src="require(`@/assets/${state.imgsrc[i]}`)" alt="yet" style="width: 100%; height: 200px"/>
       </li>
     </ul>
   </el-dialog>
@@ -18,29 +16,34 @@ export default {
   name:"FilterPop",
   props: {
     open: {
-      type: Boolean,
-      default: false,
     }
   },
 
   setup(props, { emit }) {
     const store = useStore()
-
     const state = reactive({
       formLabelWidth: '120px',
       popupVisible: computed(() => props.open),
+      imgsrc: ["img-vue.png","img-logo-chat.png","img-logo-mafia.png","img-logo-puzzle.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png",],
+      type: ["zero","all","mafia","puzzle","1","2","3","4","5","6",],
     })
 
     const handleClose = function () {
-      emit('closeFilterPopup')
+      emit('closeFilterPopup','no')
     }
-
-    return {state, handleClose}
+    const clickGame = function (val) {
+      //let type = state.type[val]
+      emit('closeFilterPopup', state.type[val])
+    }
+    return {state, handleClose, clickGame}
   }
 }
 </script>
 
 <style>
+.gameFilter-list {
+  border: 5px solid;
+}
 .gameFilter-list-item {
   min-width: 200px;
   max-width: 20%;
