@@ -8,27 +8,15 @@
       ></side-bar>
     </el-aside>
     <el-container>
-        <main-header></main-header>
-        <router-view></router-view>
-        <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
+      <main-header></main-header>
+      <router-view></router-view>
+      <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
     </el-container>
   </el-container>
-  <filter-pop
-    :open="filterPopupOpen"
-    @closeFilterPopup="onCloseFilterPopup"
-  />
-  <create-room-pop
-    :open="roomPopupOpen"
-    @closeRoomPopup="onCloseRoomPopup"
-  />
-  <room-pw-pop
-    :open="pwPopupOpen"
-    @closePwPopup="onClosePwPopup"
-  />
-  <setting-pop
-    :open="settingPopupOpen"
-    @closeSettingPopup="onCloseSettingPopup"
-  />
+  <filter-pop :open="filterPopupOpen" @closeFilterPopup="onCloseFilterPopup" />
+  <create-room-pop :open="roomPopupOpen" @closeRoomPopup="onCloseRoomPopup" />
+  <room-pw-pop :open="pwPopupOpen" @closePwPopup="onClosePwPopup" />
+  <setting-pop :open="settingPopupOpen" @closeSettingPopup="onCloseSettingPopup" />
 </template>
 
 <script>
@@ -96,25 +84,25 @@ data () {
 
 <style>
 @import "https://unpkg.com/element-plus/lib/theme-chalk/index.css";
-.space{
+.space {
   height: 100px;
   width: 100%;
 }
-.el-header{
+.el-header {
   position: fixed;
   top: 0;
-	left: 0;
+  left: 0;
   width: 100%;
   height: 70px;
   /* border: solid; */
   background: white;
-  z-index: 1;
+  /* z-index: 1; */
   opacity: 0.9;
 }
 .el-aside {
   position: fixed;
   top: 70px;
-	left: 0;
+  left: 0;
   width: 120px;
   height: 100%;
   /* border: solid; */
@@ -122,18 +110,18 @@ data () {
 }
 .el-main {
   width: 100% - 100px;
-  margin-left: 100px;
+  /* margin-left: 100px; */
   background-color: #e8eef3;
   color: #333;
   text-align: center;
-  z-index: -1;
+  /* z-index: -1; */
 }
 
 body > .el-container {
   margin-bottom: 40px;
 }
 .el-footer {
-  background-color: #E9EEF3;
+  background-color: #e9eef3;
   color: #333;
   text-align: center;
   width: 100%;
