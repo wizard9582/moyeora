@@ -9,7 +9,7 @@
     </el-aside>
     <el-container>
         <main-header></main-header>
-        <router-view></router-view>
+        <router-view :key="$route.fullPath"/>
         <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
     </el-container>
   </el-container>

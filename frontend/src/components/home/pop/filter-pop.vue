@@ -25,7 +25,7 @@ export default {
       formLabelWidth: '120px',
       popupVisible: computed(() => props.open),
       imgsrc: ["img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png",],
-      type: ["all","mafia","puzzle","1","2","3","4","5","6","7",],
+      type: ["zero","all","mafia","puzzle","1","2","3","4","5","6",],
     })
 
     const handleClose = function () {
