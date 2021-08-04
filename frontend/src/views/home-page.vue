@@ -13,10 +13,10 @@
       <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
     </el-container>
   </el-container>
-  <filter-pop :open="filterPopupOpen" @closeFilterPopup="onCloseFilterPopup" />
-  <create-room-pop :open="roomPopupOpen" @closeRoomPopup="onCloseRoomPopup" />
-  <room-pw-pop :open="pwPopupOpen" @closePwPopup="onClosePwPopup" />
-  <setting-pop :open="settingPopupOpen" @closeSettingPopup="onCloseSettingPopup" />
+  <filter-pop :open="state.filterPopupOpen" @closeFilterPopup="onCloseFilterPopup" />
+  <create-room-pop :open="state.roomPopupOpen" @closeRoomPopup="onCloseRoomPopup" />
+  <room-pw-pop :open="state.pwPopupOpen" @closePwPopup="onClosePwPopup" />
+  <setting-pop :open="state.settingPopupOpen" @closeSettingPopup="onCloseSettingPopup" />
 </template>
 
 <script>

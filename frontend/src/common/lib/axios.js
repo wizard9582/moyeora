@@ -1,7 +1,7 @@
 import VueAxios from 'vue-axios'
 import axios from 'axios'
 
-const BASE_URL = '/'
+const BASE_URL = '/api/v1'
 const DEFAULT_ACCEPT_TYPE = 'application/json'
 
 axios.defaults.baseURL = BASE_URL
