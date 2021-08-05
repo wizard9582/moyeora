@@ -72,6 +72,16 @@ export default {
       })
     }
 
+    const getUserId = function (token) {
+      store.dispatch('root/requestUserInfo', token)
+      .then((result) => {
+        store.commit('root/setUserId', result.data.userId)
+      })
+      .catch((err) => {
+        alert(err)
+      })
+    }
+
     const clickLogin = function () {
       // 스피너 시작
       state.popupLoading = true;
@@ -86,8 +96,9 @@ export default {
             store.dispatch('root/requestLogin', { id: state.form.id, password: state.form.password })
             .then(function (result) {
               store.commit('root/setToken', result.data.accessToken)
-              emit('closeLoginPopup')
               // 해당 유저의 정보를 받아오는 axios
+              getUserId(result.data.accessToken)
+              emit('closeLoginPopup')
             })
             .catch(function (err) {
               alert(err)

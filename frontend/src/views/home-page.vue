@@ -129,7 +129,7 @@ body > .el-container {
   color: #333;
   text-align: center;
   width: 100%;
-  height: 200px;
+  /* height: 200px; */
   line-height: 150px;
 }
 /* 차후 main.css로 통합? */

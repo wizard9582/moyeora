@@ -45,9 +45,8 @@ export function requestRoomList ({ state }, payload) {
   return $axios.get(url)
 }
 
-export function requestUserInfo ({ state }, payload) {
-  console.log('requestUserInfo', state, payload)
-  let token = localStorage.getItem('jwt')
+export function requestUserInfo ({ state }, token) {
+  console.log('requestUserInfo', state, token)
   const url = `/users/me`
   const headers = {
     'Authorization': 'Bearer ' + token
