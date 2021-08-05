@@ -30,7 +30,7 @@ import HomeSection from '../components/home/home-section.vue';
 import NoticeSection from '../components/home/notice-section.vue';
 import BoardSection from '../components/home/board-section.vue';
 import UserSection from '../components/home/user-section.vue';
-import { reactive} from 'vue';
+import { reactive } from 'vue';
 import { useRouter } from 'vue-router';
 
 export default {
