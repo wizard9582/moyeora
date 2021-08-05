@@ -18,6 +18,7 @@
 
 <script>
 import { reactive, computed, ref } from 'vue'
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 
 export default {
@@ -35,6 +36,7 @@ export default {
   },
 
   setup(props, { emit }) {
+    const router = useRouter()
     const store = useStore()
     const loginForm = ref(null)
 
@@ -88,6 +90,7 @@ export default {
               store.commit('root/setToken', result.data.accessToken)
               emit('closeLoginPopup')
               // 해당 유저의 정보를 받아오는 axios
+              router.push("/home/all")
             })
             .catch(function (err) {
               alert(err)

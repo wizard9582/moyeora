@@ -21,26 +21,25 @@ export function requestCheckID ({ state }, payload) {
 }
 
 export function requestCreateRoom ({ state }, payload) {
+  console.log('requestCreateRoom', state, payload)
+  const url = '/room'
+  let body = payload
+
   //테스트 후 token 가져오기 vuex store 기반으로 변경
   //body의 JSON.stringify는 자동으로 되나? 체크
   let token = localStorage.getItem('jwt')
-
-  console.log('requestCreateRoom', state, payload)
-  const url = `/room`
-  let body = payload
 
   return $axios({
     method:'post',
     url: url,
     headers: {'Authorization': 'Bearer ' + token},
-    body: body
+    data: body
   })
-  // let header = {'Authorization': 'Bearer ' + token}
-  // return $axios.post(url, header, body)
+  // return $axios.post(url, body)
 }
 
 export function requestRoomList ({ state }, payload) {
-  console.log('requestRoomList', state, payload)
-  const url = `/room/list`
+  console.log('requestRoomList')
+  const url = `/room/roomList`
   return $axios.get(url)
 }
