@@ -40,21 +40,15 @@ ws.onmessage = function(message) {
 }
 
 function register(roomNum, userName) {
-	name = userName
-    // name = document.getElementById('name').value;
-	// var room = document.getElementById('roomName').value;
-	var room = roomNum
+  name = userName
+  var room = roomNum
 
-	// document.getElementById('room-header').innerText = 'ROOM ' + room;
-	// document.getElementById('join').style.display = 'none';
-	// document.getElementById('room').style.display = 'block';
-
-	var message = {
-		id : 'joinRoom',
-		name : name,
-		room : room,
-	}
-	sendMessage(message);
+  var message = {
+    id: 'joinRoom',
+    name: name,
+    room: room,
+  }
+  sendMessage(message);
 }
 
 function onNewParticipant(request) {
@@ -152,4 +146,4 @@ function onParticipantLeft(request) {
 }
 
 
-export {register, leaveRoom};
+export {register, leaveRoom, participants};
