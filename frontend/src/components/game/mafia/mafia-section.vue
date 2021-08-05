@@ -8,7 +8,7 @@
           </el-col>
         </el-row>
       </el-col>
-      <el-col v-if="chatVisible" :span="state.chatSize" class="chat">
+      <el-col v-show="chatVisible" :span="state.chatSize" class="chat">
         <GameChat/>
       </el-col>
     </el-row>
