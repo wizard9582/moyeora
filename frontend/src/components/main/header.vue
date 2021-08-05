@@ -21,7 +21,15 @@
         </el-dropdown>
       </li>
       <li>
-        <el-button icon="el-icon-user" circle @click="clickOnUser" ></el-button>
+        <el-dropdown trigger="click">
+          <el-button icon="el-icon-user" circle></el-button>
+          <template #dropdown>
+            <el-dropdown-menu>
+              <el-dropdown-item icon="el-icon-user" @click="clickUserInfo">내 정보</el-dropdown-item>
+              <el-dropdown-item icon="el-icon-back" @click="clickLogout">로그아웃</el-dropdown-item>
+            </el-dropdown-menu>
+          </template>
+        </el-dropdown>
       </li>
     </ul>
   </el-header>
@@ -69,19 +77,14 @@ export default {
     // 로그아웃
     const clickLogout = () => {
       store.commit('root/removeToken')
-      router.push({
-        // 수정 필요
-        name: 'home'
-      })
+      router.push("/")
     }
-    const clickOnUser = () => {
+    const clickUserInfo = () => {
       //console.log('user')
-      router.push({
-      name: 'home/user'
-      })
+      router.push("home/user/id")
     }
 
-    return { state, isLoggedIn, clickLogin, clickSignup, clickLogout, clickOnUser }
+    return { state, isLoggedIn, clickLogin, clickSignup, clickLogout, clickUserInfo }
   }
 }
 </script>

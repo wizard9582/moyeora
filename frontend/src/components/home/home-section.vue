@@ -3,16 +3,17 @@
     <div class="space"></div>
     <el-button class="btn-refresh" type="primary" icon="el-icon-refresh-left" @click="clickRefresh">새로고침</el-button>
     <ul class="gameroom-list">
-      <li v-for="item in this.listData" class="gameroom-list-item" :key="item.title">
-        <game-room :roomData=item @click="clickRoom(item.title)"></game-room>
+      <li v-for="item in state.listData" class="gameroom-list-item" :key="item.id">
+        <game-room :roomData=item @click="clickRoom(item.id)"></game-room>
       </li>
     </ul>
-    <el-pagination layout="prev, pager, next" :page-size="1" @current-change="handleCurrentChange" :total="index"></el-pagination>
+    <el-pagination layout="prev, pager, next" :page-size="1" @current-change="handleCurrentChange" :total="state.index"></el-pagination>
   </el-main>
 </template>
 
 <script>
 import GameRoom from '@/components/home/game-room.vue';
+import { reactive, computed, ref } from 'vue'
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 export default {
@@ -20,97 +21,85 @@ export default {
     components:{
       GameRoom,
     },
-    data(){
-      return{
-        type: "",
-        page: 1,
-        index: 0,
-        roomData: [
-          {title: "싸피아게임0", type:"null", member: 6, lock: true, password: "", state: "accessable", desc: "너만 오면 고"},
-          {title: "싸피아게임1", type:"mafia", member: 6, lock: true, state: "accessable", desc: "너만 오면 고"},
-          {title: "싸피아게임2", type:"null", member: 10, lock: false, state: "playing", desc: "너만 오면 고"},
-          {title: "싸피아게임3", type:"mafia", member: 7, lock: true, state: "accessable", desc: "너만 오면 고"},
-          {title: "싸피아게임4", type:"mafia", member: 10, lock: false, state: "wating", desc: "너만 오면 고"},
-          {title: "싸피아게임5", type:"mafia", member: 1, lock: false, state: "accessable", desc: "너만 오면 고"},
-          {title: "싸피아게임6", type:"mafia", member: 2, lock: false, state: "accessable", desc: "너만 오면 고"},
-          {title: "싸피아게임7", type:"mafia", member: 5, lock: true, state: "accessable", desc: "너만 오면 고"},
-          {title: "싸피아게임8", type:"mafia", member: 10, lock: false, state: "wating", desc: "너만 오면 고"},
-          {title: "싸피아게임9", type:"mafia", member: 3, lock: true, state: "wating", desc: "너만 오면 고"},
-          {title: "싸피아게임10", type:"mafia", member: 6, lock: true, state: "accessable", desc: "너만 오면 고"},
-          {title: "싸피아게임11", type:"mafia", member: 9, lock: true, state: "playing", desc: "너만 오면 고"},
-          {title: "싸피아게임12", type:"mafia", member: 6, lock: true, state: "accessable", desc: "너만 오면 고"},
-          {title: "싸피아게임13", type:"mafia", member: 6, lock: true, state: "accessable", desc: "너만 오면 고"},
-          {title: "싸피아게임14", type:"mafia", member: 6, lock: true, state: "accessable", desc: "너만 오면 고"},
-          {title: "싸피아게임15", type:"mafia", member: 10, lock: false, state: "playing", desc: "너만 오면 고"},
-          {title: "싸피아게임16", type:"mafia", member: 7, lock: true, state: "accessable", desc: "너만 오면 고"},
-          {title: "싸피아게임17", type:"mafia", member: 10, lock: false, state: "wating", desc: "너만 오면 고"},
-          {title: "싸피아게임18", type:"mafia", member: 1, lock: false, state: "accessable", desc: "너만 오면 고"},
-          {title: "싸피아게임19", type:"mafia", member: 2, lock: false, state: "accessable", desc: "너만 오면 고"},
-          {title: "싸피아게임20", type:"mafia", member: 5, lock: true, state: "accessable", desc: "너만 오면 고"},
-          {title: "싸피아게임21", type:"mafia", member: 10, lock: false, state: "wating", desc: "너만 오면 고"},
-          {title: "싸피아게임22", type:"mafia", member: 3, lock: true, state: "wating", desc: "너만 오면 고"},
-          {title: "싸피아게임23", type:"mafia", member: 6, lock: true, state: "accessable", desc: "너만 오면 고"},
-          {title: "싸피아게임24", type:"mafia", member: 9, lock: true, state: "playing", desc: "너만 오면 고"},
-          {title: "싸피아게임25", type:"mafia", member: 6, lock: true, state: "accessable", desc: "너만 오면 고"},
 
-        ],
-        filteredData: [],
-        listData: [],
-      }
-    },
     setup(){
-
-      const clickRoom = function(room) {
-        console.log("click" + room)
-      }
-      return {clickRoom }
-    },
-
-    created(){
       const store = useStore()
       const router = useRouter()
 
-      this.type = this.$route.params.type;
-      //roomData 받아오는 axios 요청 아래 부분만 묶어서 주석 풀면 됨
+      const state = reactive({
+        roomData: [],
+        filteredData: [],
+        listData: [],
+        type: "",
+        page: 1,
+        index:  0
+      })
 
-      // store.dispatch('root/requestRoomList')
-      // .then(function (result) {
-      //   //data 타입, 형태 맞춰서 확인
-      //   //console.log(result.data)
-      //   this.listData = result.data
-      // })
-      // .catch(function (err) {
-      //   alert(err)
-      // })
+      //type = this.$route.params.type;
+      console.log("type ->", router.currentRoute.value.params.type)
+      state.type = router.currentRoute.value.params.type
 
-      if(this.type === "all"){
-        this.filteredData = this.roomData;
-      }else{
-        this.roomData.forEach(item => {
-          if(item.type === this.type){
-            this.filteredData.push(item);
-          }
-        });
+      // console.log("current ->", router.currentRoute)
+      // console.log("current ->", router.currentRoute.value.params.type)
+      // console.log("route ->", router.getRoutes())
+      // console.log("optios ->", router.options)
+
+      store.dispatch('root/requestRoomList')
+      .then(function (result) {
+        //console.log(result.data)
+        result.data.forEach(item =>{
+          //console.log(roomData)
+          //console.log(item)
+          let conference = {id: 0, title: "", type:"", member: 0, lock: true, password: "", state: "", desc: ""}
+          conference.id = item.id
+          conference.title = item.title
+          conference.type = item.conferenceCategory
+          conference.lock = item.private
+          conference.desc = item.description
+          //참가자 수 확인과 룸 상태 변경은 나중에 구현
+          conference.member = 0
+          conference.state = "accessable"
+          //console.log(conference)
+          state.roomData.push(conference)
+        })
+
+        if(state.type === "all"){
+          state.filteredData = state.roomData;
+        }else{
+          state.roomData.forEach(item => {
+            if(item.type === state.type){
+              state.filteredData.push(item);
+            }
+          })
+        }
+        //console.log("filteredData",filteredData)
+
+        state.listData = state.filteredData.slice((state.page-1)*8, state.page*8 );
+        state.index = parseInt(state.filteredData.length / 8);
+
+        if(state.filteredData.length % 8 != 0){
+          state.index = state.index + 1;
+        }
+      })
+      .catch(function (err) {
+        alert(err)
+      })
+
+      const clickRoom = function(room) {
+        //console.log("click" + room)
+        router.push("/game/" + room)
       }
-      this.listData = this.filteredData.slice((this.page-1)*8, this.page*8 );
-      this.index = parseInt(this.filteredData.length / 8);
-      if(this.filteredData.length % 8 != 0){
-        this.index ++;
+      const handleCurrentChange = function(val) {
+        state.page = val;
+        state.listData = state.filteredData.slice((state.page-1)*8, state.page*8 );
       }
-    },
-
-    methods:{
-      handleCurrentChange(val) {
-        console.log(this.index);
-        this.page = val;
-        this.listData = this.filteredData.slice((this.page-1)*8, this.page*8 );
-      },
-      clickRefresh() {
+      const clickRefresh = function() {
         console.log("refresh")
-        this.$router.go();
+        router.go()
       }
-    },
 
+      return { state, clickRoom , handleCurrentChange, clickRefresh }
+    },
 }
 </script>
 <style>
