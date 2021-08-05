@@ -64,44 +64,38 @@ export default {
         this.message = ''
         this.toName = ''
       }
-    },    
-    
+    },
+
     sendToRoom() {
       console.log("Send message To Room "+ this.roomId +" :" + this.message);
       if (this.stompClient && this.stompClient.connected) {
-        const msg = { 
+        const msg = {
           roomId: this.roomId,
           fromName: this.userName,
           toName: this.toName,
-          message: this.message 
+          message: this.message
         };
         this.stompClient.send("/pub/chat/room/"+ this.roomId, JSON.stringify(msg), {});
       }
-    },  
+    },
 
     sendToPerson() {
       console.log("Send message To Perseon "+ this.toName +" : " + this.message);
       if (this.stompClient && this.stompClient.connected) {
-        const msg = { 
+        const msg = {
           roomId: this.roomId,
           fromName: this.userName,
           toName: this.toName,
-          message: this.message 
+          message: this.message
         };
         this.stompClient.send("/pub/chat/room/"+ this.roomId + "/" + this.toName, JSON.stringify(msg), {});
         this.recvList.push(msg)
       }
-    },  
+    },
 
     connect() {
       const store = useStore();
-      store.dispatch('root/requestUserInfo')
-        .then(function (result) {
-            scope.userName = result.data.userId;
-        })
-        .catch(function (err) {
-          alert(err)
-        })
+      this.userName = computed(() => store.getters['root/getUserId']);
 
       const serverURL = "https://localhost:8443/websocket"
       let socket = new SockJS(serverURL);
@@ -122,7 +116,7 @@ export default {
           this.stompClient.subscribe('/sub/chat/room/'+this.roomId+'/'+this.userName, function (chat) {
             scope.recvList.push(JSON.parse(chat.body));
           });
-          // for문을 사용하여 참가자 아이디 별로 구독할지, 전체 구독으로 사용자에 따른 
+          // for문을 사용하여 참가자 아이디 별로 구독할지, 전체 구독으로 사용자에 따른
           this.stompClient.subscribe('/sub/vote/room/'+this.roomId+'/'+this.userName, function (chat) {
             console.log("투표 받았다")
           });
@@ -132,7 +126,7 @@ export default {
           console.log('소켓 연결 실패', error);
           this.connected = false;
         }
-      );        
+      );
     },
 
   },
