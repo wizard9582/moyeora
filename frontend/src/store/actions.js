@@ -44,3 +44,13 @@ export function requestRoomList ({ state }, payload) {
   const url = `/room/list`
   return $axios.get(url)
 }
+
+export function requestUserInfo ({ state }, payload) {
+  console.log('requestUserInfo', state, payload)
+  let token = localStorage.getItem('jwt')
+  const url = `/users/me`
+  const headers = {
+    'Authorization': 'Bearer ' + token
+  }
+  return $axios.get(url, {headers})
+}
