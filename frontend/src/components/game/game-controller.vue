@@ -1,21 +1,25 @@
 <template>
-    <el-button type="primary">음소거 버튼</el-button>
-    <el-button type="primary">비디오 버튼</el-button>
+    <el-button type="primary" @click="micOff">음소거 버튼</el-button>
+    <el-button type="primary" @click="cameraOff">비디오 버튼</el-button>
     <el-button icon="el-icon-close" type="danger" @click="clickGameClose"></el-button>
     <el-button :icon="state.chatIcon" type="primary" @click="clickChat"></el-button>
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
+import { leaveRoom, participants, muteMic, offCam } from '@/common/lib/conferenceroom'
+import { useStore } from 'vuex'
 
 export default {
   name: 'GameController',
 
   setup(props, {emit}) {
+    const store = useStore()
 
     const state = reactive({
       chatClicked: false,
       chatIcon: 'el-icon-chat-dot-round',
+      userName: computed(() => store.getters['root/getUserId'])
     })
 
     // 채팅창 열기
@@ -38,7 +42,17 @@ export default {
       emit('openGameClosePopup')
     }
 
-    return { state, clickChat, clickGameClose }
+    const micOff = () => {
+      console.log('마이크 끄기 클릭')
+      muteMic(state.userName);
+    }
+
+    const cameraOff = () => {
+      console.log('카메라 끄기 클릭')
+      offCam(state.userName);
+    }
+
+    return { state, clickChat, clickGameClose, micOff, cameraOff }
   }
 }
 </script>
