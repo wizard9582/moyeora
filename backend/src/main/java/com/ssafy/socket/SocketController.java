@@ -42,6 +42,13 @@ public class SocketController {
 	public Chat vote(Chat chat, @DestinationVariable String roomId, @DestinationVariable String userId) {
 		return new Chat(roomId, chat.getFromName(), chat.getToName(), null);
 	}
+
+	// 방 폭파 메세지
+	@MessageMapping("/leave/{roomId}")
+	@SendTo("/sub/leave/{roomId}")
+	public Chat leave(Chat chat, @DestinationVariable String roomId) {
+		return new Chat(roomId, chat.getFromName(), "leave");
+	}
 	
 	/*
 	 * 참고자료 정리
