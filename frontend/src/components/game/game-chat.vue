@@ -11,17 +11,26 @@
         <li v-for="i in recvList" class="list-item" :key="i">{{ i.fromName }} >> {{ i.toName }} : <br> {{ i.message }}</li>
       </ul>
     </div>
-    <el-input placeholder="모두에게" v-model="toName"></el-input>
+    <el-select v-model="toName" clearable placeholder="Select">
+      <el-option
+        v-for="player in participants"
+        :key="player.name"
+        :label="player.name"
+        :value="player.name">
+      </el-option>
+    </el-select>
+    <!-- <el-input placeholder="모두에게" v-model="toName"></el-input> -->
     <el-input type="textarea" :rows="2" placeholder="Press Enter for send message." v-model="message" @keyup="sendMessage"></el-input>
   </div>
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
+import { participants } from '@/common/lib/conferenceroom'
 
 let scope = '';
 
@@ -43,7 +52,10 @@ export default {
     const route = useRoute();
     const roomId = route.params.no;
 
-    return { count, disabled, load, roomId };
+    // const participants = ref(participants)
+    // console.log('participants[ssafy1] : ', participants['ssafy1'])
+
+    return { count, disabled, load, roomId, participants };
   },
   data() {
     return {
@@ -57,6 +69,7 @@ export default {
   methods: {
     sendMessage (e) {
       if(e.keyCode === 13 && this.userName !== '' && this.message !== ''){
+        console.log('----------toName---------- ', this.toName)
         if(this.toName == '')
           this.sendToRoom()
         else
