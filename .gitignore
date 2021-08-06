@@ -4,6 +4,7 @@
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
 backend/src/main/resources/application.properties
+backend/build.gradle
 
 # Node artifact files
 node_modules/
