@@ -1,12 +1,12 @@
 import {sendMessage} from './webSocket'
 
-const PARTICIPANT_MAIN_CLASS = 'participant main';
-const PARTICIPANT_CLASS = 'participant';
+const PARTICIPANT_MAIN_CLASS = 'participant main el-col el-col-6 is-guttered';
+const PARTICIPANT_CLASS = 'participant el-col el-col-6 is-guttered';
 
 function Participant(name) {
 	this.name = name;
 	var container = document.createElement('div');
-	container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
+  container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
 	container.id = name;
 	var span = document.createElement('span');
 	var video = document.createElement('video');
