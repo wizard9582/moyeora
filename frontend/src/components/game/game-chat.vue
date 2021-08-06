@@ -76,6 +76,8 @@ export default {
           this.sendToPerson()
         this.message = ''
         this.toName = ''
+
+        this.sendToLeave()
       }
     },
 
@@ -106,6 +108,17 @@ export default {
       }
     },
 
+    sendToLeave() {
+      console.log("Send message To Leave ");
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = {
+          roomId: this.roomId,
+          fromName: this.userName,
+        };
+        this.stompClient.send("/pub/leave/"+ this.roomId, JSON.stringify(msg), {});
+      }
+    },
+
     connect() {
       const store = useStore();
       this.userName = computed(() => store.getters['root/getUserId']);
@@ -132,6 +145,11 @@ export default {
           // for문을 사용하여 참가자 아이디 별로 구독할지, 전체 구독으로 사용자에 따른
           this.stompClient.subscribe('/sub/vote/room/'+this.roomId+'/'+this.userName, function (chat) {
             console.log("투표 받았다")
+          });
+
+          this.stompClient.subscribe('/sub/leave/'+this.roomId, function (chat) {
+            let mess = JSON.parse(chat.body)
+            console.log("나가라")
           });
         },
         error => {
