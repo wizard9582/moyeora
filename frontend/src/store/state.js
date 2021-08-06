@@ -1,0 +1,6 @@
+// ROOT STATE 변수 정의 및 기본값 대입
+
+export default {
+  userId: localStorage.getItem('id'),
+  authToken: localStorage.getItem('jwt')
+}
