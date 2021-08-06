@@ -51,19 +51,19 @@ public class RoomController {
 			@ApiResponse(code = 404, message = "사용자 없음"),
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
-	public ResponseEntity<List<Conference>> getRoomInfo() {
+	public ResponseEntity<List<RoomRes>> getRoomInfo() {
 		return ResponseEntity.status(200).body(roomService.findRooms());
 	}
-	
+
 	@PostMapping()
 	@ApiOperation(value = "회의 방 생성", notes = "<strong>title과 description</strong>을 작성하여 회의방을 생성한다.")
-    @ApiResponses({
-        @ApiResponse(code = 200, message = "성공"),
-        @ApiResponse(code = 401, message = "인증 실패"),
-        @ApiResponse(code = 404, message = "사용자 없음"),
-        @ApiResponse(code = 500, message = "서버 오류")
-    })
-	public ResponseEntity<RoomRes> createRoom(
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "사용자 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<Conference> createRoom(
 			@ApiIgnore Authentication authentication,
 			@RequestBody @ApiParam(value="생성할 방 정보", required = true) RoomPostReq req) {
 
@@ -84,6 +84,6 @@ public class RoomController {
 			passwordZip.put(newRoom.getId(), req.getPassword());
 		}
 
-		return ResponseEntity.status(200).body(RoomRes.of(conf));
+		return ResponseEntity.status(200).body(conf);
 	}
 }

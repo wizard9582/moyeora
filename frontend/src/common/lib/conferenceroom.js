@@ -44,11 +44,11 @@ function register(roomNum, userName) {
   var room = roomNum
 
   var message = {
-    id: 'joinRoom',
-    name: name,
-    room: room,
-  }
-  sendMessage(message);
+	  id: 'joinRoom',
+	  name: name,
+	  room: room,
+	}
+	sendMessage(message);
 }
 
 function onNewParticipant(request) {
@@ -86,6 +86,7 @@ function onExistingParticipants(msg) {
 	console.log(name + " registered in room " + room);
 	var participant = new Participant(name);
 	participants[name] = participant;
+	console.log('in conference room : ', Object.keys(participants).length)
 	var video = participant.getVideoElement();
 
 	var options = {

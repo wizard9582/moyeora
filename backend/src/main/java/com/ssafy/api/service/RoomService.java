@@ -1,5 +1,6 @@
 package com.ssafy.api.service;
 
+import com.ssafy.api.response.RoomRes;
 import com.ssafy.db.entity.Conference;
 
 import java.util.List;
@@ -11,6 +12,6 @@ public interface RoomService {
 
 	Conference createRoom(Conference conf);
 
-    List<Conference> findRooms();
+    List<RoomRes> findRooms();
 
 }
