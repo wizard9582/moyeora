@@ -1,6 +1,7 @@
 package com.ssafy.api.response;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.ssafy.db.entity.Conference;
 import com.ssafy.db.entity.User;
@@ -35,8 +36,12 @@ public class RoomRes {
     boolean isActive;	
 	@ApiModelProperty(name="Room IsPrivate")
     boolean isPrivate;
+	@ApiModelProperty(name="Room Participants")
+	List<User> member;
+	@ApiModelProperty(name="Room Participants length")
+	int count;
 	
-	public static RoomRes of(Conference conf) {
+	public static RoomRes of(Conference conf, List<User> member, int count) {
 		RoomRes res = new RoomRes();
 		res.setId(conf.getId());
 		res.setOwnerId(conf.getOwnerId());
@@ -47,6 +52,8 @@ public class RoomRes {
 		res.setDescription(conf.getDescription());
 		res.setActive(conf.isActive());
 		res.setPrivate(conf.isPrivate());
+		res.setMember(member);
+		res.setCount(count);
 		return res;
 	}
 }
