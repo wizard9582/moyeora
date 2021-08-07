@@ -74,7 +74,7 @@ export default {
       }
     }
 
-    register(state.roomNum, state.userName)
+    // register(state.roomNum, state.userName)
 
     // props로 넘어온 데이터가 변하면 size를 바꿔준다
     watch(chatVisible, () => {
