@@ -1,8 +1,12 @@
 <template>
-    <el-button type="primary" @click="micOff">음소거 버튼</el-button>
-    <el-button type="primary" @click="cameraOff">비디오 버튼</el-button>
-    <el-button icon="el-icon-close" type="danger" @click="clickGameClose"></el-button>
-    <el-button :icon="state.chatIcon" type="primary" @click="clickChat"></el-button>
+    <el-button class="game-start-button" v-if="!state.gameStart" @click="clickGameStart">게임 시작</el-button>
+    <div class="main-controller">
+      <el-button type="primary" @click="micOff">음소거</el-button>
+      <el-button type="primary" @click="cameraOff">비디오</el-button>
+      <el-button icon="el-icon-close" type="danger" @click="clickGameClose"></el-button>
+      <el-button :icon="state.chatIcon" type="primary" @click="clickChat"></el-button>
+    </div>
+    <el-button class="player-list-button"  @click="clickPlayerList">참가자</el-button>
 </template>
 
 <script>
@@ -17,6 +21,7 @@ export default {
     const store = useStore()
 
     const state = reactive({
+      gameStart: false,
       chatClicked: false,
       chatIcon: 'el-icon-chat-dot-round',
       userName: computed(() => store.getters['root/getUserId'])
@@ -35,6 +40,17 @@ export default {
       }
     }
 
+    // 게임 시작 버튼
+    const clickGameStart = () => {
+      console.log('게임 시작!!')
+      state.gameStart = !state.gameStart
+    }
+
+    // 참가자 확인
+    const clickPlayerList = () => {
+      console.log('참가자 명단')
+    }
+
     // 게임방 나가기
     const clickGameClose = () => {
       state.chatClicked = false
@@ -42,21 +58,39 @@ export default {
       emit('openGameClosePopup')
     }
 
+    // 마이크 버튼
     const micOff = () => {
       console.log('마이크 끄기 클릭')
       muteMic(state.userName);
     }
 
+    // 카메라 버튼
     const cameraOff = () => {
       console.log('카메라 끄기 클릭')
       offCam(state.userName);
     }
 
-    return { state, clickChat, clickGameClose, micOff, cameraOff }
+    return { state, clickGameStart, clickPlayerList, clickChat, clickGameClose, micOff, cameraOff }
   }
 }
 </script>
 
 <style>
+.main-controller {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
 
+.game-start-button {
+  position: absolute;
+  left: 80px;
+  transform: translateX(-50%);
+}
+
+.player-list-button {
+  position: absolute;
+  right: 0%;
+  transform: translateX(-50%);
+}
 </style>
