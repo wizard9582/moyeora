@@ -3,5 +3,6 @@
 export default {
   userId: localStorage.getItem('id'),
   authToken: localStorage.getItem('jwt'),
-  roomOwner: localStorage.getItem('roomOwner')
+  roomOwner: localStorage.getItem('roomOwner'),
+  stompClient : null,
 }

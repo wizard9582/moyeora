@@ -23,3 +23,7 @@ export function setRoomOwner(state, id) {
   state.roomOwner = id
   localStorage.setItem('roomOwner', id)
 }
+
+export function setStompClient(state, payload) {
+  state.stompClient = payload
+}

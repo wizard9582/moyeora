@@ -10,3 +10,7 @@ export function getUserId(state) {
 export function getRoomOwner(state) {
   return state.roomOwner
 }
+
+export function getStompClient(state) {
+  return state.stompClient
+}

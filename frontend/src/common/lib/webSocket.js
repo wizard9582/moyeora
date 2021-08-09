@@ -10,18 +10,25 @@ function sendMessage(message) {
 		ws.send(jsonMessage);
 }
 
-import Stomp from 'webstomp-client'
-import SockJS from 'sockjs-client'
+// import Stomp from 'webstomp-client'
+// import SockJS from 'sockjs-client'
 
-const serverURL = "/websocket"
-let socket = new SockJS(serverURL);
-var stompClient = Stomp.over(socket);
+// const serverURL = "/websocket"
+// let socket = new SockJS(serverURL);
+// var stompClient = Stomp.over(socket);
+// // function socketConnect() {
+// // 	if (!stompClient || !stompClient.connected) {
+// // 		stompClient = Stomp.over(socket);
+// // 	}
+// // }
 
-function socketConnect() {
-	if (!stompClient.connected) {
-		socket = new SockJS(serverURL);
-		stompClient = Stomp.over(socket);
-	}
-}
+// function disconnectSocket() {
+// 	if (stompClient !== null) {
+// 	  stompClient.disconnect();
+// 	}
+// 	setConnected(false);
+// 	console.log("Disconnected");
+//   }
+  
 
-export {sendMessage, ws, stompClient, socketConnect};
+export {sendMessage, ws};

@@ -26,12 +26,12 @@
 
 <script>
 import { ref, computed, reactive } from 'vue'
-// import Stomp from 'webstomp-client'
-// import SockJS from 'sockjs-client'
+import Stomp from 'webstomp-client'
+import SockJS from 'sockjs-client'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { participants, leaveRoom } from '@/common/lib/conferenceroom'
-import { stompClient, socketConnect } from '@/common/lib/webSocket'
+// import { stompClient, socket } from '@/common/lib/webSocket'
 
 let scope = '';
 
@@ -54,11 +54,12 @@ export default {
     const roomId = route.params.no;
 
     const router = useRouter();
+    const store = useStore();
 
     // const participants = ref(participants)
     // console.log('participants[ssafy1] : ', participants['ssafy1'])
 
-    return { count, disabled, load, roomId, participants, router };
+    return { count, disabled, load, roomId, participants, router, store };
   },
   data() {
     return {
@@ -84,72 +85,77 @@ export default {
 
     sendToRoom() {
       console.log("Send message To Room "+ this.roomId +" :" + this.message);
-      if (stompClient && stompClient.connected) {
+      if (this.stompClient && this.stompClient.connected) {
         const msg = {
           roomId: this.roomId,
           fromName: this.userName,
           toName: this.toName,
           message: this.message
         };
-        stompClient.send("/pub/chat/room/"+ this.roomId, JSON.stringify(msg), {});
+        this.stompClient.send("/pub/chat/room/"+ this.roomId, JSON.stringify(msg), {});
       }
     },
 
     sendToPerson() {
       console.log("Send message To Perseon "+ this.toName +" : " + this.message);
-      if (stompClient && stompClient.connected) {
+      if (this.stompClient && this.stompClient.connected) {
         const msg = {
           roomId: this.roomId,
           fromName: this.userName,
           toName: this.toName,
           message: this.message
         };
-        stompClient.send("/pub/chat/room/"+ this.roomId + "/" + this.toName, JSON.stringify(msg), {});
+        this.stompClient.send("/pub/chat/room/"+ this.roomId + "/" + this.toName, JSON.stringify(msg), {});
         this.recvList.push(msg)
       }
     },
 
     sendToLeave() {
       console.log("Send message To Leave ");
-      if (stompClient && stompClient.connected) {
+      if (this.stompClient && this.stompClient.connected) {
         const msg = {
           roomId: this.roomId,
           fromName: this.userName,
         };
-        stompClient.send("/pub/leave/"+ this.roomId, JSON.stringify(msg), {});
+        this.stompClient.send("/pub/leave/"+ this.roomId, JSON.stringify(msg), {});
       }
     },
 
     connect() {
-      const store = useStore();
-      this.userName = computed(() => store.getters['root/getUserId']);
+      //const store = useStore();
+      this.userName = computed(() => this.store.getters['root/getUserId']);
 
-      // const serverURL = "/websocket"
-      // let socket = new SockJS(serverURL);
-      // this.stompClient = Stomp.over(socket);
-      // console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
-      socketConnect()
-      stompClient.connect(
+      const serverURL = "/websocket"
+      let socket = new SockJS(serverURL);
+      this.stompClient = Stomp.over(socket);
+      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
+      // socketConnect()
+      // stompClient = Stomp.over(socket);
+      
+      this.stompClient.connect(
         {},
         frame => {
           // 소켓 연결 성공
           this.connected = true;
           console.log('소켓 연결 성공', frame);
 
-          stompClient.subscribe("/sub/chat/room/"+this.roomId, chat => {
+          this.store.commit('root/setStompClient', this.stompClient)
+
+          this.stompClient.subscribe("/sub/chat/room/"+this.roomId, chat => {
             let mess = JSON.parse(chat.body)
             mess.toName = '모두'
             scope.recvList.push(mess)
           });
-          stompClient.subscribe('/sub/chat/room/'+this.roomId+'/'+this.userName, function (chat) {
+          this.stompClient.subscribe('/sub/chat/room/'+this.roomId+'/'+this.userName, function (chat) {
             scope.recvList.push(JSON.parse(chat.body));
           });
           // for문을 사용하여 참가자 아이디 별로 구독할지, 전체 구독으로 사용자에 따른
-          stompClient.subscribe('/sub/vote/room/'+this.roomId+'/'+this.userName, function (chat) {
+          this.stompClient.subscribe('/sub/vote/room/'+this.roomId+'/'+this.userName, function (chat) {
             console.log("투표 받았다")
           });
 
-          stompClient.subscribe('/sub/leave/'+this.roomId, function (chat) {
+          this.stompClient.subscribe('/sub/leave/'+this.roomId, function (chat) {
+            scope.disconnectSocket()
             console.log("나가라")
             scope.router.push("/home/" + 'all')
             leaveRoom()
@@ -163,9 +169,17 @@ export default {
       );
     },
 
+    disconnectSocket() {
+      if (this.stompClient !== null) {
+        this.stompClient.disconnect();
+      }
+      
+      this.store.commit('root/setStompClient', null);
+      console.log("Disconnected");
+    },
+
   },
   created() {
-    console.log('소켓 확인: ',stompClient)
     this.connect()
     scope = this;
   },
