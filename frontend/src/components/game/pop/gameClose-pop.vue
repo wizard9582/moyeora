@@ -15,6 +15,7 @@ import { reactive, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import { leaveRoom } from '@/common/lib/conferenceroom'
+import { stompClient } from '@/common/lib/webSocket'
 
 export default {
   name: 'GameClosePop',
@@ -32,13 +33,32 @@ export default {
 
     const state = reactive({
       popupVisible: computed(() => props.open),
+      userName: computed(() => store.getters['root/getUserId']),
+      ownerName: computed(() => store.getters['root/getRoomOwner']),
     })
+
+    console.log("루트: ",route)
+    const roomId = route.params.no;
+
+    const sendToLeave = () => {
+      console.log("Send message To Leave ");
+      if (stompClient && stompClient.connected) {
+        const msg = {
+          roomId: roomId,
+          fromName: state.userName,
+        };
+        stompClient.send("/pub/leave/"+ roomId, JSON.stringify(msg), {});
+      }
+    }
 
     const leaveGame = function () {
       let token = localStorage.getItem('jwt')
       let roomNum = route.params.no
       store.dispatch('root/requestLeaveRoom', { token: token, roomId: roomNum })
       .then((result) => {
+        if(state.userName == state.ownerName){
+          sendToLeave()
+        }
         console.log('result : ', result)
         router.push("/home/" + 'all')
         leaveRoom()

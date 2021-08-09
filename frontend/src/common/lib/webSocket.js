@@ -10,4 +10,11 @@ function sendMessage(message) {
 		ws.send(jsonMessage);
 }
 
-export {sendMessage, ws};
+import Stomp from 'webstomp-client'
+import SockJS from 'sockjs-client'
+
+const serverURL = "/websocket"
+let socket = new SockJS(serverURL);
+var stompClient = Stomp.over(socket);
+
+export {sendMessage, ws, stompClient};
