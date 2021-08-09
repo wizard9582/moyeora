@@ -1,4 +1,4 @@
-var ws = new WebSocket('wss://' + "localhost:8443" + '/groupcall');
+var ws = new WebSocket('wss://' + "52.79.219.86"+":8443" + '/groupcall');
 
 function sendMessage(message) {
 	var jsonMessage = JSON.stringify(message);
