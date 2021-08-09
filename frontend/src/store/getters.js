@@ -14,3 +14,7 @@ export function getRoomOwner(state) {
 export function getStompClient(state) {
   return state.stompClient
 }
+
+export function getParticipantsList(state) {
+  return state.participantsList
+}

@@ -52,11 +52,11 @@ export default {
     const sendToLeave = () => {
       console.log("Send message To Leave ");
       if (state.stompClient && state.stompClient.connected) {
-        const msg = {
+        const msg1 = {
           roomId: roomId,
           fromName: state.userName,
         };
-        state.stompClient.send("/pub/leave/"+ roomId, JSON.stringify(msg), {});
+        state.stompClient.send("/pub/leave/"+ roomId, JSON.stringify(msg1), {});
       }
     }
 
@@ -67,6 +67,12 @@ export default {
       .then((result) => {
         if(state.userName == state.ownerName){
           sendToLeave()
+        }
+        if (state.stompClient && state.stompClient.connected) {
+          const msg2 = {
+              name: state.userName,
+          };
+          state.stompClient.send("/pub/bye/room/"+ roomId, JSON.stringify(msg2), {});
         }
         disconnectSocket()
         console.log('result : ', result)

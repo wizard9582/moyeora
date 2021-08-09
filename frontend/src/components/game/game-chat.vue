@@ -13,10 +13,10 @@
     </div>
     <el-select v-model="toName" clearable placeholder="Select">
       <el-option
-        v-for="player in participants"
-        :key="player.name"
-        :label="player.name"
-        :value="player.name">
+        v-for="player in state.participantsList"
+        :key="player.userId"
+        :label="player.userId"
+        :value="player.userId">
       </el-option>
     </el-select>
     <!-- <el-input placeholder="모두에게" v-model="toName"></el-input> -->
@@ -56,10 +56,14 @@ export default {
     const router = useRouter();
     const store = useStore();
 
+    const state = reactive({
+      participantsList: computed(() => store.getters['root/getParticipantsList']),
+    })
+
     // const participants = ref(participants)
     // console.log('participants[ssafy1] : ', participants['ssafy1'])
 
-    return { count, disabled, load, roomId, participants, router, store };
+    return { count, disabled, load, roomId, participants, router, store, state };
   },
   data() {
     return {
@@ -68,6 +72,7 @@ export default {
       message: "",
       recvList: [],
       toName: "",
+      //participantsList: [],
     }
   },
   methods: {
@@ -141,6 +146,32 @@ export default {
 
           this.store.commit('root/setStompClient', this.stompClient)
 
+          // 환영 메세지
+          if (this.stompClient && this.stompClient.connected) {
+            const msg = {
+              name: this.userName,
+            };
+            this.stompClient.send("/pub/hello/room/"+ this.roomId, JSON.stringify(msg), {});
+          }
+
+          // 구독 결과
+          this.stompClient.subscribe('/sub/greetings/room/'+this.roomId, function (chat) {
+            console.log("새로운 참가자 등장!!", chat.body);
+            scope.store.dispatch('root/requestRoomInfo', { roomId: scope.roomId })
+            .then((result) => {
+              console.log('새로운 목록: ',result.data.member)
+              scope.store.commit('root/setParticipantsList', result.data.member)
+            })
+          });
+          this.stompClient.subscribe('/sub/bye/room/'+this.roomId, function (chat) {
+            console.log("참가자 퇴장!!", chat.body);
+            //this.participantsList.push(chat.body);
+            scope.store.dispatch('root/requestRoomInfo', { roomId: scope.roomId })
+            .then((result) => {
+              console.log('새로운 목록: ',result.data.member)
+              scope.store.commit('root/setParticipantsList', result.data.member)
+            })
+          });
           this.stompClient.subscribe("/sub/chat/room/"+this.roomId, chat => {
             let mess = JSON.parse(chat.body)
             mess.toName = '모두'

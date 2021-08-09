@@ -27,3 +27,7 @@ export function setRoomOwner(state, id) {
 export function setStompClient(state, payload) {
   state.stompClient = payload
 }
+
+export function setParticipantsList(state, payload) {
+  state.participantsList = payload
+}
