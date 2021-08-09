@@ -100,7 +100,7 @@ export default {
   position: fixed;
   bottom: 0;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
 }
 </style>
