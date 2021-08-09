@@ -1,6 +1,7 @@
 package com.ssafy.api.response;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import com.ssafy.db.entity.Conference;
 import com.ssafy.db.entity.User;
@@ -18,25 +19,29 @@ import lombok.Setter;
 @ApiModel("RoomResponse")
 public class RoomRes {
 	@ApiModelProperty(name="Room ID")
-	Long id;	
+	Long id;
 	@ApiModelProperty(name="Room Owner")
-	User ownerId;  
+	User ownerId;
 	@ApiModelProperty(name="Room Category")
-    String category;
+	String category;
 	@ApiModelProperty(name="Room Start Time")
-    Timestamp callStartTime;
+	Timestamp callStartTime;
 	@ApiModelProperty(name="Room End Time")
-    Timestamp callEndTime;	
+	Timestamp callEndTime;
 	@ApiModelProperty(name="Room Title")
-    String title;	
+	String title;
 	@ApiModelProperty(name="Room Description")
-    String description;	
+	String description;
 	@ApiModelProperty(name="Room IsActive")
-    boolean isActive;	
+	boolean isActive;
 	@ApiModelProperty(name="Room IsPrivate")
-    boolean isPrivate;
-	
-	public static RoomRes of(Conference conf) {
+	boolean isPrivate;
+	@ApiModelProperty(name="Room Participants")
+	List<User> member;
+	@ApiModelProperty(name="Room Participants length")
+	int count;
+
+	public static RoomRes of(Conference conf, List<User> member, int count) {
 		RoomRes res = new RoomRes();
 		res.setId(conf.getId());
 		res.setOwnerId(conf.getOwnerId());
@@ -47,6 +52,8 @@ public class RoomRes {
 		res.setDescription(conf.getDescription());
 		res.setActive(conf.isActive());
 		res.setPrivate(conf.isPrivate());
+		res.setMember(member);
+		res.setCount(count);
 		return res;
 	}
 }

@@ -79,7 +79,9 @@ export default {
     }
 
     register(state.roomNum, state.userName)
-    // console.log('participants', participants)
+    console.log('participants', participants)
+
+    console.log('participants size',Object.keys(participants))
 
     // props로 넘어온 데이터가 변하면 size를 바꿔준다
     watch(chatVisible, () => {

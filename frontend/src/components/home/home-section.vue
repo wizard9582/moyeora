@@ -1,13 +1,23 @@
 <template>
   <el-main>
     <div class="space"></div>
-    <el-button class="btn-refresh" type="primary" icon="el-icon-refresh-left" @click="clickRefresh">새로고침</el-button>
+    <el-button
+      class="btn-refresh"
+      type="primary"
+      icon="el-icon-refresh-left"
+      @click="clickRefresh"
+    >새로고침</el-button>
     <ul class="gameroom-list">
       <li v-for="item in state.listData" class="gameroom-list-item" :key="item.id">
-        <game-room :roomData=item @click="clickRoom(item.id)"></game-room>
+        <game-room :roomData="item" @click="clickRoom(item.id)"></game-room>
       </li>
     </ul>
-    <el-pagination layout="prev, pager, next" :page-size="1" @current-change="handleCurrentChange" :total="state.index"></el-pagination>
+    <el-pagination
+      layout="prev, pager, next"
+      :page-size="1"
+      @current-change="handleCurrentChange"
+      :total="state.index"
+    ></el-pagination>
   </el-main>
 </template>
 
@@ -49,7 +59,7 @@ export default {
         //console.log(result.data)
         result.data.forEach(item =>{
           //console.log(roomData)
-          //console.log(item)
+          //console.log("requestRoomList : "+item.id + " / "+item.count);
           let conference = {id: 0, title: "", type:"", member: 0, lock: true, password: "", state: "", desc: ""}
           conference.id = item.id
           conference.title = item.title
@@ -57,7 +67,7 @@ export default {
           conference.lock = item.private
           conference.desc = item.description
           //참가자 수 확인과 룸 상태 변경은 나중에 구현
-          conference.member = 0
+          conference.member = item.count;
           conference.state = "accessable"
           //console.log(conference)
           state.roomData.push(conference)
@@ -103,8 +113,7 @@ export default {
 }
 </script>
 <style>
-
-.btn-refresh{
+.btn-refresh {
   position: fixed;
   top: 80px;
   right: 50px;
@@ -128,5 +137,4 @@ export default {
   display: inline-block;
   cursor: pointer;
 }
-
 </style>

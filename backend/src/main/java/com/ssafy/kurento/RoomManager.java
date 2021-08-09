@@ -36,7 +36,7 @@ public class RoomManager {
   @Autowired
   private KurentoClient kurento;
 
-  private final ConcurrentMap<String, Room> rooms = new ConcurrentHashMap<>();
+  public final ConcurrentMap<String, Room> rooms = new ConcurrentHashMap<>();
 
   /**
    * Looks for a room in the active room list.
