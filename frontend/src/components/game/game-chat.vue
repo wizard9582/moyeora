@@ -31,7 +31,7 @@ import { ref, computed, reactive } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { participants, leaveRoom } from '@/common/lib/conferenceroom'
-import { stompClient } from '@/common/lib/webSocket'
+import { stompClient, socketConnect } from '@/common/lib/webSocket'
 
 let scope = '';
 
@@ -128,6 +128,7 @@ export default {
       // let socket = new SockJS(serverURL);
       // this.stompClient = Stomp.over(socket);
       // console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
+      socketConnect()
       stompClient.connect(
         {},
         frame => {
@@ -164,6 +165,7 @@ export default {
 
   },
   created() {
+    console.log('소켓 확인: ',stompClient)
     this.connect()
     scope = this;
   },

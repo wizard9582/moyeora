@@ -17,4 +17,11 @@ const serverURL = "/websocket"
 let socket = new SockJS(serverURL);
 var stompClient = Stomp.over(socket);
 
-export {sendMessage, ws, stompClient};
+function socketConnect() {
+	if (!stompClient.connected) {
+		socket = new SockJS(serverURL);
+		stompClient = Stomp.over(socket);
+	}
+}
+
+export {sendMessage, ws, stompClient, socketConnect};
