@@ -25,11 +25,16 @@
 
 <script>
 import { reactive } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'GameHeader',
 
   setup(props, {emit}) {
+    const store = useStore()
+    const route = useRoute()
+
     const state = reactive({
       statusIcon: 'el-icon-sunny',
       clicked: 2,
@@ -47,8 +52,19 @@ export default {
       console.log('도움말')
     }
 
+    const getRoomInfo = () => {
+      store.dispatch('root/requestRoomInfo', {roomId: route.params.no})
+      .then((result) => {
+        console.log('result : ', result)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    }
+
     // 넘어가기 클릭
     const clickPass = () => {
+      getRoomInfo()
       console.log('PASS')
     }
 
