@@ -7,7 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-
+import javax.persistence.OneToMany;
+import java.util.List;
 /**
  * 유저 모델 정의.
  */
@@ -23,4 +24,7 @@ public class User extends BaseEntity{
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password;
+
+    @OneToMany(mappedBy = "user")
+    List<Post> posts;
 }

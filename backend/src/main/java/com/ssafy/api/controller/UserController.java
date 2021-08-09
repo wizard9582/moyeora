@@ -1,8 +1,11 @@
 package com.ssafy.api.controller;
 
+
+import com.ssafy.db.entity.Post;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ssafy.api.request.PostRegisterPostReq;
+import com.ssafy.api.service.PostService;
 import com.ssafy.api.request.UserLoginPostReq;
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.api.response.UserLoginPostRes;
@@ -32,6 +37,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.List;
+
 /**
  * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
  */
@@ -39,7 +46,10 @@ import springfox.documentation.annotations.ApiIgnore;
 @RestController
 @RequestMapping("/api/v1/users")
 public class UserController {
-	
+
+	@Autowired
+	PostService postService;
+
 	@Autowired
 	UserService userService;
 	
@@ -150,4 +160,5 @@ public class UserController {
 		long result = userService.deleteUserByUserId(userId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(204, "Success"));
 	}
+
 }
