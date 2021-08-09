@@ -124,9 +124,9 @@ export default {
 
 <style>
 .board-list{
-  margin-left: 10%;
-  width: 80%;
-  margin-right: 10%;
+  margin-left: 15%;
+  width: 70%;
+  margin-right: 15%;
 }
 .board-under-wrapper{
   padding: 50px;
