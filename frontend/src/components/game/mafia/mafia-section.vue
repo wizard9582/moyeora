@@ -74,7 +74,20 @@ export default {
       }
     }
 
-    // register(state.roomNum, state.userName)
+    const enterRoom = () => {
+      let token = localStorage.getItem('jwt')
+      store.dispatch('root/requestEnterRoom', { token: token, roomId: state.roomNum })
+      .then((result) => {
+        console.log('result : ', result)
+        store.commit('root/setRoomOwner', result.data.ownerId.userId)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    }
+
+    register(state.roomNum, state.userName)
+    enterRoom()
 
     // props로 넘어온 데이터가 변하면 size를 바꿔준다
     watch(chatVisible, () => {

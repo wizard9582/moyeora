@@ -18,3 +18,8 @@ export function removeUserId (state) {
   state.userId = id
   localStorage.removeItem('id')
 }
+
+export function setRoomOwner(state, id) {
+  state.roomOwner = id
+  localStorage.setItem('roomOwner', id)
+}

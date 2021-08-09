@@ -12,7 +12,8 @@
 
 <script>
 import { reactive, computed } from 'vue'
-import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
 import { leaveRoom } from '@/common/lib/conferenceroom'
 
 export default {
@@ -25,14 +26,26 @@ export default {
     }
   },
   setup(props, {emit}) {
+    const route = useRoute()
     const router = useRouter()
+    const store = useStore()
+
     const state = reactive({
       popupVisible: computed(() => props.open),
     })
 
     const leaveGame = function () {
-      router.push("/home/" + 'all')
-      leaveRoom()
+      let token = localStorage.getItem('jwt')
+      let roomNum = route.params.no
+      store.dispatch('root/requestLeaveRoom', { token: token, roomId: roomNum })
+      .then((result) => {
+        console.log('result : ', result)
+        router.push("/home/" + 'all')
+        leaveRoom()
+      })
+      .catch((error) => {
+        console.log(error)
+      })
     }
 
     const handleClose = function () {
