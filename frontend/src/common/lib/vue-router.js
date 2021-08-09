@@ -10,7 +10,7 @@ import NoticeSection from "@/components/home/notice-section.vue";
 import BoardList from "@/components/home/board-list.vue";
 import NoticeList from "@/components/home/notice-list.vue";
 import BoardEdit from "@/components/home/board-edit.vue";
-import NoticeEdit from "@/components/home/notice-edit.vue";
+import BoardWrite from "@/components/home/board-write.vue";
 
 const routes = [
   {
@@ -31,7 +31,7 @@ const routes = [
       {path: "board/edit/:no", component: BoardEdit , meta:{ loginRequired: true } },
       {path: "notice/list", component: NoticeList , meta:{ loginRequired: false } },
       {path: "notice/:no", component: NoticeSection , meta:{ loginRequired: false } },
-      {path: "notice/edit/:no", component: NoticeEdit , meta:{ loginRequired: true } },
+      {path: "board/write/:type", component: BoardWrite , meta:{ loginRequired: true } },
     ],
   },
   {

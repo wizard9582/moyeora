@@ -23,7 +23,7 @@
 
 <script>
 import GameRoom from '@/components/home/game-room.vue';
-import { reactive, computed, ref } from 'vue'
+import { reactive } from 'vue'
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 export default {

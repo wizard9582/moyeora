@@ -3,11 +3,6 @@
     <div class="space"></div>
     <h1>게시판</h1>
     <el-descriptions class="board-text" :title="state.no" :column="3" border>
-      <template #extra>
-        <el-button type="info" icon="el-icon-tickets" size="small" @click="clickList()">목록으로</el-button>
-        <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="clickEdit()">수정</el-button>
-        <el-button type="danger" icon="el-icon-delete-solid" size="small" @click="clickDelete()">삭제</el-button>
-      </template>
       <el-descriptions-item label="글쓴이">{{state.writer}}</el-descriptions-item>
       <el-descriptions-item label="태그">
         <el-tag size="small">{{state.tag}}</el-tag>
@@ -20,9 +15,9 @@
       <div class="context-text">
         {{state.context}}
       </div>
-        <el-button type="info" icon="el-icon-tickets" size="small" @click="clickList()">목록으로</el-button>
-        <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="clickEdit()">수정</el-button>
-        <el-button type="danger" icon="el-icon-delete-solid" size="small" @click="clickDelete()">삭제</el-button>
+      <el-button type="info" icon="el-icon-tickets" size="small" @click="clickList()">목록으로</el-button>
+      <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="clickEdit()">수정</el-button>
+      <el-button type="danger" icon="el-icon-delete-solid" size="small" @click="clickDelete()">삭제</el-button>
     </div>
 	</el-main>
 </template>
@@ -35,7 +30,7 @@ export default {
 
   setup(){
     const state = {
-      no:0,
+      no: -1,
       writer: "",
       tag: "",
       date: "",

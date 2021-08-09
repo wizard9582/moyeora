@@ -4,10 +4,10 @@
       @openSignupPopup="onOpenSignupPopup"
       @openLoginPopup="onOpenLoginPopup"
     />
-    <el-main>
+    <el-container>
       <welcome-section></welcome-section>
-    </el-main>
-    <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
+      <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
+    </el-container>
   </el-container>
   <signup-pop
     :open="state.signupPopupOpen"
@@ -70,12 +70,10 @@ export default {
 </script>
 
 <style>
-
 .el-footer {
   color: #333;
   text-align: center;
   width: 100%;
   height: 200px;
 }
-
 </style>

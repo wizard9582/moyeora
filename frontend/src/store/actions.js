@@ -32,21 +32,70 @@ export function requestUserInfo ({ state }, token) {
   return $axios.get(url, {headers})
 }
 
-// ROOM REQUEST
-export function requestCreateRoom ({ state }, payload) {
-  console.log('requestCreateRoom', state, payload)
-  const url = '/room'
-  let body = payload
+//---------- 이 밑으로 게시판 관련 api ----------
 
-  //테스트 후 token 가져오기 vuex store 기반으로 변경
-  //body의 JSON.stringify는 자동으로 되나? 체크
+export function requestPostBoard ({ state }, payload) {
+  console.log('requestPostBoard', state, payload)
+  const url = `/post/register`
   let token = localStorage.getItem('jwt')
 
   return $axios({
     method:'post',
     url: url,
     headers: {'Authorization': 'Bearer ' + token},
-    data: body
+    data: payload
+  })
+}
+export function requestUpdateBoard ({ state }, payload) {
+  console.log('requestUpdateoard', state, payload)
+  const url = `/post/update/` + payload.postId
+  let token = localStorage.getItem('jwt')
+
+  return $axios({
+    method:'PATCH',
+    url: url,
+    headers: {'Authorization': 'Bearer ' + token},
+    data: payload
+  })
+}
+export function requestCheckWriter ({ state }, payload) {
+  console.log('requestCheckWriter', state, payload)
+  const url = `/post/writer`
+  return $axios.get(url)
+}
+export function requestBoard ({ state }, payload) {
+  console.log('requestBoard', state, payload)
+  const url = `/post/`
+  return $axios.get(url)
+}
+export function requestNotice ({ state }, payload) {
+  console.log('requestNotice', state, payload)
+  const url = `/post/notice`
+  return $axios.get(url)
+}
+export function requestBoardById ({ state }, payload) {
+  console.log('requestBoardById', state, payload)
+  const url = `/post/posts/` + payload.postId
+  return $axios.get(url)
+}
+export function requestDeleteBoard ({ state }, payload) {
+  console.log('requestDeleteBoard', state, payload)
+  const url = `/post/` + payload.postId
+  return $axios.delete(url)
+}
+
+// ---------- 이 밑으로 게임방 관련 api ----------
+// ROOM REQUEST
+export function requestCreateRoom ({ state }, payload) {
+  console.log('requestCreateRoom', state, payload)
+  const url = '/room'
+  let token = localStorage.getItem('jwt')
+
+  return $axios({
+    method:'post',
+    url: url,
+    headers: {'Authorization': 'Bearer ' + token},
+    data: payload
   })
 }
 

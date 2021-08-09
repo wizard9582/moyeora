@@ -81,7 +81,7 @@ export default {
     }
     const clickUserInfo = () => {
       //console.log('user') 밑에 router 자기 id로 옮겨지게
-      router.push("home/user/id")
+      router.push("/home/user/id")
     }
 
     return { state, isLoggedIn, clickLogin, clickSignup, clickLogout, clickUserInfo }
@@ -111,6 +111,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   position: fixed;
+  z-index: 100;
 }
 
 .main-logo,
