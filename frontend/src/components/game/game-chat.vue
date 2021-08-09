@@ -11,17 +11,27 @@
         <li v-for="i in recvList" class="list-item" :key="i">{{ i.fromName }} >> {{ i.toName }} : <br> {{ i.message }}</li>
       </ul>
     </div>
-    <el-input placeholder="모두에게" v-model="toName"></el-input>
+    <el-select v-model="toName" clearable placeholder="Select">
+      <el-option
+        v-for="player in state.participantsList"
+        :key="player.userId"
+        :label="player.userId"
+        :value="player.userId">
+      </el-option>
+    </el-select>
+    <!-- <el-input placeholder="모두에게" v-model="toName"></el-input> -->
     <el-input type="textarea" :rows="2" placeholder="Press Enter for send message." v-model="message" @keyup="sendMessage"></el-input>
   </div>
 </template>
 
 <script>
-import { ref, computed } from 'vue'
+import { ref, computed, reactive } from 'vue'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
+import { participants, leaveRoom } from '@/common/lib/conferenceroom'
+// import { stompClient, socket } from '@/common/lib/webSocket'
 
 let scope = '';
 
@@ -43,7 +53,17 @@ export default {
     const route = useRoute();
     const roomId = route.params.no;
 
-    return { count, disabled, load, roomId };
+    const router = useRouter();
+    const store = useStore();
+
+    const state = reactive({
+      participantsList: computed(() => store.getters['root/getParticipantsList']),
+    })
+
+    // const participants = ref(participants)
+    // console.log('participants[ssafy1] : ', participants['ssafy1'])
+
+    return { count, disabled, load, roomId, participants, router, store, state };
   },
   data() {
     return {
@@ -52,11 +72,13 @@ export default {
       message: "",
       recvList: [],
       toName: "",
+      //participantsList: [],
     }
   },
   methods: {
     sendMessage (e) {
       if(e.keyCode === 13 && this.userName !== '' && this.message !== ''){
+        console.log('----------toName---------- ', this.toName)
         if(this.toName == '')
           this.sendToRoom()
         else
@@ -93,14 +115,28 @@ export default {
       }
     },
 
-    connect() {
-      const store = useStore();
-      this.userName = computed(() => store.getters['root/getUserId']);
+    sendToLeave() {
+      console.log("Send message To Leave ");
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = {
+          roomId: this.roomId,
+          fromName: this.userName,
+        };
+        this.stompClient.send("/pub/leave/"+ this.roomId, JSON.stringify(msg), {});
+      }
+    },
 
-      const serverURL = "https://localhost:8443/websocket"
+    connect() {
+      //const store = useStore();
+      this.userName = computed(() => this.store.getters['root/getUserId']);
+
+      const serverURL = "/websocket"
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
+      // socketConnect()
+      // stompClient = Stomp.over(socket);
+      
       this.stompClient.connect(
         {},
         frame => {
@@ -108,6 +144,34 @@ export default {
           this.connected = true;
           console.log('소켓 연결 성공', frame);
 
+          this.store.commit('root/setStompClient', this.stompClient)
+
+          // 환영 메세지
+          if (this.stompClient && this.stompClient.connected) {
+            const msg = {
+              name: this.userName,
+            };
+            this.stompClient.send("/pub/hello/room/"+ this.roomId, JSON.stringify(msg), {});
+          }
+
+          // 구독 결과
+          this.stompClient.subscribe('/sub/greetings/room/'+this.roomId, function (chat) {
+            console.log("새로운 참가자 등장!!", chat.body);
+            scope.store.dispatch('root/requestRoomInfo', { roomId: scope.roomId })
+            .then((result) => {
+              console.log('새로운 목록: ',result.data.member)
+              scope.store.commit('root/setParticipantsList', result.data.member)
+            })
+          });
+          this.stompClient.subscribe('/sub/bye/room/'+this.roomId, function (chat) {
+            console.log("참가자 퇴장!!", chat.body);
+            //this.participantsList.push(chat.body);
+            scope.store.dispatch('root/requestRoomInfo', { roomId: scope.roomId })
+            .then((result) => {
+              console.log('새로운 목록: ',result.data.member)
+              scope.store.commit('root/setParticipantsList', result.data.member)
+            })
+          });
           this.stompClient.subscribe("/sub/chat/room/"+this.roomId, chat => {
             let mess = JSON.parse(chat.body)
             mess.toName = '모두'
@@ -120,6 +184,13 @@ export default {
           this.stompClient.subscribe('/sub/vote/room/'+this.roomId+'/'+this.userName, function (chat) {
             console.log("투표 받았다")
           });
+
+          this.stompClient.subscribe('/sub/leave/'+this.roomId, function (chat) {
+            scope.disconnectSocket()
+            console.log("나가라")
+            scope.router.push("/home/" + 'all')
+            leaveRoom()
+          });
         },
         error => {
           // 소켓 연결 실패
@@ -127,6 +198,15 @@ export default {
           this.connected = false;
         }
       );
+    },
+
+    disconnectSocket() {
+      if (this.stompClient !== null) {
+        this.stompClient.disconnect();
+      }
+      
+      this.store.commit('root/setStompClient', null);
+      console.log("Disconnected");
     },
 
   },

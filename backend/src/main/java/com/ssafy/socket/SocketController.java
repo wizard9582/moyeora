@@ -10,10 +10,17 @@ import org.springframework.web.util.HtmlUtils;
 public class SocketController {
 	
 	// 환영 메세지
-	@MessageMapping("/hello") // 클라이언트에서 /hello 를 통해 메세지 전달
-	@SendTo("/sub/greetings") // 이쪽으로 결과를 리턴
-	public Greeting greeting(HelloMessage message) throws Exception {
-		return new Greeting(HtmlUtils.htmlEscape(message.getName()) + " 님이 입장했습니다.");
+	@MessageMapping("/hello/room/{roomId}") // 클라이언트에서 /hello 를 통해 메세지 전달
+	@SendTo("/sub/greetings/room/{roomId}") // 이쪽으로 결과를 리턴
+	public Greeting greeting(HelloMessage message, @DestinationVariable String roomId) throws Exception {
+		return new Greeting(HtmlUtils.htmlEscape(message.getName()));
+	}
+
+	// 퇴장 메세지
+	@MessageMapping("/bye/room/{roomId}")
+	@SendTo("/sub/bye/room/{roomId}")
+	public Greeting bye(HelloMessage message, @DestinationVariable String roomId) throws Exception {
+		return new Greeting(HtmlUtils.htmlEscape(message.getName()));
 	}
 	
 	@MessageMapping("/chat")
@@ -41,6 +48,13 @@ public class SocketController {
 	@SendTo("/sub/vote/room/{roomId}/{userId}")
 	public Chat vote(Chat chat, @DestinationVariable String roomId, @DestinationVariable String userId) {
 		return new Chat(roomId, chat.getFromName(), chat.getToName(), null);
+	}
+
+	// 방 폭파 메세지
+	@MessageMapping("/leave/{roomId}")
+	@SendTo("/sub/leave/{roomId}")
+	public Chat leave(Chat chat, @DestinationVariable String roomId) {
+		return new Chat(roomId, chat.getFromName(), "leave");
 	}
 	
 	/*

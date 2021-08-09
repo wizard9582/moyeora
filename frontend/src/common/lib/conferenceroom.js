@@ -110,12 +110,12 @@ function leaveRoom() {
 		id : 'leaveRoom'
 	});
 
-	for ( var key in participants) {
+  for (var key in participants) {
 		participants[key].dispose();
 	}
 
-	document.getElementById('join').style.display = 'block';
-	document.getElementById('room').style.display = 'none';
+	// document.getElementById('join').style.display = 'block';
+	// document.getElementById('room').style.display = 'none';
 
 	//ws.close();
 }
@@ -146,5 +146,13 @@ function onParticipantLeft(request) {
 	delete participants[request.name];
 }
 
+function muteMic(name) {
+	participants[name].rtcPeer.audioEnabled = !participants[name].rtcPeer.audioEnabled;
+}
 
-export {register, leaveRoom, participants};
+function offCam(name) {
+	participants[name].rtcPeer.videoEnabled = !participants[name].rtcPeer.videoEnabled;
+}
+
+
+export {register, leaveRoom, participants, muteMic, offCam};

@@ -6,3 +6,15 @@ export function isLoggedIn(state) {
 export function getUserId(state) {
   return state.userId
 }
+
+export function getRoomOwner(state) {
+  return state.roomOwner
+}
+
+export function getStompClient(state) {
+  return state.stompClient
+}
+
+export function getParticipantsList(state) {
+  return state.participantsList
+}

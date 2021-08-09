@@ -1,17 +1,13 @@
 <template>
   <div class="player-list">
     <el-row :gutter="20">
-      <el-col :span="state.colSize">
-        <el-row :gutter="20">
+      <el-col :span="state.colSize" id="room">
+        <el-row :gutter="20" id="participants">
           <!-- <el-col :span="6" v-for="idx in playerList.length" :key="idx"> -->
-          <el-col :span="6">
-            <div id="room">
-              <h2 id="room-header"></h2>
-              <div id="participants"></div>
-              <input type="button" id="button-leave" @mouseup="leaveRoom" value="Leave room" />
-            </div>
+          <!-- <el-col :span="6"> -->
+            <!-- <div id="participants"></div> -->
             <!-- <MafiaPlayer/> -->
-          </el-col>
+          <!-- </el-col> -->
         </el-row>
       </el-col>
       <el-col v-show="chatVisible" :span="state.chatSize" class="chat">
@@ -27,7 +23,7 @@ import GameChat from '@/components/game/game-chat.vue'
 import { watch, reactive, computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import { register, leaveRoom, participants } from '@/common/lib/conferenceroom'
+import { register, participants } from '@/common/lib/conferenceroom'
 
 export default {
   name: "MafiaSection",
@@ -78,10 +74,26 @@ export default {
       }
     }
 
+    const enterRoom = () => {
+      let token = localStorage.getItem('jwt')
+      store.dispatch('root/requestEnterRoom', { token: token, roomId: state.roomNum })
+      .then((result) => {
+        console.log('result : ', result)
+        store.commit('root/setRoomOwner', result.data.ownerId.userId)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    }
+
     register(state.roomNum, state.userName)
+
     console.log('participants', participants)
 
     console.log('participants size',Object.keys(participants))
+
+    enterRoom()
+
 
     // props로 넘어온 데이터가 변하면 size를 바꿔준다
     watch(chatVisible, () => {
@@ -98,6 +110,9 @@ export default {
   background-color: white;
 }
 
+video {
+  border-radius: 5px;
+}
 /* .el-col {
   height: 100%;
 } */
