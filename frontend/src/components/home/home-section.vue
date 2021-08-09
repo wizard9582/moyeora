@@ -36,7 +36,7 @@ export default {
       })
 
       //type = this.$route.params.type;
-      console.log("type ->", router.currentRoute.value.params.type)
+      //console.log("type ->", router.currentRoute.value.params.type)
       state.type = router.currentRoute.value.params.type
 
       // console.log("current ->", router.currentRoute)

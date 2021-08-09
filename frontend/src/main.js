@@ -94,6 +94,8 @@ import {
     ElMessage,
     ElMessageBox,
     ElNotification,
+    ElDescriptions,
+    ElDescriptionsItem,
 } from 'element-plus';
 
 const components = [
@@ -123,6 +125,8 @@ const components = [
     ElColorPicker,
     ElContainer,
     ElDatePicker,
+    ElDescriptions,
+    ElDescriptionsItem,
     ElDialog,
     ElDivider,
     ElDrawer,

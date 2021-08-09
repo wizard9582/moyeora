@@ -4,6 +4,7 @@
       <h1>게시판</h1>
       <el-table class="board-list" ref="filterTable"
       :data="tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
+      @row-click="clickBoard"
       :default-sort = "{prop: 'date', order: 'descending'}" border stripe>
         <el-table-column prop="no" label="글번호" width="150"></el-table-column>
         <el-table-column prop="tag" label="태그" width="100"
@@ -29,8 +30,20 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router'
+
 export default {
     name:"BoardList",
+    setup(){
+      const router = useRouter()
+
+      const clickBoard = function(row){
+        //console.log(row)
+        router.push(row.no.toString())
+      }
+
+      return { clickBoard }
+    },
     data() {
       return {
         search: '',

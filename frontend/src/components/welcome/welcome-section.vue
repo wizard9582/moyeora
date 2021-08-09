@@ -43,7 +43,7 @@ export default {
   }
 
   .el-row .main-content {
-    height: 1000px;
+    height: 500px;
     background: #d3dce6;
     border-radius: 4px;
     text-align: center;

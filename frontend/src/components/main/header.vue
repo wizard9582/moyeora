@@ -1,7 +1,7 @@
 <template>
   <el-header v-if="isLoggedIn()" class="main-header" :height="'70px'">
-    <a href="/home" class="logo">
-      <img :src="require('@/assets/img-vue.png')" alt="IceBreaking logo" width="50" height="50"/>
+    <a href="/home/all" class="logo">
+      <img :src="require('@/assets/img-logo.png')" alt="IceBreaking logo" width="80" height="60"/>
     </a>
     <ul class="nav">
       <li>
@@ -34,9 +34,9 @@
     </ul>
   </el-header>
   <el-header v-if="!isLoggedIn()" class="main-header" :height="'70px'">
-    <div class="main-logo" @click="clickLogo">
-      <img :src="require('@/assets/img-vue.png')" alt="IceBreaking logo" width="50" height="50"/>
-    </div>
+    <a href="/home/all" class="logo">
+      <img :src="require('@/assets/img-logo.png')" alt="IceBreaking logo" width="80" height="60"/>
+    </a>
     <div class="button-wrapper">
       <el-button icon="el-icon-circle-plus-outline" @click="clickSignup">회원 가입</el-button>
       <el-button icon="el-icon-key" type="primary" @click="clickLogin">로그인</el-button>
@@ -80,7 +80,7 @@ export default {
       router.push("/")
     }
     const clickUserInfo = () => {
-      //console.log('user')
+      //console.log('user') 밑에 router 자기 id로 옮겨지게
       router.push("home/user/id")
     }
 

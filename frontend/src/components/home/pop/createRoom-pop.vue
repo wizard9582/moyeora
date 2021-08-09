@@ -30,6 +30,7 @@
 
 <script>
 import { reactive, computed, ref } from 'vue'
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 
 export default {
@@ -44,6 +45,7 @@ export default {
 
   setup(props, { emit }) {
     const store = useStore()
+    const router = useRouter()
     const createRoomForm = ref(null)
 
     const state = reactive({
@@ -95,9 +97,9 @@ export default {
           //console.log(state.form)
           store.dispatch('root/requestCreateRoom', { title: state.form.title, category: state.form.category, private: state.form.private, password: state.form.password, description: state.form.description})
           .then(function (result) {
-            console.log(result)
-            //생성된 방으로 이동하는 router push
-            //emit('closeSignupPopup')
+            //console.log(result)
+            emit('closeSignupPopup')
+            router.push("/game/" + result.data.id)
           })
           .catch(function () {
 
