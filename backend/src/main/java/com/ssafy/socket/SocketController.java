@@ -56,7 +56,23 @@ public class SocketController {
 	public Chat leave(Chat chat, @DestinationVariable String roomId) {
 		return new Chat(roomId, chat.getFromName(), "leave");
 	}
-	
+
+	String[] descs = {"morning",""};
+
+	// 게임 시작 및 1라운드 낮
+	@MessageMapping("/game/start/{roomId}")
+	@SendTo("/sub/game/start/{roomId}")
+	public MafiaChat startGame(MafiaChat chat, @DestinationVariable String roomId) {
+
+		return new MafiaChat();
+	}
+
+	@SendTo("/sub/game/start/{roomId}")
+	public MafiaChat gameTimer(int round, int desc, @DestinationVariable String roomId) {
+
+		return new MafiaChat();
+	}
+
 	/*
 	 * 참고자료 정리
 	 * 
