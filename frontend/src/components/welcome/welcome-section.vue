@@ -1,29 +1,31 @@
 <template>
-  <el-row :gutter="20">
-    <el-col class="main-content">
-      <h1>Main Content</h1>
-    </el-col>
-    <el-col class="sub-content">
-      <el-row :gutter="20">
-        <el-col :span="8" class="sample-image">
-          <img src="@/assets/img-vue.png" alt="sample-image">
-        </el-col>
-        <el-col :span="16">
-          <div class="grid-content"></div>
-        </el-col>
-      </el-row>
-    </el-col>
-    <el-col class="sub-content">
-      <el-row :gutter="20">
-        <el-col :span="16">
-          <div class="grid-content"></div>
-        </el-col>
-        <el-col :span="8" class="sample-image">
-          <img src="@/assets/img-vue.png" alt="sample-image">
-        </el-col>
-      </el-row>
-    </el-col>
-  </el-row>
+  <el-main>
+    <el-row :gutter="20">
+      <el-col class="main-content">
+        <h1>Main Content</h1>
+      </el-col>
+      <el-col class="sub-content">
+        <el-row :gutter="20">
+          <el-col :span="8" class="sample-image">
+            <img src="@/assets/img-vue.png" alt="sample-image">
+          </el-col>
+          <el-col :span="16">
+            <div class="grid-content"></div>
+          </el-col>
+        </el-row>
+      </el-col>
+      <el-col class="sub-content">
+        <el-row :gutter="20">
+          <el-col :span="16">
+            <div class="grid-content"></div>
+          </el-col>
+          <el-col :span="8" class="sample-image">
+            <img src="@/assets/img-vue.png" alt="sample-image">
+          </el-col>
+        </el-row>
+      </el-col>
+    </el-row>
+  </el-main>
 </template>
 
 <script>
@@ -43,7 +45,7 @@ export default {
   }
 
   .el-row .main-content {
-    height: 1000px;
+    height: 300px;
     background: #d3dce6;
     border-radius: 4px;
     text-align: center;
