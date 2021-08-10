@@ -5,6 +5,8 @@
         @openFilterPopup="onOpenFilterPopup"
         @openRoomPopup="onOpenRoomPopup"
         @openSettingPopup="onOpenSettingPopup"
+        @openBoard="onOpenBoard"
+        @openNotice="onOpenNotice"
       ></side-bar>
     </el-aside>
     <el-container>
@@ -54,6 +56,7 @@ export default {
       pwPopupOpen: false,
       filterPopupOpen: false,
       roomPopupOpen: false,
+      loginPopupOpen: false,
     })
     const onOpenSettingPopup = function(){
       state.settingPopupOpen = true
@@ -82,8 +85,14 @@ export default {
     const onClosePwPopup = function(){
       state.pwPopupOpen = false
     }
-    return {state, onOpenSettingPopup, onCloseSettingPopup, onOpenFilterPopup, onCloseFilterPopup,
-            onOpenRoomPopup, onCloseRoomPopup, onOpenPwPopup, onClosePwPopup}
+    const onOpenNotice = function(){
+      router.push("/home/notice/list")
+    }
+    const onOpenBoard = function(){
+      router.push("/home/board/list")
+    }
+    return { state, onOpenSettingPopup, onCloseSettingPopup, onOpenFilterPopup, onCloseFilterPopup, onOpenRoomPopup, onCloseRoomPopup,
+            onOpenPwPopup, onClosePwPopup, onOpenNotice, onOpenBoard}
   }
 };
 </script>

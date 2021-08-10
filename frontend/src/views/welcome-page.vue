@@ -4,17 +4,17 @@
       @openSignupPopup="onOpenSignupPopup"
       @openLoginPopup="onOpenLoginPopup"
     />
-    <el-main>
+    <el-container>
       <welcome-section></welcome-section>
-    </el-main>
-    <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
+      <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
+    </el-container>
   </el-container>
   <signup-pop
-    :open="signupPopupOpen"
+    :open="state.signupPopupOpen"
     @closeSignupPopup="onCloseSignupPopup"
   />
   <login-pop
-    :open="loginPopupOpen"
+    :open="state.loginPopupOpen"
     @closeLoginPopup="onCloseLoginPopup"
   />
 </template>
@@ -24,6 +24,10 @@ import Header from "@/components/main/header.vue";
 import WelcomeSection from "@/components/welcome/welcome-section.vue";
 import LoginPop from "@/components/welcome/login-pop.vue";
 import SignupPop from "@/components/welcome/signup-pop.vue";
+import { reactive } from 'vue'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
+
 
 export default {
   name: "WelcomePage",
@@ -33,36 +37,43 @@ export default {
     LoginPop,
     SignupPop,
   },
-  data () {
-    return {
+
+    setup(){
+    const store = useStore()
+    const router = useRouter()
+    const state = reactive({
       signupPopupOpen: false,
-      loginPopupOpen: false,
+      loginPopupOpen: false
+    })
+
+    const onOpenSignupPopup = function(){
+      state.signupPopupOpen = true
     }
-  },
-  methods: {
-    onOpenSignupPopup () {
-      this.signupPopupOpen = true
-    },
-    onCloseSignupPopup () {
-      this.signupPopupOpen = false
-    },
-    onOpenLoginPopup () {
-      this.loginPopupOpen = true
-    },
-    onCloseLoginPopup () {
-      this.loginPopupOpen = false
+    const onCloseSignupPopup = function(){
+      state.signupPopupOpen = false
     }
+    const onOpenLoginPopup = function(){
+      state.loginPopupOpen = true
+    }
+    const onCloseLoginPopup = function(){
+      state.loginPopupOpen = false
+      if(isLoggedIn()){
+        router.push("/home/all")
+      }
+    }
+    const isLoggedIn = function () {
+      return store.getters['root/isLoggedIn']
+    }
+    return { state, onOpenSignupPopup, onCloseSignupPopup, onOpenLoginPopup, onCloseLoginPopup, isLoggedIn }
   }
 };
 </script>
 
 <style>
-
 .el-footer {
   color: #333;
   text-align: center;
   width: 100%;
   height: 200px;
 }
-
 </style>

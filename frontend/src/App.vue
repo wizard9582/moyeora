@@ -4,7 +4,7 @@
 
 <script>
 // import WelcomePage from "@/views/welcome-page.vue"
-
+document.title = "모여라";
 export default {
   name: "App",
   components: {

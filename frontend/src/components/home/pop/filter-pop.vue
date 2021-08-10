@@ -10,7 +10,6 @@
 
 <script>
 import { reactive, computed } from 'vue'
-import { useStore } from 'vuex'
 
 export default {
   name:"FilterPop",
@@ -20,7 +19,6 @@ export default {
   },
 
   setup(props, { emit }) {
-    const store = useStore()
     const state = reactive({
       formLabelWidth: '120px',
       popupVisible: computed(() => props.open),

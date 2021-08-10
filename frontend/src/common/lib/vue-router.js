@@ -9,30 +9,36 @@ import BoardSection from "@/components/home/board-section.vue";
 import NoticeSection from "@/components/home/notice-section.vue";
 import BoardList from "@/components/home/board-list.vue";
 import NoticeList from "@/components/home/notice-list.vue";
+import BoardEdit from "@/components/home/board-edit.vue";
+import BoardWrite from "@/components/home/board-write.vue";
 
 const routes = [
   {
     path: "/",
     name: "Welcome",
     component: WelcomePage,
+    meta:{ loginRequired: false }
   },
   {
-    path: "/home/:type",
+    path: "/home",
     name: "Home",
     component: HomePage,
     children: [
-      {path: "", component: HomeSection},
-      {path: "user/:id", component: UserSection},
-      {path: "board/list", component: BoardList},
-      {path: "notice/list", component: NoticeList},
-      {path: "board/:no", component: BoardSection},
-      {path: "notice/:no", component: NoticeSection},
+      {path: ":type", component: HomeSection, meta:{ loginRequired: true } },
+      {path: "user/:id", component: UserSection , meta:{ loginRequired: true } },
+      {path: "board/list", component: BoardList , meta:{ loginRequired: true } },
+      {path: "board/:id", component: BoardSection , meta:{ loginRequired: true } },
+      {path: "board/edit/:type/:id", component: BoardEdit , meta:{ loginRequired: true } },
+      {path: "notice/list", component: NoticeList , meta:{ loginRequired: false } },
+      {path: "notice/:id", component: NoticeSection , meta:{ loginRequired: false } },
+      {path: "board/write/:type", component: BoardWrite , meta:{ loginRequired: true } },
     ],
   },
   {
     path: "/game/:no",
     name: "Game",
     component: GamePage,
+    meta:{ loginRequired: true }
   },
 ];
 
@@ -40,4 +46,26 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
+const isLoggedIn = function(){
+  return localStorage.getItem('jwt') ? true : false
+}
+
+router.beforeEach((to, from, next) => {
+  //console.log(to)
+
+  if(to.meta.loginRequired){
+    if(isLoggedIn()){
+      //console.log("로그인 통과")
+      next()
+    }else{
+      alert('로그인이 필요합니다!')
+      next("/")
+    }
+  }else{
+    //console.log("로그인 불필요")
+    next()
+  }
+})
+
 export default router;
