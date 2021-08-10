@@ -113,25 +113,6 @@ public class RoomController {
 
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "방에서 나왔습니다."));
 	}
-
-//	@PatchMapping("/poproom")
-//	@ApiOperation(value = "방 폭파", notes = "방의 isActive를 false로 만들어 비활성화된 방으로 만든다.")
-//	@ApiResponses({
-//			@ApiResponse(code = 200, message = "성공"),
-//			@ApiResponse(code = 401, message = "인증 실패"),
-//			@ApiResponse(code = 404, message = "사용자 없음"),
-//			@ApiResponse(code = 500, message = "서버 오류")
-//	})
-//	public ResponseEntity<BaseResponseBody> popRoom(@ApiIgnore Authentication authentication, @RequestParam Long roomId) {
-//		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
-//		User user = userDetails.getUser();
-//		Conference conf = roomService.findByRoomId(roomId).get();
-//		if(conf.getOwnerId().getId() != user.getId()){
-//			return ResponseEntity.status(200).body(BaseResponseBody.of(401, "권한 없음 : 방장이 아닙니다."));
-//		}
-//		roomService.popRoom(roomId);
-//		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "방이 닫혔습니다."));
-//	}
 	
 	@PostMapping()
 	@ApiOperation(value = "회의 방 생성", notes = "<strong>title과 description</strong>을 작성하여 회의방을 생성한다.")
