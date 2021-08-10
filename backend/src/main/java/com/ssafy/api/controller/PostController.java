@@ -67,8 +67,7 @@ public class PostController {
 	@GetMapping("/posts/{id}")
 	@ApiOperation(value = "id", notes = "특정 유저가 쓴 게시물만 보여주게 한다.")
 	public List<Post> getUserPosts(@PathVariable String id){
-		User user =  userService.getUserByUserId(id);
-		return user.getPosts();
+		return postService.getPostByUserId(Long.parseLong(id));
 	}
 
 	@GetMapping("/")
