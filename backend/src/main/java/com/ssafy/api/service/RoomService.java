@@ -26,4 +26,6 @@ public interface RoomService {
 
     void leave(UserConference uc);
 
+    long popRoom(long id);
+
 }

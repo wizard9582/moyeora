@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,5 +40,19 @@ public class RoomRepositorySupport{
 	public Long deleteUserConf(User user, Conference conf){
 		Long result = jpaQueryFactory.delete(qUC).where(qUC.conference.eq(conf).and(qUC.user.eq(user))).execute();
 		return result;
+	}
+
+	@Transactional
+	public long popRoom(long id){
+	 	long result = jpaQueryFactory.update(qCon)
+				.where(qCon.id.eq(id))
+				.set(qCon.isActive, false)
+				.set(qCon.callEndTime, new Timestamp(System.currentTimeMillis())).execute();
+	 	return result;
+	}
+
+	public List<Conference> getActiveRoom(){
+	 	List<Conference> result = jpaQueryFactory.select(qCon).from(qCon).where(qCon.isActive.eq(true)).fetch();
+	 	return result;
 	}
 }
