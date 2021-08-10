@@ -1,9 +1,12 @@
 package com.ssafy.db.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.db.entity.ConferenceHistory;
+import com.ssafy.db.entity.QConferenceHistory;
 import com.ssafy.db.entity.QUser;
 import com.ssafy.db.entity.User;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +20,7 @@ public class UserRepositorySupport {
     @Autowired
     private JPAQueryFactory jpaQueryFactory;
     QUser qUser = QUser.user;
+    QConferenceHistory qHistory = QConferenceHistory.conferenceHistory;
 
     public Optional<User> findUserByUserId(String userId) {
         User user = jpaQueryFactory.select(qUser).from(qUser)
@@ -37,5 +41,11 @@ public class UserRepositorySupport {
     public long deleteUserByUserId(String userId) {
     	long result = jpaQueryFactory.delete(qUser).where(qUser.userId.eq(userId)).execute();
     	return result;
+    }
+
+    public List<ConferenceHistory> getUserHistory(long id){
+        List<ConferenceHistory> result = jpaQueryFactory.select(qHistory).from(qHistory)
+                                        .where(qHistory.user.id.eq(id)).fetch();
+        return result;
     }
 }
