@@ -60,7 +60,7 @@ export function requestUpdateBoard ({ state }, payload) {
 }
 export function requestCheckWriter ({ state }, payload) {
   console.log('requestCheckWriter', state, payload)
-  const url = `/post/writer`
+  const url = `/post/writer/` + payload.postId
   return $axios.get(url)
 }
 export function requestBoard ({ state }, payload) {

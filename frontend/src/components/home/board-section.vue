@@ -2,7 +2,7 @@
 	<el-main>
     <div class="space"></div>
     <h1>게시판</h1>
-    <el-descriptions class="board-text" :title="state.no" :column="3" border>
+    <el-descriptions class="board-text" :title="state.id" :column="3" border>
       <template #extra>
         <el-button type="info" icon="el-icon-tickets" size="small" @click="clickList()">목록으로</el-button>
         <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="clickEdit()">수정</el-button>
@@ -29,28 +29,40 @@
 
 <script>
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 export default {
   name:"BoardSection",
 
   setup(){
+    const router = useRouter()
+    const store = useStore()
     const state = {
-      no:0,
+      id: 0,
       writer: "",
       tag: "",
       date: "",
       title: "",
       context: ""
     }
-    const router = useRouter()
+
+    state.id = router.currentRoute.value.params.id
+
     const clickList = function(){
-      router.push("list")
+      router.push("/home/board/list")
     }
     const clickEdit = function(){
-
+      router.push( { path:"/home/board/edit/0/" + state.id } )
     }
     const clickDelete = function(){
-
+      store.dispatch('root/requestCheckWriter', {postId: state.id})
+      .then(function (result){
+        console.log(result)
+        //삭제 요청
+      })
+      .catch(function (err){
+        alert('내가 작성한 글이 아닙니다')
+      })
     }
     return {state, clickList, clickEdit, clickDelete}
   }

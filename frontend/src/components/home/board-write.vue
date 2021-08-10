@@ -27,7 +27,7 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 
 export default {
-  name:"NoticeSection",
+  name:"BoardWrite",
 
   setup(){
     const writeForm = ref(null)

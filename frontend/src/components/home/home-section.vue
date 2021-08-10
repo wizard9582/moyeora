@@ -1,23 +1,13 @@
 <template>
   <el-main>
     <div class="space"></div>
-    <el-button
-      class="btn-refresh"
-      type="primary"
-      icon="el-icon-refresh-left"
-      @click="clickRefresh"
-    >새로고침</el-button>
+    <el-button class="btn-refresh" type="primary" icon="el-icon-refresh-left" @click="clickRefresh">새로고침</el-button>
     <ul class="gameroom-list">
       <li v-for="item in state.listData" class="gameroom-list-item" :key="item.id">
         <game-room :roomData="item" @click="clickRoom(item.id)"></game-room>
       </li>
     </ul>
-    <el-pagination
-      layout="prev, pager, next"
-      :page-size="1"
-      @current-change="handleCurrentChange"
-      :total="state.index"
-    ></el-pagination>
+    <el-pagination layout="prev, pager, next" :page-size="1" @current-change="handleCurrentChange" :total="state.index"></el-pagination>
   </el-main>
 </template>
 

@@ -36,7 +36,7 @@ import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 
 export default {
-    name:"BoardList",
+    name:"NoticeList",
     setup(){
       const router = useRouter()
       const store = useStore()

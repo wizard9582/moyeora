@@ -1,68 +1,106 @@
 <template>
-	<el-main>
+	<el-main class="main-write">
     <div class="space"></div>
-    <h1>게시판</h1>
-    <el-descriptions class="board-text" :title="state.no" :column="3" border>
-      <el-descriptions-item label="글쓴이">{{state.writer}}</el-descriptions-item>
-      <el-descriptions-item label="태그">
-        <el-tag size="small">{{state.tag}}</el-tag>
-      </el-descriptions-item>
-      <el-descriptions-item label="작성일">{{state.date}}</el-descriptions-item>
-      <el-descriptions-item label="제목">{{state.title}}</el-descriptions-item>
-    </el-descriptions>
-    <el-divider></el-divider>
-    <div class="board-text">
-      <div class="context-text">
-        {{state.context}}
-      </div>
-      <el-button type="info" icon="el-icon-tickets" size="small" @click="clickList()">목록으로</el-button>
-      <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="clickEdit()">수정</el-button>
-      <el-button type="danger" icon="el-icon-delete-solid" size="small" @click="clickDelete()">삭제</el-button>
+    <div class="write-wrapper">
+      <h4>{{state.form.typeTitle}}</h4>
+      <el-form :model="state.form" :rules="state.rules" ref="writeForm" :label-position="state.form.align">
+        <el-form-item>
+          <h4>제목</h4>
+          <el-input v-model="state.form.title" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <h4>내용</h4>
+          <el-input v-model="state.form.text" :rows=20 type="textarea"></el-input>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="write-btn-wrapper">
+      <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="clickWrite()">글쓰기</el-button>
+      <el-button type="danger" icon="el-icon-delete-solid" size="small" @click="clickList()">취소</el-button>
     </div>
 	</el-main>
 </template>
 
 <script>
+import { reactive, ref } from '@vue/reactivity'
 import { useRouter } from 'vue-router'
+import { useStore } from 'vuex'
 
 export default {
-  name:"NoticeSection",
+  name:"BoardEdit",
 
   setup(){
-    const state = {
-      no: -1,
-      writer: "",
-      tag: "",
-      date: "",
-      title: "",
-      context: ""
-    }
+    const writeForm = ref(null)
+    const store = useStore()
     const router = useRouter()
+
+    const type = router.currentRoute.value.params.type
+    let userId = store.getters['root/getUserId']
+
+    const state = reactive({
+      form: {
+        typeTitle: '',
+        title: '',
+        text: '',
+        align: 'left',
+      },
+      rules: {
+        title: [
+          { required: true, message: '제목을 입력하세요.', trigger: 'change' },
+        ],
+        text: [
+          { required: true, message: '글 내용을 입력하세요.', trigger: 'change' },
+        ],
+      },
+    })
+    state.form.typeTitle = type == 0 ? "게시판 글쓰기" : "공지사항 글쓰기"
     const clickList = function(){
-      router.push("list")
+      if(type == 1){
+         router.push("/home/notice/list")
+      }else{
+         router.push("/home/board/list")
+      }
     }
-    const clickEdit = function(){
+    const clickWrite = function(){
+      writeForm.value.validate((valid) => {
+        if (valid) {
+          store.dispatch('root/requestPostBoard', { title: state.form.title, description: state.form.text, notice: type, userId: userId})
+          .then(function (result) {
+            //console.log(result)
+            if(result.status == 200){
+              if(type == 1){
+                router.push("/home/notice/list")
+              }else{
+                router.push("/home/board/list")
+              }
+            }else{
+              alert('글 작성이 실패했습니다!')
+            }
+          })
+          .catch(function () {
+            alert('글 작성이 실패했습니다!')
+          })
+        } else {
+          alert('글 내용을 작성해주세요!')
+        }
+      });
+    }
 
-    }
-    const clickDelete = function(){
-
-    }
-    return {state, clickList, clickEdit, clickDelete}
+    return { state, writeForm, clickList, clickWrite }
   }
 }
 </script>
 
 <style>
-.board-text{
+.write-wrapper{
   margin-left: 15%;
   width: 70%;
   margin-right: 15%;
 }
-.board-text .context-text{
+.main-write{
   text-align: left;
-  margin: 5%;
-  padding: 5%;
-  background: white;
-  min-height: 500px;
+}
+.write-btn-wrapper{
+  text-align: center;
 }
 </style>
