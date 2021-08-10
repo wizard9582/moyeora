@@ -86,7 +86,12 @@ export function requestBoardById ({ state }, payload) {
 export function requestDeleteBoard ({ state }, payload) {
   console.log('requestDeleteBoard', state, payload)
   const url = `/post/` + payload.postId
-  return $axios.delete(url)
+  let token = localStorage.getItem('jwt')
+  return $axios({
+    method:'delete',
+    url: url,
+    headers: {'Authorization': 'Bearer ' + token},
+  })
 }
 
 // ---------- 이 밑으로 게임방 관련 api ----------

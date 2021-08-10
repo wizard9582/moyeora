@@ -52,13 +52,34 @@ export default {
       router.push("/home/board/list")
     }
     const clickEdit = function(){
-      router.push( { path:"/home/board/edit/0/" + state.id } )
+      store.dispatch('root/requestCheckWriter', {postId: state.id})
+      .then(function (result){
+        if(result.status == 200){
+          router.push( { path:"/home/board/edit/0/" + state.id } )
+        }else{
+          alert('내가 작성한 글이 아닙니다')
+        }
+      })
+      .catch(function (err){
+        alert('내가 작성한 글이 아닙니다')
+      })
     }
     const clickDelete = function(){
       store.dispatch('root/requestCheckWriter', {postId: state.id})
       .then(function (result){
-        console.log(result)
-        //삭제 요청
+        if(result.status == 200){
+          store.dispatch('root/requestDeleteBoard', {postId: state.id})
+          .then(function(result){
+            if(result.status == 200){
+              alert('삭제에 성공했습니다.')
+              router.push( { path:"/home/board/list"} )
+            }else{
+              alert('삭제에 실패했습니다.')
+            }
+          })
+        }else{
+          alert('내가 작성한 글이 아닙니다')
+        }
       })
       .catch(function (err){
         alert('내가 작성한 글이 아닙니다')
