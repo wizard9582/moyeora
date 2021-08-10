@@ -1,5 +1,6 @@
 package com.ssafy.db.repository;
 
+import com.ssafy.api.response.RoomRes;
 import com.ssafy.db.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 import javax.transaction.Transactional;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,7 +31,7 @@ public class RoomRepositorySupport{
 	 }
 
 	public Optional<List<User>> findUserByRoomId(Long roomId){
-		List<User> list = jpaQueryFactory.select(qUser).from(qUC)
+		List<User> list = jpaQueryFactory.select(qUser).distinct().from(qUC)
 				.where(qUC.conference.id.eq(roomId)).fetch();
 		if(list == null) return Optional.empty();
 		return Optional.ofNullable(list);
@@ -40,4 +42,25 @@ public class RoomRepositorySupport{
 		Long result = jpaQueryFactory.delete(qUC).where(qUC.conference.eq(conf).and(qUC.user.eq(user))).execute();
 		return result;
 	}
+
+	@Transactional
+	public long popRoom(long id){
+	 	long result = jpaQueryFactory.update(qCon)
+				.where(qCon.id.eq(id))
+				.set(qCon.isActive, false)
+				.set(qCon.callEndTime, new Timestamp(System.currentTimeMillis())).execute();
+	 	return result;
+	}
+
+	public List<Conference> getActiveRoom(){
+	 	List<Conference> result = jpaQueryFactory.select(qCon).from(qCon).where(qCon.isActive.eq(true)).fetch();
+	 	return result;
+	}
+
+//	public List<RoomRes> getActiveRoomWithCnt(){
+//		List<RoomRes> result = jpaQueryFactory.selectFrom(qCon).select(qUC.conference.count().as("count"))
+//								.leftJoin(qUC.conference, qCon)
+//								.on(qUC.id.eq(qCon.id)).where(qCon.isActive.eq(true)).groupBy(qCon.id).fetch();
+//		return result;
+//	}
 }

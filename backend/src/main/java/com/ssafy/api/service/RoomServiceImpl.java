@@ -3,6 +3,8 @@ package com.ssafy.api.service;
 import com.ssafy.api.response.RoomRes;
 import com.ssafy.db.entity.Conference;
 
+import com.ssafy.db.entity.ConferenceHistory;
+import com.ssafy.db.repository.ConferenceHistoryRepository;
 import com.ssafy.kurento.RoomManager;
 
 import com.ssafy.db.entity.User;
@@ -16,6 +18,7 @@ import com.ssafy.db.repository.RoomRepository;
 import com.ssafy.db.repository.RoomRepositorySupport;
 
 
+import java.sql.Timestamp;
 import java.util.*;
 
 
@@ -41,6 +44,9 @@ public class RoomServiceImpl implements RoomService {
 	@Autowired
 	RoomRepositorySupport roomRepositorySupport;
 
+	@Autowired
+	ConferenceHistoryRepository chRepository;
+
 	@Override
 	public Conference createRoom(Conference conf) {
 		return roomRepository.save(conf);
@@ -49,12 +55,12 @@ public class RoomServiceImpl implements RoomService {
 
 	@Override
 	public List<RoomRes> findRooms() {
-		List<Conference> conferenceList = roomRepository.findAll();
+		List<Conference> conferenceList = roomRepositorySupport.getActiveRoom();
 		List<RoomRes> roomList = new ArrayList<>();
 
 		for(Conference c : conferenceList){
 			int count = 0;
-			if(roomManager.rooms.size()!=0 &&roomManager.rooms.get(c.getId()+"").getParticipants()!=null ){
+			if(roomManager != null && roomManager.rooms != null && roomManager.rooms.size()!=0 &&roomManager.rooms.get(c.getId()+"").getParticipants()!=null ){
 				count = roomManager.rooms.get(c.getId()+"").getParticipants().size();
 			}
 			roomList.add(RoomRes.of(c,null,count));
@@ -82,5 +88,15 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public void leave(UserConference uc) {
 		roomRepositorySupport.deleteUserConf(uc.getUser(),uc.getConference());
+		ConferenceHistory ch = new ConferenceHistory();
+		ch.setUser(uc.getUser());
+		ch.setConference(uc.getConference());
+		ch.setInsertedTime(new Timestamp(System.currentTimeMillis()));
+		chRepository.save(ch);
+	}
+
+	@Override
+	public long popRoom(long id) {
+		return roomRepositorySupport.popRoom(id);
 	}
 }

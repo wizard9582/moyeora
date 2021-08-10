@@ -93,7 +93,7 @@ public class RoomController {
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "성공"),
 			@ApiResponse(code = 401, message = "인증 실패"),
-			@ApiResponse(code = 404, message = "사용자 없음"),
+			@ApiResponse(code = 404, message = "방 없음"),
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
 	public ResponseEntity<BaseResponseBody> leaveRoom(@ApiIgnore Authentication authentication, @RequestParam Long roomId) {
@@ -104,6 +104,12 @@ public class RoomController {
 		uc.setUser(user);
 		uc.setConference(conf);
 		roomService.leave(uc);
+
+		// 나간 사람이 방장이라면
+		if(conf.getOwnerId().getId() == user.getId()){
+			roomService.popRoom(roomId);
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "방장 권한으로 방을 나오며 닫았습니다."));
+		}
 
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "방에서 나왔습니다."));
 	}
