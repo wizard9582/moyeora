@@ -95,7 +95,7 @@ public class PostController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
-	@GetMapping("/writer")
+	@GetMapping("/writer/{postId}")
 	@ApiOperation(value = "postId", notes =  "글쓴이인지 판별한다")
 	@ApiResponses({
 			@ApiResponse(code = 200, message = "성공"),
