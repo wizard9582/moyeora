@@ -31,7 +31,7 @@ public class RoomRepositorySupport{
 	 }
 
 	public Optional<List<User>> findUserByRoomId(Long roomId){
-		List<User> list = jpaQueryFactory.select(qUser).from(qUC)
+		List<User> list = jpaQueryFactory.select(qUser).distinct().from(qUC)
 				.where(qUC.conference.id.eq(roomId)).fetch();
 		if(list == null) return Optional.empty();
 		return Optional.ofNullable(list);
