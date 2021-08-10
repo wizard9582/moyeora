@@ -44,4 +44,10 @@ public class PostRepositorySupport {
                 .set(qPost.description, postInfo.getDescription())
                 .execute();
     }
+
+    public List<Post> getPostByUserId(long id){
+        List<Post> result = jpaQueryFactory.select(qPost).from(qPost)
+                                            .where(qPost.user.id.eq(id)).fetch();
+        return result;
+    }
 }

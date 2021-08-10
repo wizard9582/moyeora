@@ -14,4 +14,5 @@ public interface PostService {
     void updatePostByPostId(PostRegisterPostReq postInfo, Long postId);
     void deletePostByPostId(Long postId);
     Post getPost(Long postId);
+    List<Post> getPostByUserId(long id);
 }
