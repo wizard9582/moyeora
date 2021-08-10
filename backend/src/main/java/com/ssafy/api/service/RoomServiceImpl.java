@@ -60,7 +60,7 @@ public class RoomServiceImpl implements RoomService {
 
 		for(Conference c : conferenceList){
 			int count = 0;
-			if(roomManager.rooms.size()!=0 &&roomManager.rooms.get(c.getId()+"").getParticipants()!=null ){
+			if(roomManager != null && roomManager.rooms != null && roomManager.rooms.size()!=0 &&roomManager.rooms.get(c.getId()+"").getParticipants()!=null ){
 				count = roomManager.rooms.get(c.getId()+"").getParticipants().size();
 			}
 			roomList.add(RoomRes.of(c,null,count));

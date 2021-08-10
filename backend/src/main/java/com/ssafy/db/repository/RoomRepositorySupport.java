@@ -1,5 +1,6 @@
 package com.ssafy.db.repository;
 
+import com.ssafy.api.response.RoomRes;
 import com.ssafy.db.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -55,4 +56,11 @@ public class RoomRepositorySupport{
 	 	List<Conference> result = jpaQueryFactory.select(qCon).from(qCon).where(qCon.isActive.eq(true)).fetch();
 	 	return result;
 	}
+
+//	public List<RoomRes> getActiveRoomWithCnt(){
+//		List<RoomRes> result = jpaQueryFactory.selectFrom(qCon).select(qUC.conference.count().as("count"))
+//								.leftJoin(qUC.conference, qCon)
+//								.on(qUC.id.eq(qCon.id)).where(qCon.isActive.eq(true)).groupBy(qCon.id).fetch();
+//		return result;
+//	}
 }
