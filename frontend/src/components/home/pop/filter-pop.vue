@@ -2,7 +2,7 @@
   <el-dialog class="gameFilter" title="게임선택" v-model="state.popupVisible" @close="handleClose">
     <ul class="gameFilter-list">
       <li v-for="i in 9" class="gameFilter-list-item" @click="clickGame(i)" :key="i">
-        <img :src="require(`@/assets/${state.imgsrc[i]}`)" alt="yet" style="width: 100%; height: 200px"/>
+        <img :src="require(`@/assets/${state.imgsrc[i]}`)" class="img-game" alt="yet" style="width: 100%; height: 200px"/>
       </li>
     </ul>
   </el-dialog>
@@ -39,9 +39,6 @@ export default {
 </script>
 
 <style>
-.gameFilter-list {
-  border: 5px solid;
-}
 .gameFilter-list-item {
   min-width: 200px;
   max-width: 20%;
@@ -50,5 +47,10 @@ export default {
   display: inline-block;
   cursor: pointer;
   margin: 10px;
+}
+.img-game{
+  border: 1px solid black;
+  padding: 0px;
+
 }
 </style>

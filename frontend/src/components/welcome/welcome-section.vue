@@ -4,7 +4,8 @@
     <h1>MOYEORA</h1>
     <iframe width="560" height="315" src="https://www.youtube.com/embed/-FMHYjqC4iA" title="YouTube video player"
     frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-    <div class="space">프로젝트 설명</div>
+    <div class="space">위에 프로젝트 ucc 넣을거에요</div>
+    <el-button v-if="isLoggedIn()" type="danger" @click="clickStart">바로 시작하기<i class="el-icon-caret-right el-icon-right"></i></el-button>
     <el-row class="sub-content">
       <el-col :span="8" class="sample-image">
         <img src="@/assets/img-vue.png" alt="sample-image">
@@ -33,8 +34,25 @@
 </template>
 
 <script>
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex'
+
 export default {
     name:'WelcomeSection',
+    setup(){
+      const router = useRouter()
+      const store = useStore()
+
+      const clickStart = function(){
+        router.push("/home/all")
+      }
+
+      const isLoggedIn = function () {
+        return store.getters['root/isLoggedIn']
+      }
+
+      return { clickStart, isLoggedIn }
+    }
 }
 </script>
 
