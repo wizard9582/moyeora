@@ -76,7 +76,11 @@ function Participant(name) {
 	this.dispose = function() {
 		console.log('Disposing participant ' + this.name);
 		this.rtcPeer.dispose();
-		container.parentNode.removeChild(container);
+		try{
+			container.parentNode.removeChild(container);
+		} catch {
+			console.log('removeChild 오류 발생')
+		}
 	};
 }
 

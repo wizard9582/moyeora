@@ -13,19 +13,24 @@
 import { reactive, computed } from 'vue'
 import { leaveRoom, participants, muteMic, offCam } from '@/common/lib/conferenceroom'
 import { useStore } from 'vuex'
+import { useRoute } from 'vue-router'
 
 export default {
   name: 'GameController',
 
   setup(props, {emit}) {
     const store = useStore()
+    const route = useRoute()
 
     const state = reactive({
       gameStart: false,
       chatClicked: false,
       chatIcon: 'el-icon-chat-dot-round',
-      userName: computed(() => store.getters['root/getUserId'])
+      userName: computed(() => store.getters['root/getUserId']),
+      stompClient: computed(() => store.getters['root/getStompClient']),
     })
+
+    const roomId = route.params.no;
 
     // 채팅창 열기
     const clickChat = () => {
@@ -44,6 +49,7 @@ export default {
     const clickGameStart = () => {
       console.log('게임 시작!!')
       state.gameStart = !state.gameStart
+      gameTimerStart();
     }
 
     // 참가자 확인
@@ -70,7 +76,20 @@ export default {
       offCam(state.userName);
     }
 
-    return { state, clickGameStart, clickPlayerList, clickChat, clickGameClose, micOff, cameraOff }
+    // 게임 시작 시 타이머 시작
+    const gameTimerStart = () => {
+      console.log("Send message To Start game timer ");
+      if (state.stompClient && state.stompClient.connected) {
+        const msg = {
+          round: 1,
+          desc: "start",
+          second : 60
+        };
+        state.stompClient.send("/pub/game/start/"+ roomId, JSON.stringify(msg), {});
+      }
+    }
+
+    return { state, clickGameStart, clickPlayerList, clickChat, clickGameClose, micOff, cameraOff, gameTimerStart }
   }
 }
 </script>
