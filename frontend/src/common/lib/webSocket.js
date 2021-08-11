@@ -1,11 +1,25 @@
 // var ws = new WebSocket('wss://' + "172.26.11.225:8443" + '/groupcall');
 var ws = new WebSocket('wss://' + "localhost:8443" + '/groupcall');
 
+// ws.onopen = function () {
+// 	// subscribe to some channels
+// 	ws.send(JSON.stringify({
+// 		//.... some message the I must send when I connect ....
+// 	}))
+// };
+	
+// ws.onclose = function(e) {
+//     console.log('쿠렌토 Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
+//     setTimeout(function() {
+// 		ws = new WebSocket('wss://' + "localhost:8443" + '/groupcall');
+//     }, 1000);
+//   };
+
 function sendMessage(message) {
 	var jsonMessage = JSON.stringify(message);
 	console.log('Sending message: ' + jsonMessage);
 	console.log('state : ',ws.readyState)
-	if (ws.readyState == 0)
+	if (ws.readyState != 1)
 		ws.onopen = () => ws.send(jsonMessage);
 	else
 		ws.send(jsonMessage);

@@ -1,10 +1,15 @@
 package com.ssafy.socket;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.util.HtmlUtils;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 @Controller
 public class SocketController {
@@ -57,20 +62,49 @@ public class SocketController {
 		return new Chat(roomId, chat.getFromName(), "leave");
 	}
 
-	String[] descs = {"morning",""};
+	@Autowired
+	private SimpMessagingTemplate template;
+
+	String[] descs = {"morning", "night", "end"};
+	int[] seconds = {60,30};
 
 	// 게임 시작 및 1라운드 낮
 	@MessageMapping("/game/start/{roomId}")
-	@SendTo("/sub/game/start/{roomId}")
-	public MafiaChat startGame(MafiaChat chat, @DestinationVariable String roomId) {
-
-		return new MafiaChat();
+	public void startGame(MafiaChat chat, @DestinationVariable String roomId) {
+		final int[] round = {0};
+		final int[] desc = {0};
+		Timer timer = new Timer();
+		TimerTask tt = new TimerTask() {
+			@Override
+			public void run() {
+				//System.out.println("타이머 작동 "+round[0]+", "+desc[0]+", 라운드 수: "+chat.getRound());
+				// 진행해야 하는 라운드 수가 끝난 경우 게임이 끝나야 한다.
+				if(chat.getRound()+1 == round[0]){
+					template.convertAndSend("/sub/game/start/"+roomId,gameTimer(round[0], desc[desc.length-1], roomId));
+					timer.cancel();
+				}else{
+					template.convertAndSend("/sub/game/start/"+roomId,gameTimer(round[0], desc[0], roomId));
+					if(desc[0] == 1){
+						round[0] = round[0]+1;
+						desc[0] = 0;
+					}else{
+						desc[0] = desc[0]+1;
+					}
+				}
+			}
+		};
+		// 실행된 후 0초뒤, 5초마다 실행
+		timer.schedule(tt,0,10000);
 	}
 
-	@SendTo("/sub/game/start/{roomId}")
+	//@SendTo("/sub/game/start/{roomId}")
 	public MafiaChat gameTimer(int round, int desc, @DestinationVariable String roomId) {
-
-		return new MafiaChat();
+		//System.out.println("타이머 함수 진입 "+round+", "+desc);
+		MafiaChat mc = new MafiaChat();
+		mc.setRound(round);
+		mc.setDesc(descs[desc]);
+		mc.setSecond(seconds[desc]);
+		return mc;
 	}
 
 	/*
