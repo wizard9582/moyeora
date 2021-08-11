@@ -65,8 +65,8 @@ public class SocketController {
 	@Autowired
 	private SimpMessagingTemplate template;
 
-	String[] descs = {"morning","vote", "night"};
-	int[] seconds = {60,20,30};
+	String[] descs = {"morning", "night", "end"};
+	int[] seconds = {60,30};
 
 	// 게임 시작 및 1라운드 낮
 	@MessageMapping("/game/start/{roomId}")
@@ -80,10 +80,11 @@ public class SocketController {
 				//System.out.println("타이머 작동 "+round[0]+", "+desc[0]+", 라운드 수: "+chat.getRound());
 				// 진행해야 하는 라운드 수가 끝난 경우 게임이 끝나야 한다.
 				if(chat.getRound()+1 == round[0]){
+					template.convertAndSend("/sub/game/start/"+roomId,gameTimer(round[0], desc[desc.length-1], roomId));
 					timer.cancel();
 				}else{
 					template.convertAndSend("/sub/game/start/"+roomId,gameTimer(round[0], desc[0], roomId));
-					if(desc[0] == 2){
+					if(desc[0] == 1){
 						round[0] = round[0]+1;
 						desc[0] = 0;
 					}else{
@@ -93,7 +94,7 @@ public class SocketController {
 			}
 		};
 		// 실행된 후 0초뒤, 5초마다 실행
-		timer.schedule(tt,0,5000);
+		timer.schedule(tt,0,10000);
 	}
 
 	//@SendTo("/sub/game/start/{roomId}")

@@ -85,9 +85,6 @@ export default {
           this.sendToPerson()
         this.message = ''
         this.toName = ''
-
-        // timer test
-        this.gameTimerStart()
       }
     },
 
@@ -145,7 +142,7 @@ export default {
         setTimeout(function () {
               console.log('기다리고')
               register(room, name);
-        }, 1000);
+        }, 3000);
     },
 
     connect() {
@@ -219,16 +216,22 @@ export default {
             if(result.desc == 'night'){
               leaveRoom()
               if(scope.userName=='aaaa'){
+                // 마피아인 경우 : 마피아끼리 모임
                 //register(scope.roomId+"/mafia",scope.userName)
                 scope.waitSecond(scope.roomId+"/mafia",scope.userName)
               }else{
+                // 시민인 경우 : 아예 쿠렌토 연결을 끊어버림
                 //register(scope.roomId+"/"+scope.userName,scope.userName)
-                scope.waitSecond(scope.roomId+"/"+scope.userName,scope.userName)
+                //scope.waitSecond(scope.roomId+"/"+scope.userName,scope.userName)
               }
             }else if(result.desc == 'morning' && result.round != 0){
               leaveRoom()
               //register(scope.roomId,scope.userName);
               scope.waitSecond(scope.roomId,scope.userName)
+            }else if(result.desc == 'end'){
+              leaveRoom()
+              scope.waitSecond(scope.roomId,scope.userName)
+              console.log("게임 끝!!")
             }
           });
         },

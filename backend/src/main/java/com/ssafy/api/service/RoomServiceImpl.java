@@ -64,7 +64,10 @@ public class RoomServiceImpl implements RoomService {
 				if (roomManager != null && roomManager.rooms != null && roomManager.rooms.size() != 0 && roomManager.rooms.get(c.getId() + "").getParticipants() != null) {
 					count = roomManager.rooms.get(c.getId() + "").getParticipants().size();
 				}
-			}finally {
+			}catch (Exception e){
+				System.out.println("findRooms: "+e);
+			}
+			finally {
 				roomList.add(RoomRes.of(c,null,count));
 			}
 
