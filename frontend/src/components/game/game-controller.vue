@@ -81,11 +81,11 @@ export default {
       console.log("Send message To Start game timer ");
       if (state.stompClient && state.stompClient.connected) {
         const msg = {
-          round: 1,
-          desc: "start",
-          second : 60
+          round: 0,
+          desc: "morning",
+          second : 20,
         };
-        state.stompClient.send("/pub/game/start/"+ roomId, JSON.stringify(msg), {});
+        state.stompClient.send("/pub/game/morning/"+ roomId, JSON.stringify(msg), {});
       }
     }
 

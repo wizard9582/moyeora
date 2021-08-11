@@ -58,6 +58,7 @@ export default {
 
     const state = reactive({
       participantsList: computed(() => store.getters['root/getParticipantsList']),
+      ownerId : computed(()=> store.getters['root/getRoomOwner']),
     })
 
     // const participants = ref(participants)
@@ -142,7 +143,7 @@ export default {
         setTimeout(function () {
               console.log('기다리고')
               register(room, name);
-        }, 3000);
+        }, 3000); // 랜덤 숫자 더하기 (-0.5~0.5)
     },
 
     connect() {
@@ -200,7 +201,7 @@ export default {
             scope.recvList.push(JSON.parse(chat.body));
           });
           // for문을 사용하여 참가자 아이디 별로 구독할지, 전체 구독으로 사용자에 따른
-          this.stompClient.subscribe('/sub/vote/room/'+this.roomId+'/'+this.userName, function (chat) {
+          this.stompClient.subscribe('/sub/vote/room/'+this.roomId, function (chat) {
             console.log("투표 받았다")
           });
 
@@ -210,30 +211,69 @@ export default {
             scope.router.push("/home/" + 'all')
             leaveRoom()
           });
-          this.stompClient.subscribe('/sub/game/start/'+this.roomId, function (chat) {
-            console.log('게임 타이머: ',JSON.parse(chat.body));
-            let result = JSON.parse(chat.body);
-            if(result.desc == 'night'){
-              leaveRoom()
-              if(scope.userName=='aaaa'){
-                // 마피아인 경우 : 마피아끼리 모임
-                //register(scope.roomId+"/mafia",scope.userName)
-                scope.waitSecond(scope.roomId+"/mafia",scope.userName)
-              }else{
-                // 시민인 경우 : 아예 쿠렌토 연결을 끊어버림
-                //register(scope.roomId+"/"+scope.userName,scope.userName)
-                //scope.waitSecond(scope.roomId+"/"+scope.userName,scope.userName)
-              }
-            }else if(result.desc == 'morning' && result.round != 0){
-              leaveRoom()
-              //register(scope.roomId,scope.userName);
-              scope.waitSecond(scope.roomId,scope.userName)
-            }else if(result.desc == 'end'){
-              leaveRoom()
-              scope.waitSecond(scope.roomId,scope.userName)
-              console.log("게임 끝!!")
+
+          ////////////// 게임 로직 ///////////////
+          // 메세지를 받을 때마다 게임 승리여부 판단과 라운드 체크를 해주어야 합니다.
+          this.stompClient.subscribe('/sub/game/morning/'+this.roomId, function (chat) {
+            console.log("타이머 1 (아침, 투표) : ", JSON.parse(chat.body))
+            let rchat = JSON.parse(chat.body);
+            if((scope.userName == scope.state.ownerId || scope.userName == 'aaaa') && rchat.desc=='end'){
+            const msg = {
+              round: 0,
+              desc: "morning",
+              second : 20,
+            };
+            scope.stompClient.send("/pub/game/judge/"+ scope.roomId, JSON.stringify(msg), {});}
+          });
+
+          this.stompClient.subscribe('/sub/game/judge/'+this.roomId, function (chat) {
+            console.log("타이머 2 (변론, 투표) : ", JSON.parse(chat.body))
+            let rchat = JSON.parse(chat.body);
+             if((scope.userName == scope.state.ownerId || scope.userName == 'aaaa')&& rchat.desc=='end' ){
+            const msg = {
+              round: 0,
+              desc: "morning",
+              second : 20,
+            };
+            scope.stompClient.send("/pub/game/night/"+ scope.roomId, JSON.stringify(msg), {});}
+          });
+
+          this.stompClient.subscribe('/sub/game/night/'+this.roomId, function (chat) {
+            console.log("타이머 3 (저녁, 결과) : ", JSON.parse(chat.body))
+            let rchat = JSON.parse(chat.body);
+             if((scope.userName == scope.state.ownerId || scope.userName == 'aaaa')&& rchat.desc=='end'){
+            const msg = {
+              round: 0,
+              desc: "morning",
+              second : 20,
+            };
+            //scope.stompClient.send("/pub/game/morning/"+ scope.roomId, JSON.stringify(msg), {});
             }
           });
+          // this.stompClient.subscribe('/sub/game/start/'+this.roomId, function (chat) {
+          //   console.log('게임 타이머: ',JSON.parse(chat.body));
+          //   let result = JSON.parse(chat.body);
+          //   if(result.desc == 'night'){
+          //     leaveRoom()
+          //     if(scope.userName=='aaaa'){
+          //       // 마피아인 경우 : 마피아끼리 모임
+          //       //register(scope.roomId+"/mafia",scope.userName)
+          //       scope.waitSecond(scope.roomId+"/mafia",scope.userName)
+          //     }else{
+          //       // 시민인 경우 : 아예 쿠렌토 연결을 끊어버림
+          //       //register(scope.roomId+"/"+scope.userName,scope.userName)
+          //       //scope.waitSecond(scope.roomId+"/"+scope.userName,scope.userName)
+          //     }
+          //   }else if(result.desc == 'morning' && result.round != 0){
+          //     leaveRoom()
+          //     //register(scope.roomId,scope.userName);
+          //     scope.waitSecond(scope.roomId,scope.userName)
+          //   }else if(result.desc == 'end'){
+          //     leaveRoom()
+          //     scope.waitSecond(scope.roomId,scope.userName)
+          //     console.log("게임 끝!!")
+          //   }
+          // });
         },
         error => {
           // 소켓 연결 실패

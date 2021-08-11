@@ -49,9 +49,9 @@ public class SocketController {
 	}
 	
 	// 마피아 투표
-	@MessageMapping("/vote/room/{roomId}/{userId}")
-	@SendTo("/sub/vote/room/{roomId}/{userId}")
-	public Chat vote(Chat chat, @DestinationVariable String roomId, @DestinationVariable String userId) {
+	@MessageMapping("/vote/room/{roomId}")
+	@SendTo("/sub/vote/room/{roomId}")
+	public Chat vote(Chat chat, @DestinationVariable String roomId) {
 		return new Chat(roomId, chat.getFromName(), chat.getToName(), null);
 	}
 
@@ -62,38 +62,94 @@ public class SocketController {
 		return new Chat(roomId, chat.getFromName(), "leave");
 	}
 
+
+	//////////////////////////////////////////// 게임 타이머 로직 ////////////////////////////////////////////
+
 	@Autowired
 	private SimpMessagingTemplate template;
 
-	String[] descs = {"morning", "night", "end"};
-	int[] seconds = {60,30};
+	String[] descs = {"morning", "vote", "judge", "finalvote", "night", "result", "end"};
+	int[] seconds = {20, 10, 20, 10, 20, 10, 0};
 
-	// 게임 시작 및 1라운드 낮
-	@MessageMapping("/game/start/{roomId}")
-	public void startGame(MafiaChat chat, @DestinationVariable String roomId) {
-		final int[] round = {0};
-		final int[] desc = {0};
+
+	@MessageMapping("/game/morning/{roomId}")
+	public void gameMorning(MafiaChat chat, @DestinationVariable String roomId) {
+		// morning인지 vote인지 체크하는 변수 check
+		final int[] check = {0};
+		Timer timer = new Timer();
+		TimerTask tt = new TimerTask() {
+			@Override
+			public void run() {
+				System.out.println("타이머 작동 "+check[0]+", 라운드 수: "+chat.getRound());
+				if(check[0] == 0){
+					// 아침이다!!
+					template.convertAndSend("/sub/game/morning/"+roomId,gameTimer(chat.getRound(), check[0], roomId));
+				}else if(check[0] == 2){
+					// 투표할 시간이다!!
+					template.convertAndSend("/sub/game/morning/"+roomId,gameTimer(chat.getRound(), check[0]-1, roomId));
+				}else if(check[0] == 3){
+					// 타이머 끝!! 최후 변론 또는 밤으로 넘어가자
+					template.convertAndSend("/sub/game/morning/"+roomId,gameTimer(chat.getRound(), descs.length-1, roomId));
+					timer.cancel();
+				}
+				check[0] = check[0]+1;
+			}
+		};
+		// 실행된 후 0초뒤, 10초마다 실행
+		timer.schedule(tt,0,10000);
+	}
+
+	@MessageMapping("/game/judge/{roomId}")
+	public void gameJudge(MafiaChat chat, @DestinationVariable String roomId) {
+		// 최후변론(judge)인지 최종투표(finalvote)인지 체크하는 변수 check
+		final int[] check = {0};
 		Timer timer = new Timer();
 		TimerTask tt = new TimerTask() {
 			@Override
 			public void run() {
 				//System.out.println("타이머 작동 "+round[0]+", "+desc[0]+", 라운드 수: "+chat.getRound());
-				// 진행해야 하는 라운드 수가 끝난 경우 게임이 끝나야 한다.
-				if(chat.getRound()+1 == round[0]){
-					template.convertAndSend("/sub/game/start/"+roomId,gameTimer(round[0], desc[desc.length-1], roomId));
+				if(check[0] == 0){
+					// 최후 변론 시간이다!!
+					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), 2+check[0], roomId));
+				}else if(check[0] == 2){
+					// 최종 투표할 시간이다!!
+					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), 2+check[0]-1, roomId));
+				}else if(check[0] == 3){
+					// 타이머 끝!! 밤으로 넘어가자
+					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), descs.length-1, roomId));
 					timer.cancel();
-				}else{
-					template.convertAndSend("/sub/game/start/"+roomId,gameTimer(round[0], desc[0], roomId));
-					if(desc[0] == 1){
-						round[0] = round[0]+1;
-						desc[0] = 0;
-					}else{
-						desc[0] = desc[0]+1;
-					}
 				}
+				check[0] = check[0]+1;
 			}
 		};
-		// 실행된 후 0초뒤, 5초마다 실행
+		// 실행된 후 0초뒤, 10초마다 실행
+		timer.schedule(tt,0,10000);
+	}
+
+	@MessageMapping("/game/night/{roomId}")
+	public void gameNight(MafiaChat chat, @DestinationVariable String roomId) {
+		// morning인지 vote인지 체크하는 변수 check
+		final int[] check = {0};
+		Timer timer = new Timer();
+		TimerTask tt = new TimerTask() {
+			@Override
+			public void run() {
+				//System.out.println("타이머 작동 "+round[0]+", "+desc[0]+", 라운드 수: "+chat.getRound());
+				if(check[0] == 0){
+					// 밤이다!!
+					template.convertAndSend("/sub/game/night/"+roomId,gameTimer(chat.getRound(), 4+check[0], roomId));
+				}else if(check[0] == 2){
+					// 결과다!!
+					template.convertAndSend("/sub/game/night/"+roomId,gameTimer(chat.getRound(), 4+check[0]-1, roomId));
+				}else if(check[0] == 3){
+					// 타이머 끝!! 게임 끝 또는 아침으로 넘어가자
+					template.convertAndSend("/sub/game/night/"+roomId,gameTimer(chat.getRound(), descs.length-1, roomId));
+					timer.cancel();
+				}
+				check[0] = check[0]+1;
+			}
+		};
+		// 실행된 후 0초뒤, 10초마다 실행
 		timer.schedule(tt,0,10000);
 	}
 
