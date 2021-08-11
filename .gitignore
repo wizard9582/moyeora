@@ -3,8 +3,6 @@
 # Learn more about .gitignore:
 #     https://www.atlassian.com/git/tutorials/saving-changes/gitignore
 
-backend/src/main/resources/application.properties
-backend/build.gradle
 
 # Node artifact files
 node_modules/
@@ -61,3 +59,8 @@ build
 
 # Tracked gradle-wrapper
 !/backend/gradle/wrapper/gradle-wrapper.jar
+
+# Keystore ignore
+backend/src/main/resources/kestore/ssafy.p12
+*.jks
+*.p12
