@@ -1,7 +1,7 @@
 <template>
   <el-header class="game-header">
     <div class="basic-info">
-      <img :src="require('@/assets/img-vue.png')" alt="IceBreaking logo" width="50" height="50"/>
+      <img :src="require('@/assets/img-logo.png')" alt="IceBreaking logo" width="80" height="60"/>
       <!-- <div>
         <span class="gameroom-desc">김싸피의 마피아게임</span>
         <span><i class="el-icon-user-solid"></i> 10/10</span>
@@ -12,7 +12,12 @@
         <span :class="state.statusIcon"></span>
         <span>토론</span>
       </div>
-      <span class="game-timer">0:0</span>
+      <span class="game-timer">
+        <span class="minute">{{ padMinute(state.minute) }}</span>
+        <span>:</span>
+        <span class="seconds">{{ padSecond(state.second) }}</span>
+        <el-button @click="startTimer(1)">time</el-button>
+      </span>
       <button @click="clickPass">넘어가기 {{state.clicked}}/{{state.total}}</button>
     </div>
     <!-- <div>당신은 마피아입니다. ~~~ 하세요.</div> -->
@@ -39,7 +44,37 @@ export default {
       statusIcon: 'el-icon-sunny',
       clicked: 2,
       total: 4,
+      timer: null,
+      minute: 0,
+      second: 0
     })
+
+    const padMinute = (val) =>{
+      return val.toString().padStart(2,'0')
+    }
+    const padSecond = (val) =>{
+      return val.toString().padStart(2,'0')
+    }
+    const resetTime = (val)=>{
+      state.minute = val
+      state.second = 0
+    }
+    const startTimer = (val)=> {
+      resetTime(val)
+      state.timer = setInterval(() => countdown(), 1000);
+    }
+    const countdown = () =>{
+      if(state.second == 0 && state.minute != 0){
+          state.minute --
+          state.second = 59
+      }else if(state.second != 0){
+        state.second --
+      }else{
+        clearInterval(state.timer)
+        alert('타이머 종료!')
+        //위에 alert대신 작동할 로직 넣으면 될듯
+      }
+    }
 
     // 초대하기 팝업 열기
     const clickInvite = () => {
@@ -68,7 +103,7 @@ export default {
       console.log('PASS')
     }
 
-    return { state, clickPass, clickInvite, clickOnQuestion }
+    return { state, clickPass, clickInvite, clickOnQuestion, padMinute, padSecond, resetTime, startTimer }
   }
 }
 </script>
