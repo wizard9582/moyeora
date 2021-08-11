@@ -1,28 +1,32 @@
 <template>
   <el-main>
-    <el-row :gutter="20">
-      <el-col class="main-content">
-        <h1>Main Content</h1>
+    <div class="space"></div>
+    <h1>MOYEORA</h1>
+    <iframe width="560" height="315" src="https://www.youtube.com/embed/-FMHYjqC4iA" title="YouTube video player"
+    frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <div class="space">프로젝트 설명</div>
+    <el-row class="sub-content">
+      <el-col :span="8" class="sample-image">
+        <img src="@/assets/img-vue.png" alt="sample-image">
       </el-col>
-      <el-col class="sub-content">
-        <el-row :gutter="20">
-          <el-col :span="8" class="sample-image">
-            <img src="@/assets/img-vue.png" alt="sample-image">
-          </el-col>
-          <el-col :span="16">
-            <div class="grid-content"></div>
-          </el-col>
-        </el-row>
+      <el-col :span="16">
+        <div class="grid-content"></div>
       </el-col>
-      <el-col class="sub-content">
-        <el-row :gutter="20">
-          <el-col :span="16">
-            <div class="grid-content"></div>
-          </el-col>
-          <el-col :span="8" class="sample-image">
-            <img src="@/assets/img-vue.png" alt="sample-image">
-          </el-col>
-        </el-row>
+    </el-row>
+    <el-row class="sub-content">
+      <el-col :span="16">
+        <div class="grid-content"></div>
+      </el-col>
+      <el-col :span="8" class="sample-image">
+        <img src="@/assets/img-vue.png" alt="sample-image">
+      </el-col>
+    </el-row>
+    <el-row class="sub-content">
+      <el-col :span="8" class="sample-image">
+        <img src="@/assets/img-vue.png" alt="sample-image">
+      </el-col>
+      <el-col :span="16">
+        <div class="grid-content"></div>
       </el-col>
     </el-row>
   </el-main>
@@ -35,37 +39,21 @@ export default {
 </script>
 
 <style>
-  .el-row {
-    margin-top: 50px;
-    margin-bottom: 20px;
-  }
-
-  .el-col {
-    margin-bottom: 10px;
-  }
-
-  .el-row .main-content {
+.space {
+  height: 100px;
+  width: 100%;
+}
+.sub-content {
     height: 300px;
-    background: #d3dce6;
-    border-radius: 4px;
-    text-align: center;
-  }
-
-  .sub-content {
-    height: 300px;
-  }
-
-  .sample-image {
-    height: 300px;
-    width: 300px;
-    text-align: center;
-    border: 1px solid black;
-    border-radius: 4px;
-  }
-
-  .grid-content {
+}
+.sub-content .sample-image .img{
+    min-width: 100px;
+    width: 30%;
+    height: auto;
+}
+.grid-content {
     background: #e5e9f2;
     border-radius: 4px;
     height: 300px;
-  }
+}
 </style>

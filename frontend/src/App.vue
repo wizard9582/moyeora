@@ -3,12 +3,16 @@
 </template>
 
 <script>
-// import WelcomePage from "@/views/welcome-page.vue"
-document.title = "모여라";
+import GamePage from '@/views/game-page.vue';
+import HomePage from '@/views/home-page.vue';
+import WelcomePage from '@/views/welcome-page.vue';
+
 export default {
   name: "App",
   components: {
-    // WelcomePage,
+    GamePage,
+    HomePage,
+    WelcomePage,
   },
 };
 </script>

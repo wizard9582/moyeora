@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside>
+    <el-aside width="120">
       <side-bar
         @openFilterPopup="onOpenFilterPopup"
         @openRoomPopup="onOpenRoomPopup"
@@ -12,7 +12,7 @@
     <el-container>
       <main-header></main-header>
       <router-view :key="$route.fullPath"/>
-      <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
+      <el-footer height="200">Copyright © SAMSUNG All Rights Reserved.</el-footer>
     </el-container>
   </el-container>
   <filter-pop :open="state.filterPopupOpen" @closeFilterPopup="onCloseFilterPopup" />
@@ -138,8 +138,6 @@ body > .el-container {
   color: #333;
   text-align: center;
   width: 100%;
-  /* height: 200px; */
-  line-height: 150px;
 }
 /* 차후 main.css로 통합? */
 </style>

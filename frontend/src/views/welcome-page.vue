@@ -6,7 +6,7 @@
     />
     <el-container>
       <welcome-section></welcome-section>
-      <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
+      <el-footer height="200">Copyright © SAMSUNG All Rights Reserved.</el-footer>
     </el-container>
   </el-container>
   <signup-pop
@@ -71,9 +71,9 @@ export default {
 
 <style>
 .el-footer {
+  background-color: #e9eef3;
   color: #333;
   text-align: center;
   width: 100%;
-  height: 200px;
 }
 </style>
