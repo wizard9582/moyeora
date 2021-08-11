@@ -30,7 +30,7 @@ import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { participants, leaveRoom } from '@/common/lib/conferenceroom'
+import { participants, leaveRoom, register } from '@/common/lib/conferenceroom'
 // import { stompClient, socket } from '@/common/lib/webSocket'
 
 let scope = '';
@@ -126,6 +126,25 @@ export default {
       }
     },
 
+    gameTimerStart() {
+      console.log("Send message To Start game timer ");
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = {
+          round: 1,
+          desc: "start",
+          second : 60
+        };
+        this.stompClient.send("/pub/game/start/"+ this.roomId, JSON.stringify(msg), {});
+      }
+    },
+
+    waitSecond(room, name) {
+        setTimeout(function () {
+              console.log('기다리고')
+              register(room, name);
+        }, 3000);
+    },
+
     connect() {
       //const store = useStore();
       this.userName = computed(() => this.store.getters['root/getUserId']);
@@ -190,6 +209,30 @@ export default {
             console.log("나가라")
             scope.router.push("/home/" + 'all')
             leaveRoom()
+          });
+          this.stompClient.subscribe('/sub/game/start/'+this.roomId, function (chat) {
+            console.log('게임 타이머: ',JSON.parse(chat.body));
+            let result = JSON.parse(chat.body);
+            if(result.desc == 'night'){
+              leaveRoom()
+              if(scope.userName=='aaaa'){
+                // 마피아인 경우 : 마피아끼리 모임
+                //register(scope.roomId+"/mafia",scope.userName)
+                scope.waitSecond(scope.roomId+"/mafia",scope.userName)
+              }else{
+                // 시민인 경우 : 아예 쿠렌토 연결을 끊어버림
+                //register(scope.roomId+"/"+scope.userName,scope.userName)
+                //scope.waitSecond(scope.roomId+"/"+scope.userName,scope.userName)
+              }
+            }else if(result.desc == 'morning' && result.round != 0){
+              leaveRoom()
+              //register(scope.roomId,scope.userName);
+              scope.waitSecond(scope.roomId,scope.userName)
+            }else if(result.desc == 'end'){
+              leaveRoom()
+              scope.waitSecond(scope.roomId,scope.userName)
+              console.log("게임 끝!!")
+            }
           });
         },
         error => {
