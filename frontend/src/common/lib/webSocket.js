@@ -8,12 +8,12 @@ var ws = new WebSocket('wss://' + "localhost:8443" + '/groupcall');
 // 	}))
 // };
 	
-ws.onclose = function(e) {
-    console.log('쿠렌토 Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
-    setTimeout(function() {
-		ws = new WebSocket('wss://' + "localhost:8443" + '/groupcall');
-    }, 1000);
-  };
+// ws.onclose = function(e) {
+//     console.log('쿠렌토 Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
+//     setTimeout(function() {
+// 		ws = new WebSocket('wss://' + "localhost:8443" + '/groupcall');
+//     }, 1000);
+//   };
 
 function sendMessage(message) {
 	var jsonMessage = JSON.stringify(message);
