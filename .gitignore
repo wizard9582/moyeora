@@ -64,3 +64,4 @@ build
 backend/src/main/resources/kestore/ssafy.p12
 *.jks
 *.p12
+
