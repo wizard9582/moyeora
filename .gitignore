@@ -61,6 +61,6 @@ build
 !/backend/gradle/wrapper/gradle-wrapper.jar
 
 # Keystore ignore
-kestore
+backend/src/main/resources/kestore/ssafy.p12
 *.jks
 *.p12
