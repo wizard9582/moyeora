@@ -4,7 +4,7 @@
     <el-button class="btn-refresh" type="primary" icon="el-icon-refresh-left" @click="clickRefresh">새로고침</el-button>
     <ul class="gameroom-list">
       <li v-for="item in state.listData" class="gameroom-list-item" :key="item.id">
-        <game-room :roomData="item" @click="clickRoom(item.id)"></game-room>
+        <game-room :roomData="item" @click="clickRoom(item)"></game-room>
       </li>
     </ul>
     <el-pagination layout="prev, pager, next" :page-size="1" @current-change="handleCurrentChange" :total="state.index"></el-pagination>
@@ -22,7 +22,7 @@ export default {
       GameRoom,
     },
 
-    setup(){
+    setup(props, {emit}){
       const store = useStore()
       const router = useRouter()
 
@@ -46,19 +46,19 @@ export default {
 
       store.dispatch('root/requestRoomList')
       .then(function (result) {
-        //console.log(result.data)
+        console.log(result.data)
         result.data.forEach(item =>{
           //console.log(roomData)
           //console.log("requestRoomList : "+item.id + " / "+item.count);
           let conference = {id: 0, title: "", type:"", member: 0, lock: true, password: "", state: "", desc: ""}
           conference.id = item.id
           conference.title = item.title
-          conference.type = item.conferenceCategory
+          conference.type = item.category
           conference.lock = item.private
           conference.desc = item.description
           //참가자 수 확인과 룸 상태 변경은 나중에 구현
           conference.member = item.count;
-          conference.state = "accessable"
+          conference.state = (item.count == 10)? "full" : "accessable"
           //console.log(conference)
           state.roomData.push(conference)
         })
@@ -86,8 +86,11 @@ export default {
       })
 
       const clickRoom = function(room) {
-        //console.log("click" + room)
-        router.push("/game/" + room)
+        if(room.lock){
+          emit('openPwCheck', ["1234", room.id])
+        }else{
+          router.push("/game/" + room.id)
+        }
       }
       const handleCurrentChange = function(val) {
         state.page = val;
