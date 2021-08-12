@@ -4,18 +4,14 @@ import com.ssafy.api.response.RoomRes;
 import com.ssafy.db.entity.Conference;
 
 import com.ssafy.db.entity.ConferenceHistory;
-import com.ssafy.db.repository.ConferenceHistoryRepository;
+import com.ssafy.db.repository.*;
 import com.ssafy.kurento.RoomManager;
 
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.UserConference;
-import com.ssafy.db.repository.UserConferenceRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.ssafy.db.repository.RoomRepository;
-import com.ssafy.db.repository.RoomRepositorySupport;
 
 
 import java.sql.Timestamp;
@@ -46,6 +42,9 @@ public class RoomServiceImpl implements RoomService {
 
 	@Autowired
 	ConferenceHistoryRepository chRepository;
+
+	@Autowired
+	UserConferenceRepositorySupport ucRepositorySupport;
 
 	@Override
 	public Conference createRoom(Conference conf) {
@@ -89,7 +88,7 @@ public class RoomServiceImpl implements RoomService {
 
 	@Override
 	public UserConference enter(UserConference uc) {
-		return ucRepository.save(uc);
+		return ucRepositorySupport.enter(uc);
 	}
 
 	@Override

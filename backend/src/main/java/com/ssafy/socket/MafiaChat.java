@@ -12,4 +12,5 @@ public class MafiaChat
     private int round;
     private String desc;
     private int second;
+    private String userId;
 }

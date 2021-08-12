@@ -140,10 +140,11 @@ export default {
     },
 
     waitSecond(room, name) {
+        console.log('기다리고')
+        let random = Math.floor(Math.random() * (1001 - 0)) + 0 - 500;
         setTimeout(function () {
-              console.log('기다리고')
               register(room, name);
-        }, 3000); // 랜덤 숫자 더하기 (-0.5~0.5)
+        }, 3000-random); // 랜덤 숫자 더하기 (-0.5~0.5)
     },
 
     connect() {
@@ -213,6 +214,14 @@ export default {
           });
 
           ////////////// 게임 로직 ///////////////
+          var myRole = "";
+          // 직업 분배 결과
+          this.stompClient.subscribe('/sub/game/start/'+this.roomId+"/"+this.userName, function (chat) {
+            // 직업 연동 아직 안됨
+            console.log("타이머 0 (직업 분배 결과) : ", chat.body)
+            alert("당신의 직업은 "+ chat.body +"입니다.")
+            myRole = chat.body;
+          });
           // 메세지를 받을 때마다 게임 승리여부 판단과 라운드 체크를 해주어야 합니다.
           this.stompClient.subscribe('/sub/game/morning/'+this.roomId, function (chat) {
             console.log("타이머 1 (아침, 투표) : ", JSON.parse(chat.body))
@@ -241,14 +250,39 @@ export default {
           this.stompClient.subscribe('/sub/game/night/'+this.roomId, function (chat) {
             console.log("타이머 3 (저녁, 결과) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
-             if((scope.userName == scope.state.ownerId || scope.userName == 'aaaa')&& rchat.desc=='end'){
-            const msg = {
-              round: 0,
-              desc: "morning",
-              second : 20,
-            };
-            //scope.stompClient.send("/pub/game/morning/"+ scope.roomId, JSON.stringify(msg), {});
+            leaveRoom()
+            if(true){
+              // 살아있으면
+              console.log("내 직업",myRole)
+              if(myRole=='mafia'){
+                  // 마피아인 경우 : 마피아끼리 모임
+                  scope.waitSecond(scope.roomId+"/mafia",scope.userName)
+                }else if(myRole == 'doctor'){
+                  // 의사인 경우 : 투표창 열림
+                  
+                }
+                else if(myRole == 'police'){
+                  // 경찰아인 경우 : 투표창 열림
+                  
+                }
             }
+            // 죽었으면 leaveRoom에서 끝남
+
+              if(rchat.desc=='end'){
+                if(myRole=='mafia'){
+                  // 마피아인 경우 : 마피아끼리 모임
+                  leaveRoom()
+                }
+                scope.waitSecond(scope.roomId,scope.userName)
+                if((scope.userName == scope.state.ownerId || scope.userName == 'aaaa')){
+                   const msg = {
+                    round: 0,
+                    desc: "morning",
+                    second : 20,
+                    //scope.stompClient.send("/pub/game/morning/"+ scope.roomId, JSON.stringify(msg), {});
+                    }
+                }
+              }
           });
           // this.stompClient.subscribe('/sub/game/start/'+this.roomId, function (chat) {
           //   console.log('게임 타이머: ',JSON.parse(chat.body));

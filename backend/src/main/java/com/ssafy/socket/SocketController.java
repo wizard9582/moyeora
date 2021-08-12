@@ -1,5 +1,9 @@
 package com.ssafy.socket;
 
+import com.ssafy.db.entity.Mafia;
+import com.ssafy.db.entity.UserConference;
+import com.ssafy.db.repository.MafiaRepository;
+import com.ssafy.db.repository.UserConferenceRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -8,8 +12,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.util.HtmlUtils;
 
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 @Controller
 public class SocketController {
@@ -68,12 +71,47 @@ public class SocketController {
 	@Autowired
 	private SimpMessagingTemplate template;
 
+	@Autowired
+	MafiaRepository mafiaRepository;
+
+	@Autowired
+	UserConferenceRepositorySupport userConferenceRepositorySupport;
+
 	String[] descs = {"morning", "vote", "judge", "finalvote", "night", "result", "end"};
 	int[] seconds = {20, 10, 20, 10, 20, 10, 0};
 
+	final String[][] jobs ={
+			{"mafia","police","doctor","citizen","citizen"}, //5명 기준
+			{"mafia","police","doctor","citizen","citizen","citizen"}, //6명 기준
+			{"mafia","police","doctor","citizen","citizen","citizen","mafia"}, //7명 기준
+			{"mafia","police","doctor","citizen","citizen","citizen","mafia","citizen"}, //8명 기준
+			{"mafia","mafia","mafia","police","doctor","citizen","citizen","citizen","citizen"}, //9명 기준
+			{"mafia","mafia","mafia","police","doctor","citizen","citizen","citizen","citizen","citizen"}, //10명 기준
+	};
 
 	@MessageMapping("/game/morning/{roomId}")
 	public void gameMorning(MafiaChat chat, @DestinationVariable String roomId) {
+		//직업 분배 시작
+		if(chat.getRound()==0){
+			Collections.shuffle(Arrays.asList(jobs[0]));
+			//System.out.println(Arrays.toString(jobs[0])+", "+jobs[0].length);
+
+			int idx = 0;
+			//System.out.println(chat.getUserId()+"가 소켓 통신 중");
+			List<UserConference> userConferenceList = userConferenceRepositorySupport.getUserConferenceByRoomNum(roomId);
+
+			for(UserConference uc : userConferenceList){
+				Mafia mafia = new Mafia();
+				mafia.setUserConference(uc);
+				mafia.setRole(jobs[userConferenceList.size()-5][idx++]);
+				mafia.setStatus(0);
+				System.out.println(mafia.getUserConference().getUser().getUserId()+ " => " +mafia.getRole());
+				mafiaRepository.save(mafia);
+				template.convertAndSend("/sub/game/start/"+roomId+"/"+mafia.getUserConference().getUser().getUserId(),mafia.getRole());
+			}
+		}
+		//직업 분배 끝
+
 		// morning인지 vote인지 체크하는 변수 check
 		final int[] check = {0};
 		Timer timer = new Timer();
@@ -96,7 +134,7 @@ public class SocketController {
 			}
 		};
 		// 실행된 후 0초뒤, 10초마다 실행
-		timer.schedule(tt,0,10000);
+		timer.schedule(tt,0,6000);
 	}
 
 	@MessageMapping("/game/judge/{roomId}")
@@ -123,7 +161,7 @@ public class SocketController {
 			}
 		};
 		// 실행된 후 0초뒤, 10초마다 실행
-		timer.schedule(tt,0,10000);
+		timer.schedule(tt,0,6000);
 	}
 
 	@MessageMapping("/game/night/{roomId}")
@@ -150,7 +188,7 @@ public class SocketController {
 			}
 		};
 		// 실행된 후 0초뒤, 10초마다 실행
-		timer.schedule(tt,0,10000);
+		timer.schedule(tt,0,6000);
 	}
 
 	//@SendTo("/sub/game/start/{roomId}")
