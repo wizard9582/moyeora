@@ -2,7 +2,7 @@
   <el-dialog title="방 만들기" v-model="state.popupVisible" @close="handleClose">
     <el-form :model="state.form" :rules="state.rules" ref="createRoomForm" :label-position="state.form.align" @change="checkValidation" v-loading private="state.popupLoading">
       <el-form-item prop="title" label="방제" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.title" autocomplete="off"></el-input>
+        <el-input v-model="state.form.title" autocomplete="off" maxlength="20" show-word-limit></el-input>
       </el-form-item>
       <el-form-item label="게임" :label-width="state.formLabelWidth">
         <el-select v-model="state.form.category" placeholder="Select">
@@ -17,7 +17,7 @@
         <el-input v-model="state.form.password" autocomplete="off" show-password></el-input>
       </el-form-item>
       <el-form-item prop="description" label="방 설명" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.description" autocomplete="off"></el-input>
+        <el-input v-model="state.form.description" autocomplete="off" maxlength="30" show-word-limit></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -55,7 +55,7 @@ export default {
         category: '',
         private: false,
         password: '',
-        description: '',
+        description: '환영합니다.',
         align: 'left'
       },
       games: [{value: 'video',label: '화상회의'}, {value: 'mafia',label: '마피아'}, {value: 'puzzle',label: '퍼즐',disabled: true},

@@ -1,8 +1,8 @@
 <template>
     <el-button class="game-start-button" v-if="!state.gameStart" @click="clickGameStart">게임 시작</el-button>
     <div class="main-controller">
-      <el-button type="primary" @click="micOff">음소거</el-button>
-      <el-button type="primary" @click="cameraOff">비디오</el-button>
+      <el-button :icon="state.micIcon" @click="micOff" v-bind:class="{ 'el-button--primary': !state.micOff }" >음소거</el-button>
+      <el-button :icon="state.videoIcon" @click="cameraOff" v-bind:class="{ 'el-button--primary': !state.videoOff }" >비디오</el-button>
       <el-button icon="el-icon-close" type="danger" @click="clickGameClose"></el-button>
       <el-button :icon="state.chatIcon" type="primary" @click="clickChat"></el-button>
     </div>
@@ -28,6 +28,10 @@ export default {
       chatIcon: 'el-icon-chat-dot-round',
       userName: computed(() => store.getters['root/getUserId']),
       stompClient: computed(() => store.getters['root/getStompClient']),
+      micOff: false,
+      micIcon: 'el-icon-microphone',
+      videoOff: false,
+      videoIcon: 'el-icon-camera-solid'
     })
 
     const roomId = route.params.no;
@@ -67,12 +71,24 @@ export default {
     // 마이크 버튼
     const micOff = () => {
       console.log('마이크 끄기 클릭')
+      state.micOff = !state.micOff
+      if(!state.micOff){
+        state.micIcon = 'el-icon-microphone'
+      }else{
+        state.micIcon = 'el-icon-close'
+      }
       muteMic(state.userName);
     }
 
     // 카메라 버튼
     const cameraOff = () => {
       console.log('카메라 끄기 클릭')
+      state.videoOff = !state.videoOff
+      if(!state.videoOff){
+        state.videoIcon = 'el-icon-camera-solid'
+      }else{
+        state.videoIcon = 'el-icon-close'
+      }
       offCam(state.userName);
     }
 

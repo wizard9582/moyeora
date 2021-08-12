@@ -299,7 +299,7 @@ export default {
 .anchor{
   position: fixed;
   top: 150px;
-	left: 150px;
+	right: 20px;
   width: 150px;
   height: 200px;
   border-radius: 10px;
