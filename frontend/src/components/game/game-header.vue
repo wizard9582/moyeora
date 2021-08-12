@@ -10,20 +10,24 @@
     <div class="game-info">
       <div class="game-status">
         <span :class="state.statusIcon"></span>
-        <span>토론</span>
+        <span>{{state.round}}라운드 - {{state.stageTitle}}</span>
+        <el-button @click="nextStage(true)">DevTrue</el-button>
+        <el-button @click="nextStage(false)">DevFalse</el-button>
       </div>
-      <span class="game-timer">
+      <span class="game-timer" v-bind:class="{ 'danger': state.danger }">
         <span class="minute">{{ padMinute(state.minute) }}</span>
         <span>:</span>
         <span class="seconds">{{ padSecond(state.second) }}</span>
-        <el-button @click="startTimer(1)">time</el-button>
+        <el-button @click="startTimer(40)">Dev</el-button>
       </span>
       <button @click="clickPass">넘어가기 {{state.clicked}}/{{state.total}}</button>
     </div>
     <!-- <div>당신은 마피아입니다. ~~~ 하세요.</div> -->
     <div class="button-wrapper">
-      <el-button icon="el-icon-message" @click="clickInvite"></el-button>
-      <el-button icon="el-icon-question" circle @click="clickOnQuestion" ></el-button>
+      <el-button icon="el-icon-message" @click="clickInvite">초대하기</el-button>
+      <el-tooltip class="item" effect="dark" content="도움말" placement="bottom">
+        <el-button icon="el-icon-question" circle @click="clickOnQuestion" ></el-button>
+      </el-tooltip>
     </div>
   </el-header>
 </template>
@@ -39,14 +43,21 @@ export default {
   setup(props, {emit}) {
     const store = useStore()
     const route = useRoute()
+    const stages = ["대기중","아침회의","투표","최후변론","최종투표","밤","지난 밤"]
 
     const state = reactive({
       statusIcon: 'el-icon-sunny',
       clicked: 2,
       total: 4,
+      //타이머
       timer: null,
       minute: 0,
-      second: 0
+      second: 0,
+      danger: false,
+      //라운드
+      round: 0,
+      stage: 0,
+      stageTitle: stages[0]
     })
 
     const padMinute = (val) =>{
@@ -55,15 +66,13 @@ export default {
     const padSecond = (val) =>{
       return val.toString().padStart(2,'0')
     }
-    const resetTime = (val)=>{
-      state.minute = val
-      state.second = 0
-    }
     const startTimer = (val)=> {
-      resetTime(val)
+      state.minute = parseInt(val/60)
+      state.second = parseInt(val)%60
       state.timer = setInterval(() => countdown(), 1000);
     }
     const countdown = () =>{
+
       if(state.second == 0 && state.minute != 0){
           state.minute --
           state.second = 59
@@ -73,6 +82,27 @@ export default {
         clearInterval(state.timer)
         alert('타이머 종료!')
         //위에 alert대신 작동할 로직 넣으면 될듯
+      }
+      if(state.minute == 0 && state.second < 20){
+        state.danger = (parseInt(state.second) % 2 == 1)? true : false
+      }
+    }
+
+    const nextStage = (val) =>{
+      if(val){
+        if(++state.stage == 7){
+          state.round++
+          state.stage = 1
+        }
+      }else{
+        state.stage += 3
+      }
+      state.stageTitle = stages[state.stage]
+      if(state.stage == 5){
+        emit('startNight')
+      }
+      if(state.stage == 1){
+        emit('startDay')
       }
     }
 
@@ -103,7 +133,7 @@ export default {
       console.log('PASS')
     }
 
-    return { state, clickPass, clickInvite, clickOnQuestion, padMinute, padSecond, resetTime, startTimer }
+    return { state, clickPass, clickInvite, clickOnQuestion, padMinute, padSecond, startTimer, nextStage }
   }
 }
 </script>
@@ -128,13 +158,16 @@ export default {
 .gameroom-desc {
   padding: 0px 15px;
 }
+.game-status {
+  margin-right: 10px;
+}
 
 .game-info {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
 
-  width: 25%;
+  width: 30%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -143,6 +176,11 @@ export default {
   border-radius: 6px;
   font-size: 20px;
   background-color: #e8eef3;
+}
+
+.danger{
+  color: red;
+  font-weight: bold;
 }
 
 </style>

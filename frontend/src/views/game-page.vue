@@ -3,11 +3,15 @@
     <GameHeader
       @openInvitePopup="onOpenInvitePopup"
       @openGameClosePopup="onOpenGameClosePopup"
+      @startNight="onStartNight"
+      @startDay="onStartDay"
+      v-bind:class="{ 'day': day, 'night':!day }"
     />
     <el-main>
       <MafiaSection
         :openChat="gameChatOpen"
         @closeGameChat="onCloseGameChat"
+        v-bind:class="{ 'day': day, 'night':!day }"
       />
     </el-main>
     <el-footer height="80px">
@@ -50,6 +54,7 @@ export default {
       invitePopupOpen: false,
       gameClosePopupOpen: false,
       gameChatOpen: false,
+      day: true,
     }
   },
   methods: {
@@ -70,7 +75,13 @@ export default {
     },
     onCloseGameChat () {
       this.gameChatOpen = false
-    }
+    },
+    onStartNight(){
+      this.day = false
+    },
+    onStartDay(){
+      this.day = true
+    },
   }
 }
 </script>
@@ -83,16 +94,19 @@ export default {
   width: 100%;
   height: 70px;
   /* border: solid; */
-  background: white;
 }
 .el-main {
-  background-color: #e8eef3;
   color: #333;
   text-align: center;
   width: 100%;
   height: 100%;
 }
-
+.day{
+  background: white;
+}
+.night{
+  background: black;
+}
 .el-footer {
   background-color: gray;
   color: #333;
