@@ -7,4 +7,6 @@ export default {
   stompClient: null,
   participantsList: null,
   voteCount: null,
+  gameTime: null,
+  gameRound: null,
 }

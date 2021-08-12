@@ -44,3 +44,8 @@ export function setVoteCount(state, payload) {
 export function voteTo(state, user) {
   state.voteCount[user][0] += 1
 }
+
+export function setGameRound(state, payload) {
+  state.gameTime = payload.second
+  state.gameRound = payload.round
+}

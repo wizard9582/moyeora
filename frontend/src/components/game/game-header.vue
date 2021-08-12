@@ -18,7 +18,7 @@
         <span class="minute">{{ padMinute(state.minute) }}</span>
         <span>:</span>
         <span class="seconds">{{ padSecond(state.second) }}</span>
-        <el-button @click="startTimer(40)" size="mini">Dev</el-button>
+        <el-button @click="startTimer(10)" size="mini">Dev</el-button>
       </span>
       <button @click="clickPass">넘어가기 {{state.clicked}}/{{state.total}}</button>
     </div>
@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { reactive, computed } from 'vue'
+import { reactive, computed, watch } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
@@ -47,6 +47,8 @@ export default {
 
     const state = reactive({
       stompClient: computed(() => store.getters['root/getStompClient']),
+      gameTime: computed(() => store.getters['root/getGameTime']),
+      gameRound: computed(() => store.getters['root/getGameRound']),
       statusIcon: 'el-icon-sunny',
       clicked: 2,
       total: 4,
@@ -56,35 +58,43 @@ export default {
       second: 0,
       danger: false,
       //라운드
-      round: 0,
-      stage: 0,
+      round: 1,
+      stage: 1,
       stageTitle: stages[0]
     })
 
     const padMinute = (val) =>{
       return val.toString().padStart(2,'0')
     }
+
     const padSecond = (val) =>{
       return val.toString().padStart(2,'0')
     }
+
     const startTimer = (val)=> {
       console.log("------------->", state.stompClient)
       state.minute = parseInt(val/60)
       state.second = parseInt(val)%60
       state.timer = setInterval(() => countdown(), 1000);
+      console.log('state.timer : ', state.timer)
     }
-    const countdown = () =>{
 
+    const countdown = () =>{
       if(state.second == 0 && state.minute != 0){
           state.minute --
           state.second = 59
       }else if(state.second != 0){
         state.second --
       }else{
+        console.log('state.timer : ', state.timer)
         clearInterval(state.timer)
-        alert('타이머 종료!')
+        // alert('타이머 종료!')
         //위에 alert대신 작동할 로직 넣으면 될듯
+        console.log('남은 시간? ', state.timer)
+        nextStage(true)
       }
+
+      //  타이머에 색 입히기
       if(state.minute == 0 && state.second < 20){
         state.danger = (parseInt(state.second) % 2 == 1)? true : false
       }
@@ -136,6 +146,15 @@ export default {
       getRoomInfo()
       console.log('PASS')
     }
+
+    watch(
+      () => state.gameTime,
+      (gameTime, prevGameTime) => {
+        console.log('WATCH!!!!!!!!!!!!!!!!!', gameTime, prevGameTime)
+        console.log('시작한다아ㅏㅏㅏㅏㅏ')
+        startTimer(gameTime-3)
+      }
+    )
 
     return { state, clickPass, clickInvite, clickOnQuestion, padMinute, padSecond, startTimer, nextStage }
   }

@@ -287,19 +287,21 @@ export default {
           this.stompClient.subscribe('/sub/game/morning/'+this.roomId, function (chat) {
             console.log("타이머 1 (아침, 투표) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
-            if((scope.userName == scope.state.ownerId || scope.userName == 'aaaa') && rchat.desc=='end'){
-            const msg = {
-              round: 0,
-              desc: "morning",
-              second : 20,
-            };
-            scope.stompClient.send("/pub/game/judge/"+ scope.roomId, JSON.stringify(msg), {});}
+            scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second})
+            if((scope.userName == scope.state.ownerId) && rchat.desc=='end'){
+              const msg = {
+                round: 0,
+                desc: "morning",
+                second : 20,
+              };
+              scope.stompClient.send("/pub/game/judge/"+ scope.roomId, JSON.stringify(msg), {});
+            }
           });
 
           this.stompClient.subscribe('/sub/game/judge/'+this.roomId, function (chat) {
             console.log("타이머 2 (변론, 투표) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
-             if((scope.userName == scope.state.ownerId || scope.userName == 'aaaa')&& rchat.desc=='end' ){
+             if((scope.userName == scope.state.ownerId) && rchat.desc=='end'){
             const msg = {
               round: 0,
               desc: "morning",
@@ -320,11 +322,11 @@ export default {
                   scope.waitSecond(scope.roomId+"/mafia",scope.userName)
                 }else if(myRole == 'doctor'){
                   // 의사인 경우 : 투표창 열림
-                  
+
                 }
                 else if(myRole == 'police'){
                   // 경찰아인 경우 : 투표창 열림
-                  
+
                 }
             }
             // 죽었으면 leaveRoom에서 끝남
@@ -335,7 +337,7 @@ export default {
                   leaveRoom()
                 }
                 scope.waitSecond(scope.roomId,scope.userName)
-                if((scope.userName == scope.state.ownerId || scope.userName == 'aaaa')){
+                if((scope.userName == scope.state.ownerId)){
                    const msg = {
                     round: 0,
                     desc: "morning",
@@ -349,20 +351,20 @@ export default {
           //게임 종료 판단하기
           this.stompClient.subscribe('/sub/game/end/'+this.roomId, function (res) {
               console.log("게임 진행 상황 : "+res.body);
-    
+
               if(res.body=='on'){
                 //게임 계속 진행
-                
+
 
               }else if(res.body=='citizen'){
                 //시민 이김
-               
-               
-              
+
+
+
               }else{
                 //마피아 이김
 
-        
+
 
               }
           });

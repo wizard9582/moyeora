@@ -22,3 +22,11 @@ export function getParticipantsList(state) {
 export function getVoteCount(state) {
   return state.voteCount
 }
+
+export function getGameTime(state) {
+  return state.gameTime
+}
+
+export function getGameRound(state) {
+  return state.gameRound
+}
