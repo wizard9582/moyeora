@@ -49,9 +49,9 @@ public class SocketController {
 	}
 	
 	// 마피아 투표
-	@MessageMapping("/vote/room/{roomId}/{userId}")
-	@SendTo("/sub/vote/room/{roomId}/{userId}")
-	public Chat vote(Chat chat, @DestinationVariable String roomId, @DestinationVariable String userId) {
+	@MessageMapping("/vote/room/{roomId}")
+	@SendTo("/sub/vote/room/{roomId}")
+	public Chat vote(Chat chat, @DestinationVariable String roomId) {
 		return new Chat(roomId, chat.getFromName(), chat.getToName(), null);
 	}
 
