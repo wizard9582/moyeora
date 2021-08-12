@@ -74,6 +74,7 @@ export default {
           };
           state.stompClient.send("/pub/bye/room/"+ roomId, JSON.stringify(msg2), {});
         }
+        store.commit('root/removeRoomOwner')
         disconnectSocket()
         console.log('result : ', result)
         router.push("/home/" + 'all')

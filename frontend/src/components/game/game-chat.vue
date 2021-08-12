@@ -58,6 +58,7 @@ export default {
 
     const state = reactive({
       participantsList: computed(() => store.getters['root/getParticipantsList']),
+      voteCountList: computed(() => store.getters['root/getVoteCount']),
     })
 
     // const participants = ref(participants)
@@ -155,7 +156,7 @@ export default {
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
       // socketConnect()
       // stompClient = Stomp.over(socket);
-      
+
       this.stompClient.connect(
         {},
         frame => {
@@ -180,8 +181,19 @@ export default {
             .then((result) => {
               console.log('새로운 목록: ',result.data.member)
               scope.store.commit('root/setParticipantsList', result.data.member)
+
+              // voteCount 세팅하기
+              // voteCount 구조 = [{ userId : [0, pk] }]
+              let votePlayerList = new Object
+              for (let player of result.data.member) {
+                let greetingUserId = player.userId
+                votePlayerList[greetingUserId] = [0, player.id]
+              }
+              console.log('votePlayerList', votePlayerList)
+              scope.store.commit('root/setVoteCount', votePlayerList)
             })
           });
+
           this.stompClient.subscribe('/sub/bye/room/'+this.roomId, function (chat) {
             console.log("참가자 퇴장!!", chat.body);
             //this.participantsList.push(chat.body);
@@ -200,8 +212,42 @@ export default {
             scope.recvList.push(JSON.parse(chat.body));
           });
           // for문을 사용하여 참가자 아이디 별로 구독할지, 전체 구독으로 사용자에 따른
-          this.stompClient.subscribe('/sub/vote/room/'+this.roomId+'/'+this.userName, function (chat) {
-            console.log("투표 받았다")
+          this.stompClient.subscribe('/sub/vote/room/'+this.roomId, function (chat) {
+            let voteResult = JSON.parse(chat.body)
+            console.log("투표 받았다", voteResult)
+            scope.store.commit('root/voteTo', voteResult['toName'])
+            // 받은 투표 수를 화면에 표시
+            console.log(document.querySelector(`#${voteResult['toName']}`))
+            console.log(document.querySelector(`#${voteResult['toName']}`).children[2])
+            const voteSpan = document.querySelector(`#${voteResult['toName']}`).children[2]
+            voteSpan.innerText = scope.state.voteCountList[voteResult['toName']][0]
+
+            // 투표 완료 여부 체크하기
+            let total = 0
+            let maxUser = ['', 0, 0] // 유저 아이디, 총 득표수, 유저 PK
+            let tiebreaker = false // 동점자 유무
+            let totalResult = scope.state.voteCountList
+            for (let id in totalResult) {
+              if (totalResult[id][0] > maxUser[1]) {
+                maxUser = [id, totalResult[id][0], totalResult[id][1]]
+                tiebreaker = false
+              } else if (totalResult[id][0] === maxUser[1]) {
+                tiebreaker = true
+              }
+              total += totalResult[id][0]
+            }
+
+            // 투표가 완료되었다면 처리
+            if (total === scope.state.participantsList.length) {
+              let msg = {}
+              if (tiebreaker) { // 동점자가 있는 경우
+                msg = { name: '' };
+              } else { // 동점자가 없는 경우
+                msg = { name: maxUser[2] };
+              }
+              console.log(tiebreaker, msg)
+              // this.stompClient.send("/pub/hello/room/"+ this.roomId, JSON.stringify(msg), {});
+            }
           });
 
           this.stompClient.subscribe('/sub/leave/'+this.roomId, function (chat) {
@@ -247,7 +293,7 @@ export default {
       if (this.stompClient !== null) {
         this.stompClient.disconnect();
       }
-      
+
       this.store.commit('root/setStompClient', null);
       console.log("Disconnected");
     },
