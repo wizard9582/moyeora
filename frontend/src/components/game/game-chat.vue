@@ -1,14 +1,13 @@
 <template>
   <div class="chat-wrapper">
-    <div class="chat-header">
-        채팅창
-    </div>
+    <div class="chat-header">채팅창</div>
     <div class="chat-main" style="overflow:auto">
-      <ul
-        class="list"
-        v-infinite-scroll="load"
-        infinite-scroll-disabled="disabled">
-        <li v-for="i in recvList" class="list-item" :key="i">{{ i.fromName }} >> {{ i.toName }} : <br> {{ i.message }}</li>
+      <ul class="list" v-infinite-scroll="load" infinite-scroll-disabled="disabled">
+        <li v-for="i in recvList" class="list-item" :key="i">
+          {{ i.fromName }} >> {{ i.toName }} :
+          <br />
+          {{ i.message }}
+        </li>
       </ul>
     </div>
     <el-select v-model="toName" clearable placeholder="Select">
@@ -16,11 +15,17 @@
         v-for="player in state.participantsList"
         :key="player.userId"
         :label="player.userId"
-        :value="player.userId">
-      </el-option>
+        :value="player.userId"
+      ></el-option>
     </el-select>
     <!-- <el-input placeholder="모두에게" v-model="toName"></el-input> -->
-    <el-input type="textarea" :rows="2" placeholder="Press Enter for send message." v-model="message" @keyup="sendMessage"></el-input>
+    <el-input
+      type="textarea"
+      :rows="2"
+      placeholder="Press Enter for send message."
+      v-model="message"
+      @keyup="sendMessage"
+    ></el-input>
   </div>
 </template>
 
@@ -145,6 +150,16 @@ export default {
         setTimeout(function () {
               register(room, name);
         }, 3000-random); // 랜덤 숫자 더하기 (-0.5~0.5)
+    },
+
+    //현재 게임이 끝났는지 판단해주는 API, 주의. 방장만 호출해줄 것!
+    getGameStatus() {
+        if (this.stompClient && this.stompClient.connected) {
+          const msg = {
+              roomId: this.roomId,
+          };
+        this.stompClient.send("/pub/game/end/"+ this.roomId, JSON.stringify(msg), {});
+      }
     },
 
     connect() {
@@ -284,6 +299,27 @@ export default {
                 }
               }
           });
+
+          //게임 종료 판단하기
+          this.stompClient.subscribe('/sub/game/end/'+this.roomId, function (res) {
+              console.log("게임 진행 상황 : "+res.body);
+    
+              if(res.body=='on'){
+                //게임 계속 진행
+                
+
+              }else if(res.body=='citizen'){
+                //시민 이김
+               
+               
+              
+              }else{
+                //마피아 이김
+
+        
+
+              }
+          });
           // this.stompClient.subscribe('/sub/game/start/'+this.roomId, function (chat) {
           //   console.log('게임 타이머: ',JSON.parse(chat.body));
           //   let result = JSON.parse(chat.body);
@@ -361,5 +397,4 @@ export default {
   margin: 10px;
   color: #7dbcfc;
 }
-
 </style>

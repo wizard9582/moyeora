@@ -3,6 +3,7 @@ package com.ssafy.socket;
 import com.ssafy.db.entity.Mafia;
 import com.ssafy.db.entity.UserConference;
 import com.ssafy.db.repository.MafiaRepository;
+import com.ssafy.db.repository.MafiaRepositorySupport;
 import com.ssafy.db.repository.UserConferenceRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -75,6 +76,9 @@ public class SocketController {
 	MafiaRepository mafiaRepository;
 
 	@Autowired
+	MafiaRepositorySupport mafiaRepositorySupport;
+
+	@Autowired
 	UserConferenceRepositorySupport userConferenceRepositorySupport;
 
 	String[] descs = {"morning", "vote", "judge", "finalvote", "night", "result", "end"};
@@ -88,6 +92,46 @@ public class SocketController {
 			{"mafia","mafia","mafia","police","doctor","citizen","citizen","citizen","citizen"}, //9명 기준
 			{"mafia","mafia","mafia","police","doctor","citizen","citizen","citizen","citizen","citizen"}, //10명 기준
 	};
+
+	// 게임 끝났는지 판단
+	@MessageMapping("/game/end/{roomId}")
+	public void getGameStatus(@DestinationVariable String roomId) {
+		List<Mafia> playerList = mafiaRepositorySupport.getPlayerByRoomId(Long.parseLong(roomId));
+
+		int liveMafiaCnt = 0;
+		int liveCitizenCnt =0;
+
+		//현재 생존한 직업별 플레이어 수 세기
+		for(Mafia m : playerList){
+			if(m.getStatus()==0){
+				if(m.getRole().equals("mafia")) {
+					liveMafiaCnt++;
+				}else{
+					liveCitizenCnt++;
+				}
+			}
+		}
+
+		/*
+		gameStatus는 Client에게 전달될 값,
+		"on"일 경우는 계속 게임 진행,
+		"mafia"일 경우 마피아 승
+		"citizen"일 경우 시민 승
+		 */
+		String gameStatus = "on";
+
+		if(liveMafiaCnt==0){
+			gameStatus="citizen";
+			mafiaRepositorySupport.deleteMafia(Long.parseLong(roomId));
+		}else if(liveMafiaCnt>=liveCitizenCnt){
+			gameStatus="mafia";
+			mafiaRepositorySupport.deleteMafia(Long.parseLong(roomId));
+		}
+
+		for(Mafia m : playerList){
+			template.convertAndSend("/sub/game/end/"+roomId+"/"+m.getUserConference().getUser().getUserId(),gameStatus);
+		}
+	}
 
 	@MessageMapping("/game/morning/{roomId}")
 	public void gameMorning(MafiaChat chat, @DestinationVariable String roomId) {
