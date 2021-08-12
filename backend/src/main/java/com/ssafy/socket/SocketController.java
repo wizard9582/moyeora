@@ -95,9 +95,13 @@ public class SocketController {
 
 	// 게임 끝났는지 판단
 	@MessageMapping("/game/end/{roomId}")
-	public void getGameStatus(@DestinationVariable String roomId) {
+	public void getGameStatus(@DestinationVariable String roomId, HelloMessage helloMessage) {
 		List<Mafia> playerList = mafiaRepositorySupport.getPlayerByRoomId(Long.parseLong(roomId));
 
+		if (helloMessage.getName().length() != 0) {
+			long userId = Long.parseLong(helloMessage.getName());
+			mafiaRepositorySupport.killUser(userId, Long.parseLong(roomId));
+		}
 		int liveMafiaCnt = 0;
 		int liveCitizenCnt =0;
 
@@ -128,9 +132,8 @@ public class SocketController {
 			mafiaRepositorySupport.deleteMafia(Long.parseLong(roomId));
 		}
 
-		for(Mafia m : playerList){
-			template.convertAndSend("/sub/game/end/"+roomId+"/"+m.getUserConference().getUser().getUserId(),gameStatus);
-		}
+
+		template.convertAndSend("/sub/game/end/"+roomId, gameStatus);
 	}
 
 	@MessageMapping("/game/morning/{roomId}")
