@@ -1,7 +1,7 @@
 <template>
   <el-main>
     <div class="space"></div>
-    <el-carousel trigger="click" height="500px" :interval="4000">
+    <el-carousel trigger="click" height="500px" :interval="15000">
       <el-carousel-item class="project-desc">
         <h3>MOYEORA<br> 프로젝트 소개 UCC</h3>
           <iframe width="560" height="315" src="https://www.youtube.com/embed/-FMHYjqC4iA" title="YouTube video player"

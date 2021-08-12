@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { reactive } from 'vue'
+import { reactive, computed } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
@@ -46,6 +46,7 @@ export default {
     const stages = ["대기중","아침회의","투표","최후변론","최종투표","밤","지난 밤"]
 
     const state = reactive({
+      stompClient: computed(() => store.getters['root/getStompClient']),
       statusIcon: 'el-icon-sunny',
       clicked: 2,
       total: 4,
@@ -67,6 +68,7 @@ export default {
       return val.toString().padStart(2,'0')
     }
     const startTimer = (val)=> {
+      console.log("------------->", state.stompClient)
       state.minute = parseInt(val/60)
       state.second = parseInt(val)%60
       state.timer = setInterval(() => countdown(), 1000);

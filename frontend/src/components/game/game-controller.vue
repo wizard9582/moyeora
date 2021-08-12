@@ -1,5 +1,5 @@
 <template>
-    <el-button class="game-start-button" v-if="!state.gameStart" @click="clickGameStart">게임 시작</el-button>
+    <el-button class="game-start-button" v-if="isOwner" :disabled="canStart" @click="clickGameStart">게임 시작</el-button>
     <div class="main-controller">
       <el-button :icon="state.micIcon" @click="micOff" v-bind:class="{ 'el-button--primary': !state.micOff }" >음소거</el-button>
       <el-button :icon="state.videoIcon" @click="cameraOff" v-bind:class="{ 'el-button--primary': !state.videoOff }" >비디오</el-button>
@@ -27,7 +27,9 @@ export default {
       chatClicked: false,
       chatIcon: 'el-icon-chat-dot-round',
       userName: computed(() => store.getters['root/getUserId']),
+      ownerName: computed(() => store.getters['root/getRoomOwner']),
       stompClient: computed(() => store.getters['root/getStompClient']),
+      participantsList: computed(() => store.getters['root/getParticipantsList']),
       micOff: false,
       micIcon: 'el-icon-microphone',
       videoOff: false,
@@ -46,6 +48,18 @@ export default {
         state.chatClicked = true
         state.chatIcon = 'el-icon-s-comment'
         emit('openGameChat')
+      }
+    }
+
+    const isOwner = () => {
+      return state.userName == state.ownerName
+    }
+
+    const canStart = () => {
+      if(state.participantsList!=null){
+        return (state.participantsList.length > 4)
+      }else{
+        return 0
       }
     }
 
@@ -106,7 +120,7 @@ export default {
       }
     }
 
-    return { state, clickGameStart, clickPlayerList, clickChat, clickGameClose, micOff, cameraOff, gameTimerStart }
+    return { state, clickGameStart, clickPlayerList, clickChat, clickGameClose, micOff, cameraOff, gameTimerStart, isOwner, canStart }
   }
 }
 </script>
