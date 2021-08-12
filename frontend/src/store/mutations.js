@@ -15,7 +15,7 @@ export function setUserId(state, id) {
 }
 
 export function removeUserId (state) {
-  state.userId = id
+  state.userId = ''
   localStorage.removeItem('id')
 }
 
@@ -24,10 +24,23 @@ export function setRoomOwner(state, id) {
   localStorage.setItem('roomOwner', id)
 }
 
+export function removeRoomOwner(state) {
+  state.roomOwner = ''
+  localStorage.removeItem('roomOwner')
+}
+
 export function setStompClient(state, payload) {
   state.stompClient = payload
 }
 
 export function setParticipantsList(state, payload) {
   state.participantsList = payload
+}
+
+export function setVoteCount(state, payload) {
+  state.voteCount = payload
+}
+
+export function voteTo(state, user) {
+  state.voteCount[user][0] += 1
 }

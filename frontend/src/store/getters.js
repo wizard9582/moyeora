@@ -18,3 +18,7 @@ export function getStompClient(state) {
 export function getParticipantsList(state) {
   return state.participantsList
 }
+
+export function getVoteCount(state) {
+  return state.voteCount
+}

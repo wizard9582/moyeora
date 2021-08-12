@@ -6,4 +6,5 @@ export default {
   roomOwner: localStorage.getItem('roomOwner'),
   stompClient: null,
   participantsList: null,
+  voteCount: null,
 }
