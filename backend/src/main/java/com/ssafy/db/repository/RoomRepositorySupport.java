@@ -57,6 +57,10 @@ public class RoomRepositorySupport{
 	 	return result;
 	}
 
+	public UserConference getUCID(UserConference uc){
+	 	return jpaQueryFactory.select(qUC).from(qUC).where(qUC.conference.id.eq(uc.getConference().getId()).and(qUC.user.id.eq(uc.getUser().getId()))).fetchOne();
+	}
+
 //	public List<RoomRes> getActiveRoomWithCnt(){
 //		List<RoomRes> result = jpaQueryFactory.selectFrom(qCon).select(qUC.conference.count().as("count"))
 //								.leftJoin(qUC.conference, qCon)

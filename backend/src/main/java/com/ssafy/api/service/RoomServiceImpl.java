@@ -46,6 +46,9 @@ public class RoomServiceImpl implements RoomService {
 	@Autowired
 	UserConferenceRepositorySupport ucRepositorySupport;
 
+	@Autowired
+	MafiaRepositorySupport mafiaRepositorySupport;
+
 	@Override
 	public Conference createRoom(Conference conf) {
 		return roomRepository.save(conf);
@@ -93,6 +96,9 @@ public class RoomServiceImpl implements RoomService {
 
 	@Override
 	public void leave(UserConference uc) {
+		UserConference result = roomRepositorySupport.getUCID(uc);
+		if(result != null)
+			mafiaRepositorySupport.deleteByUCID(result);
 		roomRepositorySupport.deleteUserConf(uc.getUser(),uc.getConference());
 		ConferenceHistory ch = new ConferenceHistory();
 		ch.setUser(uc.getUser());
