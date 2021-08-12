@@ -44,6 +44,21 @@ export default {
     const store = useStore()
     const route = useRoute()
     const stages = ["대기중","아침회의","투표","최후변론","최종투표","밤","지난 밤"]
+    class Queue {
+      constructor() {
+        this._arr = [];
+      }
+      enqueue(item) {
+        this._arr.push(item);
+      }
+      dequeue() {
+        return this._arr.shift();
+      }
+      peek() {
+        return this._arr[0];
+      }
+    }
+    const queue = new Queue();
 
     const state = reactive({
       stompClient: computed(() => store.getters['root/getStompClient']),
@@ -86,11 +101,7 @@ export default {
       }else if(state.second != 0){
         state.second --
       }else{
-        console.log('state.timer : ', state.timer)
         clearInterval(state.timer)
-        // alert('타이머 종료!')
-        //위에 alert대신 작동할 로직 넣으면 될듯
-        console.log('남은 시간? ', state.timer)
         nextStage(true)
       }
 
@@ -101,6 +112,13 @@ export default {
     }
 
     const nextStage = (val) =>{
+
+      if(state.stage == 2){
+        //아침투표 끝, 로직 구현
+      }else if(state.stage == 4){
+        //최종투표 끝, 로직 구현
+      }
+
       if(val){
         if(++state.stage == 7){
           state.round++
@@ -117,6 +135,12 @@ export default {
       if(state.stage == 1){
         emit('startDay')
         state.statusIcon = "el-icon-sunny"
+      }
+      console.log("stage---------->", queue)
+      queue.dequeue()
+      if(queue._arr.length > 0){
+        let nextTime = queue.peek()
+        startTimer(nextTime)
       }
     }
 
@@ -150,9 +174,15 @@ export default {
     watch(
       () => state.gameTime,
       (gameTime, prevGameTime) => {
-        console.log('WATCH!!!!!!!!!!!!!!!!!', gameTime, prevGameTime)
-        console.log('시작한다아ㅏㅏㅏㅏㅏ')
-        startTimer(gameTime-3)
+        console.log("---------->",queue)
+        //console.log(queue.length)
+        if(gameTime!=0){
+          if(queue._arr.length == 0){
+            console.log("new timer", queue)
+            startTimer(gameTime)
+          }
+          queue.enqueue(gameTime)
+        }
       }
     )
 
