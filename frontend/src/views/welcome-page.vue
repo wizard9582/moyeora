@@ -5,8 +5,9 @@
       @openLoginPopup="onOpenLoginPopup"
     />
     <el-container>
-      <welcome-section></welcome-section>
-      <el-footer height="200">Copyright © SAMSUNG All Rights Reserved.</el-footer>
+      <welcome-section
+        @openSignupPopup="onOpenSignupPopup"></welcome-section>
+      <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
     </el-container>
   </el-container>
   <signup-pop

@@ -11,14 +11,14 @@
       <div class="game-status">
         <span :class="state.statusIcon"></span>
         <span>{{state.round}}라운드 - {{state.stageTitle}}</span>
-        <el-button @click="nextStage(true)">DevTrue</el-button>
-        <el-button @click="nextStage(false)">DevFalse</el-button>
+        <el-button @click="nextStage(true)" size="mini">DevTrue</el-button>
+        <el-button @click="nextStage(false)" size="mini">DevFalse</el-button>
       </div>
       <span class="game-timer" v-bind:class="{ 'danger': state.danger }">
         <span class="minute">{{ padMinute(state.minute) }}</span>
         <span>:</span>
         <span class="seconds">{{ padSecond(state.second) }}</span>
-        <el-button @click="startTimer(40)">Dev</el-button>
+        <el-button @click="startTimer(40)" size="mini">Dev</el-button>
       </span>
       <button @click="clickPass">넘어가기 {{state.clicked}}/{{state.total}}</button>
     </div>
@@ -100,9 +100,11 @@ export default {
       state.stageTitle = stages[state.stage]
       if(state.stage == 5){
         emit('startNight')
+        state.statusIcon = "el-icon-moon"
       }
       if(state.stage == 1){
         emit('startDay')
+        state.statusIcon = "el-icon-sunny"
       }
     }
 

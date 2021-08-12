@@ -11,7 +11,7 @@
       <span class="title">{{ roomData.title }}&nbsp;&nbsp;</span>
       <i v-if="roomData.lock" class="el-icon-lock"></i>&nbsp;
       <el-tag v-if="roomData.state==='accessable'" size="small" class="accessable">접속가능</el-tag>
-      <el-tag v-else-if="roomData.state==='wating'" size="small" class="wating">대기중</el-tag>
+      <el-tag v-else-if="roomData.state==='full'" size="small" class="full">가득참</el-tag>
       <el-tag v-else-if="roomData.state==='playing'" size="small" class="playing">게임중</el-tag>
       <el-tag v-else size="small" class="empty">빈 방</el-tag>&nbsp;
       <el-tag size="small">{{ roomData.member }}/10</el-tag>
@@ -38,7 +38,7 @@
   background: green;
   color: white;
 }
-.el-card .title-wrapper .wating{
+.el-card .title-wrapper .full{
   background: blue;
   color: white;
 }

@@ -11,13 +11,15 @@
     </el-aside>
     <el-container>
       <main-header></main-header>
-      <router-view :key="$route.fullPath"/>
-      <el-footer height="200">Copyright © SAMSUNG All Rights Reserved.</el-footer>
+      <router-view :key="$route.fullPath"
+      @openPwCheck="onOpenPwPopup"
+      />
+      <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
     </el-container>
   </el-container>
   <filter-pop :open="state.filterPopupOpen" @closeFilterPopup="onCloseFilterPopup" />
   <create-room-pop :open="state.roomPopupOpen" @closeRoomPopup="onCloseRoomPopup" />
-  <room-pw-pop :open="state.pwPopupOpen" @closePwPopup="onClosePwPopup" />
+  <room-pw-pop :open="state.pwPopupOpen" @closePwPopup="onClosePwPopup" :pw="state.data[0]" :id="state.data[1]"/>
   <setting-pop :open="state.settingPopupOpen" @closeSettingPopup="onCloseSettingPopup" />
 </template>
 
@@ -57,6 +59,7 @@ export default {
       filterPopupOpen: false,
       roomPopupOpen: false,
       loginPopupOpen: false,
+      data: []
     })
     const onOpenSettingPopup = function(){
       state.settingPopupOpen = true
@@ -79,10 +82,13 @@ export default {
     const onCloseRoomPopup = function(){
       state.roomPopupOpen = false
     }
-    const onOpenPwPopup = function(){
+    const onOpenPwPopup = function(data){
+      //console.log("data-------->",data)
+      state.data = data
       state.pwPopupOpen = true
     }
     const onClosePwPopup = function(){
+      state.data = []
       state.pwPopupOpen = false
     }
     const onOpenNotice = function(){
