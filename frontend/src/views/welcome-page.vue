@@ -5,7 +5,8 @@
       @openLoginPopup="onOpenLoginPopup"
     />
     <el-container>
-      <welcome-section></welcome-section>
+      <welcome-section
+        @openSignupPopup="onOpenSignupPopup"></welcome-section>
       <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
     </el-container>
   </el-container>
@@ -71,9 +72,9 @@ export default {
 
 <style>
 .el-footer {
+  background-color: #e9eef3;
   color: #333;
   text-align: center;
   width: 100%;
-  height: 200px;
 }
 </style>

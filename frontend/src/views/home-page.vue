@@ -1,6 +1,6 @@
 <template>
   <el-container>
-    <el-aside>
+    <el-aside width="120">
       <side-bar
         @openFilterPopup="onOpenFilterPopup"
         @openRoomPopup="onOpenRoomPopup"
@@ -11,13 +11,15 @@
     </el-aside>
     <el-container>
       <main-header></main-header>
-      <router-view :key="$route.fullPath"/>
+      <router-view :key="$route.fullPath"
+      @openPwCheck="onOpenPwPopup"
+      />
       <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
     </el-container>
   </el-container>
   <filter-pop :open="state.filterPopupOpen" @closeFilterPopup="onCloseFilterPopup" />
   <create-room-pop :open="state.roomPopupOpen" @closeRoomPopup="onCloseRoomPopup" />
-  <room-pw-pop :open="state.pwPopupOpen" @closePwPopup="onClosePwPopup" />
+  <room-pw-pop :open="state.pwPopupOpen" @closePwPopup="onClosePwPopup" :pw="state.data[0]" :id="state.data[1]"/>
   <setting-pop :open="state.settingPopupOpen" @closeSettingPopup="onCloseSettingPopup" />
 </template>
 
@@ -57,6 +59,7 @@ export default {
       filterPopupOpen: false,
       roomPopupOpen: false,
       loginPopupOpen: false,
+      data: []
     })
     const onOpenSettingPopup = function(){
       state.settingPopupOpen = true
@@ -79,10 +82,13 @@ export default {
     const onCloseRoomPopup = function(){
       state.roomPopupOpen = false
     }
-    const onOpenPwPopup = function(){
+    const onOpenPwPopup = function(data){
+      //console.log("data-------->",data)
+      state.data = data
       state.pwPopupOpen = true
     }
     const onClosePwPopup = function(){
+      state.data = []
       state.pwPopupOpen = false
     }
     const onOpenNotice = function(){
@@ -138,8 +144,6 @@ body > .el-container {
   color: #333;
   text-align: center;
   width: 100%;
-  /* height: 200px; */
-  line-height: 150px;
 }
 /* 차후 main.css로 통합? */
 </style>
