@@ -38,12 +38,12 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<Post> getAllPost() {
+    public List<PostRegisterPostReq> getAllPost() {
         return postRepositorySupport.getAllPost();
     }
 
     @Override
-    public List<Post> getAllNotice() {
+    public List<PostRegisterPostReq> getAllNotice() {
         return postRepositorySupport.getAllNotice();
     }
 
