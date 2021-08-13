@@ -30,7 +30,9 @@ export function getGameTime(state) {
 export function getGameRound(state) {
   return state.gameRound
 }
-
 export function getMyJob(state) {
   return state.myJob
+}
+export function getMafiaRoles(state) {
+  return state.mafiaRoles
 }

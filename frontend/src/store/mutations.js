@@ -49,7 +49,6 @@ export function setGameRound(state, payload) {
   state.gameTime = payload.second
   state.gameRound = payload.round
 }
-
 export function setMyJob(state, job) {
   if(job == "reset"){
     state.myJob = "(미정)"
@@ -62,4 +61,7 @@ export function setMyJob(state, job) {
   }else{
     state.myJob = "경찰"
   }
+}
+export function setMafiaRoles(state, payload) {
+  state.mafiaRoles = payload;
 }
