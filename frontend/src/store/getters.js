@@ -30,3 +30,19 @@ export function getGameTime(state) {
 export function getGameRound(state) {
   return state.gameRound
 }
+
+export function getFinalVotePlayer(state) {
+  return state.finalVotePlayer
+}
+
+export function getFinalVoteCount(state) {
+  return state.finalVoteCount
+}
+
+export function getDoctorSelectPlayer(state) {
+  return state.doctorSelectPlayer
+}
+
+export function getMafiaSelectPlayer(state) {
+  return state.mafiaSelectPlayer
+}

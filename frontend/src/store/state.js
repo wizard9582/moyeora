@@ -9,4 +9,8 @@ export default {
   voteCount: null,
   gameTime: null,
   gameRound: null,
+  finalVotePlayer: null,
+  finalVoteCount: null,
+  doctorSelectPlayer: null,
+  mafiaSelectPlayer: null,
 }
