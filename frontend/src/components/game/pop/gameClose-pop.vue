@@ -73,7 +73,7 @@ export default {
               name: state.userName,
           };
           const msg3 = {
-              name: "",
+              name: "bye,",
           };
           state.stompClient.send("/pub/bye/room/"+ roomId, JSON.stringify(msg2), {});
           state.stompClient.send("/pub/game/end/"+ roomId, JSON.stringify(msg3), {});
