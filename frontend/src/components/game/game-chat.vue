@@ -279,9 +279,15 @@ export default {
           // 직업 분배 결과
           this.stompClient.subscribe('/sub/game/start/'+this.roomId+"/"+this.userName, function (chat) {
             // 직업 연동 아직 안됨
-            console.log("타이머 0 (직업 분배 결과) : ", chat.body)
-            alert("당신의 직업은 "+ chat.body +"입니다.")
-            myRole = chat.body;
+            console.log("타이머 0 (직업 분배 결과) : ", JSON.parse(chat.body))
+            let rchat = JSON.parse(chat.body);
+            let msg = "당신의 직업은 "+ rchat.role +"입니다.";
+            if(rchat.same){
+              msg += "\n마피아 목록: "
+              msg += rchat.same.substr(1,rchat.same.length-2)
+            }
+            alert(msg)
+            myRole = rchat.role;
           });
           // 메세지를 받을 때마다 게임 승리여부 판단과 라운드 체크를 해주어야 합니다.
           this.stompClient.subscribe('/sub/game/morning/'+this.roomId, function (chat) {
