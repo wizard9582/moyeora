@@ -346,7 +346,7 @@ export default {
             if((scope.userName == scope.state.ownerId) && rchat.desc === 'end'){
               let msg = {}
               let playerPK = ''
-              if (voteCount[0] > voteCount[1]) {
+              if (scope.state.finalVoteCount[0] > scope.state.finalVoteCount[1]) {
                 let finalVotePlayer = computed(() => scope.store.getters['root/getFinalVotePlayer'])
                 for (let player of scope.state.participantsList) {
                   if (player.userId === finalVotePlayer) {
@@ -424,14 +424,14 @@ export default {
           //게임 종료 판단하기
           this.stompClient.subscribe('/sub/game/end/'+this.roomId, function (res) {
               console.log("게임 진행 상황 : "+res.body);
-              const resMessage = res.split(',')
+              const resMessage = res.body.split(',')
               if(resMessage[1]=='on'){
                 //게임 계속 진행
                 if (resMessage[0] === 'judge') {
-                  const msg = { roomId: scope.roomId }
+                  const msg = { round : 1 }
                   scope.stompClient.send("/pub/game/night/"+ scope.roomId, JSON.stringify(msg), {})
                 } else if (resMessage[0] === 'night') {
-                  const msg = { roomId: scope.roomId }
+                  const msg = { round : 1 }
                   scope.stompClient.send("/pub/game/morning/"+ scope.roomId, JSON.stringify(msg), {})
                 }
               }else if(resMessage[1]=='citizen'){

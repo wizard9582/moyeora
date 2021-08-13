@@ -56,7 +56,7 @@ export default {
           toName: state.selectedPlayer,
           message: "doctor"
         };
-        this.stompClient.send("/pub/vote/room/"+ route.params.no, JSON.stringify(msg), {});
+        state.stompClient.send("/pub/vote/room/"+ route.params.no, JSON.stringify(msg), {});
       }
       emit('closeDoctorVotePopup')
     }

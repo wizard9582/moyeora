@@ -45,7 +45,7 @@ function Participant(name) {
     let roomNum = 0
     console.log(root.state.userId + " voted To " + toName);
     if (pathname[1] === 'game') {
-      roomNum = parseInt(pathname[2])
+      roomNum = parseInt(pathname[3])
       if (root.state.stompClient && root.state.stompClient.connected) {
         const msg = {
           roomId: roomNum,

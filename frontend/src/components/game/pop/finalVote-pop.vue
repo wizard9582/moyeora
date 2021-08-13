@@ -45,13 +45,13 @@ export default {
     })
 
     const clickKill = function () {
-      // store.commit('root/voteFinalVote', 'kill')
+      store.commit('root/voteFinalVote', 'kill')
       document.querySelector('.kill-button').style.backgroundColor = 'red'
       state.selected = !state.selected
     }
 
     const clickSave = function () {
-      // store.commit('root/voteFinalVote', 'save')
+      store.commit('root/voteFinalVote', 'save')
       document.querySelector('.save-button').style.backgroundColor = 'blue'
       state.selected = !state.selected
     }
