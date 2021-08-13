@@ -42,6 +42,7 @@ public class PostRepositorySupport {
                 .where(qPost.id.eq(postId))
                 .set(qPost.title, postInfo.getTitle())
                 .set(qPost.description, postInfo.getDescription())
+                .set(qPost.date,postInfo.getDate())
                 .execute();
     }
 

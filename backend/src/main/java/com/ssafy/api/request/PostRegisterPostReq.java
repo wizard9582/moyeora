@@ -21,4 +21,6 @@ public class PostRegisterPostReq {
 	String description;
 	@ApiModelProperty(name="유저 아이디", example="ssafy")
 	String userId;
+	@ApiModelProperty(name="유저 아이디", example="ssafy")
+	String date;
 }

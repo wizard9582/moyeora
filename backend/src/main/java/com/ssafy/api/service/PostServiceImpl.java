@@ -9,6 +9,8 @@ import com.ssafy.db.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Service("postService")
@@ -23,11 +25,14 @@ public class PostServiceImpl implements PostService{
     @Override
     public Post createPost(User user, PostRegisterPostReq postInfo) {
         Post post = new Post();
+        Date today = new Date();
+        SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd");
 
         post.setNotice(postInfo.getNotice());
         post.setTitle(postInfo.getTitle());
         post.setDescription(postInfo.getDescription());
         post.setUser(user);
+        post.setDate(date.format(today));
 
        return postRepository.save(post);
     }
