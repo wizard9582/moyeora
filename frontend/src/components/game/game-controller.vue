@@ -1,5 +1,5 @@
 <template>
-    <el-button class="game-start-button" v-if="isOwner" :disabled="!canStart" @click="clickGameStart">게임 시작</el-button>
+    <el-button class="game-start-button" v-if="isOwner && state.roomType=='mafia'" :disabled="!canStart" @click="clickGameStart">게임 시작</el-button>
     <div class="main-controller">
       <el-button :icon="state.micIcon" @click="micOff" v-bind:class="{ 'el-button--primary': !state.micOff }" >음소거</el-button>
       <el-button :icon="state.videoIcon" @click="cameraOff" v-bind:class="{ 'el-button--primary': !state.videoOff }" >비디오</el-button>
@@ -23,6 +23,7 @@ export default {
     const route = useRoute()
 
     const state = reactive({
+      roomType: route.params.type,
       chatClicked: false,
       chatIcon: 'el-icon-chat-dot-round',
       userName: computed(() => store.getters['root/getUserId']),

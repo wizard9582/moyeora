@@ -86,10 +86,11 @@ export default {
       })
 
       const clickRoom = function(room) {
+        let route = room.type + "/" + room.id
         if(room.lock){
-          emit('openPwCheck', ["1234", room.id])
+          emit('openPwCheck', ["1234", route])
         }else{
-          router.push("/game/" + room.id)
+          router.push("/game/" + route)
         }
       }
       const handleCurrentChange = function(val) {

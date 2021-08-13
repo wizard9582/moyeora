@@ -7,29 +7,64 @@
         <span><i class="el-icon-user-solid"></i> 10/10</span>
       </div> -->
     </div>
-    <div class="game-info">
+    <div class="job-info" v-if="state.roomType=='mafia'">
+      <span>당신은 {{state.myJob}} 입니다.</span>
+    </div>
+    <div class="game-info" v-if="state.roomType=='mafia'">
       <div class="game-status">
         <span :class="state.statusIcon"></span>
         <span>{{state.round}}라운드 - {{state.stageTitle}}</span>
-        <el-button @click="nextStage(true)" size="mini">DevTrue</el-button>
-        <el-button @click="nextStage(false)" size="mini">DevFalse</el-button>
+        <!-- <el-button @click="nextStage(true)" size="mini">DevTrue</el-button>
+        <el-button @click="nextStage(false)" size="mini">DevFalse</el-button> -->
       </div>
       <span class="game-timer" v-bind:class="{ 'danger': state.danger }">
         <span class="minute">{{ padMinute(state.minute) }}</span>
         <span>:</span>
         <span class="seconds">{{ padSecond(state.second) }}</span>
-        <el-button @click="startTimer(10)" size="mini">Dev</el-button>
+        <!-- <el-button @click="startTimer(10)" size="mini">Dev</el-button> -->
       </span>
       <button @click="clickPass">넘어가기 {{state.clicked}}/{{state.total}}</button>
     </div>
     <!-- <div>당신은 마피아입니다. ~~~ 하세요.</div> -->
     <div class="button-wrapper">
+      <el-button @click="state.detectOpen = true">dev.Police</el-button>
       <el-button icon="el-icon-message" @click="clickInvite">초대하기</el-button>
       <el-tooltip class="item" effect="dark" content="도움말" placement="bottom">
         <el-button icon="el-icon-question" circle @click="clickOnQuestion" ></el-button>
       </el-tooltip>
     </div>
   </el-header>
+  <!-- 경찰 조사 다이얼로그 -->
+  <el-dialog
+    title="수사하기"
+    v-model="state.detectOpen"
+    width="30%"
+    :before-close="handleClose">
+    <span>
+      수사할 시민을 클릭하세요. <br>
+      <el-tag class="user-tag" :key="user" v-for="user in state.participantsList" @click="detectChoose(user)"> {{user.userId}} </el-tag>
+    </span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="state.detectOpen = false">확인</el-button>
+      </span>
+    </template>
+  </el-dialog>
+  <!-- 도움말 다이얼로그 -->
+  <el-dialog
+    title="도움말"
+    v-model="state.questionOpen"
+    width="30%"
+    :before-close="handleClose">
+    <span>
+      마피아 게임 룰 설명 이미지로 들어갈 예정
+    </span>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="state.questionOpen = false">확인</el-button>
+      </span>
+    </template>
+  </el-dialog>
 </template>
 
 <script>
@@ -61,7 +96,12 @@ export default {
     const queue = new Queue();
 
     const state = reactive({
+      roomType: route.params.type,
+      detectOpen: false,
+      questionOpen: false,
       stompClient: computed(() => store.getters['root/getStompClient']),
+      participantsList: computed(() => store.getters['root/getParticipantsList']),
+      myJob: computed(() => store.getters['root/getMyJob']),
       gameTime: computed(() => store.getters['root/getGameTime']),
       gameRound: computed(() => store.getters['root/getGameRound']),
       statusIcon: 'el-icon-sunny',
@@ -152,7 +192,7 @@ export default {
 
     // 도움말 열기
     const clickOnQuestion = () => {
-      console.log('도움말')
+      state.questionOpen = true
     }
 
     const getRoomInfo = () => {
@@ -171,6 +211,13 @@ export default {
       console.log('PASS')
     }
 
+    const detectChoose = (user) => {
+      console.log(user)
+      //직업확인하는 로직, 태그 후처리
+      alert("end")
+      state.detectOpen = false
+    }
+
     watch(
       () => state.gameTime,
       (gameTime, prevGameTime) => {
@@ -186,7 +233,7 @@ export default {
       }
     )
 
-    return { state, clickPass, clickInvite, clickOnQuestion, padMinute, padSecond, startTimer, nextStage }
+    return { state, clickPass, clickInvite, clickOnQuestion, padMinute, padSecond, startTimer, nextStage, detectChoose }
   }
 }
 </script>
@@ -231,9 +278,28 @@ export default {
   background-color: #e8eef3;
 }
 
+.job-info {
+  position: absolute;
+  left: 20%;
+  transform: translateX(-50%);
+
+  width: 15%;
+  display: flex;
+  text-align: center;
+  border-radius: 6px;
+  font-size: 15px;
+  background-color: #e8eef3;
+}
+
 .danger{
   color: red;
   font-weight: bold;
 }
 
+.user-tag{
+  min-width: 30px;
+  max-width: 30%;
+  display: inline-block;
+  cursor: pointer;
+}
 </style>

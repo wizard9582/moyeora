@@ -282,6 +282,7 @@ export default {
             console.log("타이머 0 (직업 분배 결과) : ", chat.body)
             alert("당신의 직업은 "+ chat.body +"입니다.")
             myRole = chat.body;
+            scope.store.commit('root/setMyJob', myRole)
           });
           // 메세지를 받을 때마다 게임 승리여부 판단과 라운드 체크를 해주어야 합니다.
           this.stompClient.subscribe('/sub/game/morning/'+this.roomId, function (chat) {

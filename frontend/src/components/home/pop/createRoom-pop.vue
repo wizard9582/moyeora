@@ -5,7 +5,7 @@
         <el-input v-model="state.form.title" autocomplete="off" maxlength="20" show-word-limit></el-input>
       </el-form-item>
       <el-form-item label="게임" :label-width="state.formLabelWidth">
-        <el-select v-model="state.form.category" placeholder="Select">
+        <el-select v-model="state.form.category">
           <el-option v-for="item in state.games" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled">
           </el-option>
         </el-select>
@@ -52,13 +52,13 @@ export default {
       formLabelWidth: '120px',
       form: {
         title: '',
-        category: '',
+        category: 'video',
         private: false,
         password: '',
         description: '환영합니다.',
         align: 'left'
       },
-      games: [{value: 'video',label: '화상회의'}, {value: 'mafia',label: '마피아'}, {value: 'puzzle',label: '퍼즐',disabled: true},
+      games: [{value: 'video', label: '화상회의'}, {value: 'mafia',label: '마피아'}, {value: 'puzzle', label: '퍼즐',disabled: true},
               {value: 'catch-mind', label: '캐치마인드', disabled: true }, { value: 'word-mafia', label: '단어마피아', disabled: true }],
       rules: {
         title: [
@@ -99,7 +99,7 @@ export default {
           .then(function (result) {
             //console.log(result)
             emit('closeSignupPopup')
-            router.push("/game/" + result.data.id)
+            router.push("/game/"+ state.form.category + "/" + result.data.id)
           })
           .catch(function () {
 

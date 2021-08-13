@@ -35,7 +35,7 @@ const routes = [
     ],
   },
   {
-    path: "/game/:no",
+    path: "/game/:type/:no",
     name: "Game",
     component: GamePage,
     meta:{ loginRequired: true }
