@@ -234,8 +234,8 @@ export default {
             console.log("투표 받았다", voteResult)
             scope.store.commit('root/voteTo', voteResult['toName'])
             // 받은 투표 수를 화면에 표시
-            console.log(document.querySelector(`#${voteResult['toName']}`))
-            console.log(document.querySelector(`#${voteResult['toName']}`).children[2])
+            // console.log(document.querySelector(`#${voteResult['toName']}`))
+            // console.log(document.querySelector(`#${voteResult['toName']}`).children[2])
             const voteSpan = document.querySelector(`#${voteResult['toName']}`).children[2]
             voteSpan.innerText = scope.state.voteCountList[voteResult['toName']][0]
 
@@ -263,7 +263,7 @@ export default {
                 msg = { name: maxUser[2] };
               }
               console.log(tiebreaker, msg)
-              // this.stompClient.send("/pub/hello/room/"+ this.roomId, JSON.stringify(msg), {});
+              scope.stompClient.send("/pub/game/end/"+ scope.roomId, JSON.stringify(msg), {});
             }
           });
 
