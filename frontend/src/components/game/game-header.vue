@@ -91,6 +91,7 @@ export default {
       stompClient: computed(() => store.getters['root/getStompClient']),
       participantsList: computed(() => store.getters['root/getParticipantsList']),
       myJob: computed(() => store.getters['root/getMyJob']),
+      jobList: computed(() => store.getters['root/getMafiaRoles']),
       gameTime: computed(() => store.getters['root/getGameTime']),
       gameRound: computed(() => store.getters['root/getGameRound']),
       statusIcon: 'el-icon-sunny',
@@ -165,7 +166,7 @@ export default {
         emit('startDay')
         state.statusIcon = "el-icon-sunny"
       }
-      console.log("stage---------->", queue)
+      //console.log("stage---------->", queue)
       queue.dequeue()
       if(queue._arr.length > 0){
         let nextTime = queue.peek()
@@ -187,10 +188,10 @@ export default {
     const getRoomInfo = () => {
       store.dispatch('root/requestRoomInfo', {roomId: route.params.no})
       .then((result) => {
-        console.log('result : ', result)
+        //console.log('result : ', result)
       })
       .catch((error) => {
-        console.log(error)
+        //console.log(error)
       })
     }
 
@@ -201,20 +202,28 @@ export default {
     }
 
     const detectChoose = (user) => {
-      console.log(user)
+      //console.log(user)
+      //console.log("-------->직업:", state.jobList)
       //직업확인하는 로직, 태그 후처리
-      alert("end")
+      let answer = ""
+      state.jobList.forEach(target => {
+        if(target.userId == user.userId){
+          answer = target.role
+        }
+      });
+
+      alert("선택하신 대상의 직업은 " + answer + "입니다.")
       state.detectOpen = false
     }
 
     watch(
       () => state.gameTime,
       (gameTime, prevGameTime) => {
-        console.log("---------->",queue)
+        //console.log("---------->",queue)
         //console.log(queue.length)
         if(gameTime!=0){
           if(queue._arr.length == 0){
-            console.log("new timer", queue)
+            //console.log("new timer", queue)
             startTimer(gameTime)
           }
           queue.enqueue(gameTime)
@@ -290,5 +299,6 @@ export default {
   max-width: 30%;
   display: inline-block;
   cursor: pointer;
+  margin: 5px;
 }
 </style>
