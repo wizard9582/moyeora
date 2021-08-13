@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.response.RoomRes;
 import com.ssafy.db.entity.Conference;
+import com.ssafy.db.entity.Mafia;
 import com.ssafy.db.entity.User;
 import com.ssafy.db.entity.UserConference;
 import com.ssafy.db.repository.UserConferenceRepository;
@@ -27,5 +28,7 @@ public interface RoomService {
     void leave(UserConference uc);
 
     long popRoom(long id);
+
+    List<Mafia> getRoles(long roomId);
 
 }

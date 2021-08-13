@@ -288,6 +288,19 @@ export default {
             }
             alert(msg)
             myRole = rchat.role;
+
+            // 경찰이라면 참가자들의 직업을 미리 받아옴
+            if(myRole == "police"){
+              scope.store.dispatch('root/requestByPolice', { roomId: scope.roomId })
+              .then((result) => {
+                //console.log("경찰이 얻어온 직업들 : ", result.data)
+                scope.store.commit('root/setMafiaRoles', result.data);
+                console.log('경찰이 얻어온 직업들 뷰엑스 확인 : ',scope.store.getters['root/getMafiaRoles'])
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+            }
           });
           // 메세지를 받을 때마다 게임 승리여부 판단과 라운드 체크를 해주어야 합니다.
           this.stompClient.subscribe('/sub/game/morning/'+this.roomId, function (chat) {

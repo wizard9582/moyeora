@@ -156,7 +156,7 @@ public class SocketController {
 				mafia.setRole(jobs[userConferenceList.size()-5][idx++]);
 				mafia.setStatus(0);
 				System.out.println(mafia.getUserConference().getUser().getUserId()+ " => " +mafia.getRole());
-				mafiaRepository.save(mafia);
+				mafiaRepositorySupport.saveRole(mafia);
 				String msg = "{\"role\":\""+mafia.getRole()+"\", \"same\":null}";
 				if(!mafia.getRole().equals("mafia"))
 					template.convertAndSend("/sub/game/start/"+roomId+"/"+mafia.getUserConference().getUser().getUserId(),msg);

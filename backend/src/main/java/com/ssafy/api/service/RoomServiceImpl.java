@@ -1,14 +1,10 @@
 package com.ssafy.api.service;
 
 import com.ssafy.api.response.RoomRes;
-import com.ssafy.db.entity.Conference;
+import com.ssafy.db.entity.*;
 
-import com.ssafy.db.entity.ConferenceHistory;
 import com.ssafy.db.repository.*;
 import com.ssafy.kurento.RoomManager;
-
-import com.ssafy.db.entity.User;
-import com.ssafy.db.entity.UserConference;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -110,5 +106,10 @@ public class RoomServiceImpl implements RoomService {
 	@Override
 	public long popRoom(long id) {
 		return roomRepositorySupport.popRoom(id);
+	}
+
+	@Override
+	public List<Mafia> getRoles(long roomId) {
+		return mafiaRepositorySupport.getPlayerByRoomId(roomId);
 	}
 }
