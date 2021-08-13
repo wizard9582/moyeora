@@ -51,19 +51,8 @@
     </template>
   </el-dialog>
   <!-- 도움말 다이얼로그 -->
-  <el-dialog
-    title="도움말"
-    v-model="state.questionOpen"
-    width="30%"
-    :before-close="handleClose">
-    <span>
-      마피아 게임 룰 설명 이미지로 들어갈 예정
-    </span>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button type="primary" @click="state.questionOpen = false">확인</el-button>
-      </span>
-    </template>
+  <el-dialog title="도움말" v-model="state.questionOpen" width="30%" :before-close="handleClose">
+    <el-image style="width: 100%; height: auto" :src="require('@/assets/img-mafia-rule.png')" :fit="contain"></el-image>
   </el-dialog>
 </template>
 
