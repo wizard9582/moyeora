@@ -288,7 +288,7 @@ export default {
             }
             alert(msg)
             myRole = rchat.role;
-
+            scope.store.commit('root/setMyJob', myRole)
             // 경찰이라면 참가자들의 직업을 미리 받아옴
             if(myRole == "police"){
               scope.store.dispatch('root/requestByPolice', { roomId: scope.roomId })

@@ -9,5 +9,6 @@ export default {
   voteCount: null,
   gameTime: null,
   gameRound: null,
+  myJob: "(미정)",
   mafiaRoles: null,
 }
