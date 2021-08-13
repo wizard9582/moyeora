@@ -13,51 +13,82 @@
       <el-carousel-item class="project-desc">
         <h1>MOYEORA</h1>
         <el-row class="sub-content">
-          <el-col :span="8" class="sample-image">
-            <img src="@/assets/img-vue.png" alt="sample-image">
-          </el-col>
-          <el-col :span="16">
-          </el-col>
-        </el-row>
-      </el-carousel-item>
-      <el-carousel-item class="project-desc">
-        <h1>MOYEORA</h1>
-        <el-row class="sub-content">
-          <el-col :span="16" class="sample-image">
-          </el-col>
-          <el-col :span="8">
-            <img src="@/assets/img-vue.png" alt="sample-image">
-          </el-col>
-        </el-row>
-      </el-carousel-item>
-      <el-carousel-item class="project-desc">
-        <h1>MOYEORA</h1>
-        <el-row class="sub-content">
-          <el-col :span="8" class="sample-image">
-            <img src="@/assets/img-vue.png" alt="sample-image">
-          </el-col>
-          <el-col :span="16">
-          </el-col>
-        </el-row>
-      </el-carousel-item>
-      <el-carousel-item class="project-desc">
-        <h1>MOYEORA</h1>
-        <el-row class="sub-content">
-          <el-col :span="16" class="sample-image">
+          <el-col :span="3" class="sample-image">
             <div class="grid-content"></div>
           </el-col>
-          <el-col :span="8">
-            <img src="@/assets/img-vue.png" alt="sample-image">
+          <el-col :span="12" class="sample-image">
+            <span class="demonstration">작업작업</span>
+            <el-carousel height="300px" type="card">
+              <el-carousel-item v-for="item in 4" :key="item">
+                <img src="@/assets/img-vue.png" alt="sample-image">
+              </el-carousel-item>
+            </el-carousel>
+          </el-col>
+          <el-col :span="9">
+          </el-col>
+        </el-row>
+      </el-carousel-item>
+      <el-carousel-item class="project-desc">
+        <h1>MOYEORA</h1>
+        <el-row class="sub-content">
+          <el-col :span="9" class="sample-image">
+            <div class="grid-content"></div>
+          </el-col>
+          <el-col :span="12">
+            <span class="demonstration">작업작업</span>
+            <el-carousel height="300px" type="card">
+              <el-carousel-item v-for="item in 4" :key="item">
+                <img src="@/assets/img-vue.png" alt="sample-image">
+              </el-carousel-item>
+            </el-carousel>
+          </el-col>
+          <el-col :span="3" class="sample-image">
+            <div class="grid-content"></div>
+          </el-col>
+        </el-row>
+      </el-carousel-item>
+      <el-carousel-item class="project-desc">
+        <h1>MOYEORA</h1>
+        <el-row class="sub-content">
+          <el-col :span="3" class="sample-image">
+            <div class="grid-content"></div>
+          </el-col>
+          <el-col :span="12" class="sample-image">
+            <span class="demonstration">작업작업</span>
+            <el-carousel height="300px" type="card">
+              <el-carousel-item v-for="item in 4" :key="item">
+                <img src="@/assets/img-vue.png" alt="sample-image">
+              </el-carousel-item>
+            </el-carousel>
+          </el-col>
+          <el-col :span="9">
+          </el-col>
+        </el-row>
+      </el-carousel-item>
+      <el-carousel-item class="project-desc">
+        <h1>MOYEORA</h1>
+        <el-row class="sub-content">
+          <el-col :span="9" class="sample-image">
+            <div class="grid-content"></div>
+          </el-col>
+          <el-col :span="12">
+            <span class="demonstration">작업작업</span>
+            <el-carousel height="300px" type="card">
+              <el-carousel-item v-for="item in 4" :key="item">
+                <img src="@/assets/img-vue.png" alt="sample-image">
+              </el-carousel-item>
+            </el-carousel>
+          </el-col>
+          <el-col :span="3" class="sample-image">
+            <div class="grid-content"></div>
           </el-col>
         </el-row>
       </el-carousel-item>
       <el-carousel-item class="project-desc">
         <h1>MOYEORA</h1>
         <el-row>
+          <el-col :span="6"></el-col>
           <el-col :span="12">
-            프로젝트 설명
-          </el-col>
-          <el-col :span="6">
             서울 3반 6팀 '모여라'
             <el-divider/>
             팀장 : 최성훈 (Backend)<br>

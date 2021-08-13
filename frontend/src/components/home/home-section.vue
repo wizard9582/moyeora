@@ -1,7 +1,7 @@
 <template>
   <el-main>
     <div class="space"></div>
-    <el-button class="btn-refresh" type="primary" icon="el-icon-refresh-left" @click="clickRefresh">새로고침</el-button>
+    <el-button class="btn-refresh" type="primary" :icon="state.refresh" :round="true" @click="clickRefresh" @mouseover="mouseOver" @mouseleave="mouseOut">새로고침</el-button>
     <div v-if="state.noRoom">
       현재 생성된 방이 없습니다!
     </div>
@@ -30,6 +30,7 @@ export default {
       const router = useRouter()
 
       const state = reactive({
+        refresh:"el-icon-refresh-left",
         noRoom: false,
         roomData: [],
         filteredData: [],
@@ -38,60 +39,6 @@ export default {
         page: 1,
         index:  0
       })
-
-      //type = this.$route.params.type;
-      //console.log("type ->", router.currentRoute.value.params.type)
-      state.type = router.currentRoute.value.params.type
-
-      // console.log("current ->", router.currentRoute)
-      // console.log("current ->", router.currentRoute.value.params.type)
-      // console.log("route ->", router.getRoutes())
-      // console.log("optios ->", router.options)
-
-      store.dispatch('root/requestRoomList')
-      .then(function (result) {
-        console.log(result.data)
-        result.data.forEach(item =>{
-          console.log(item.state)
-          //console.log("requestRoomList : "+item.id + " / "+item.count);
-          let conference = {id: 0, title: "", type:"", member: 0, lock: true, password: "", state: "", desc: ""}
-          conference.id = item.id
-          conference.title = item.title
-          conference.type = item.category
-          conference.lock = item.private
-          conference.desc = item.description
-          //참가자 수 확인과 룸 상태 변경은 나중에 구현
-          conference.member = item.count;
-          conference.state = item.state;
-          //console.log(conference)
-          state.roomData.push(conference)
-        })
-
-        if(state.type === "all"){
-          state.filteredData = state.roomData;
-        }else{
-          state.roomData.forEach(item => {
-            if(item.type === state.type){
-              state.filteredData.push(item);
-            }
-          })
-        }
-        //console.log("filteredData",filteredData)
-
-        state.listData = state.filteredData.slice((state.page-1)*8, state.page*8 );
-        state.index = parseInt(state.filteredData.length / 8);
-
-        if(state.filteredData.length % 8 != 0){
-          state.index = state.index + 1;
-        }
-        if(state.filteredData.length == 0){
-          state.noRoom = true;
-        }
-      })
-      .catch(function (err) {
-        alert(err)
-      })
-
       const clickRoom = function(room) {
         let route = room.type + "/" + room.id
         if(room.lock){
@@ -104,12 +51,70 @@ export default {
         state.page = val;
         state.listData = state.filteredData.slice((state.page-1)*8, state.page*8 );
       }
-      const clickRefresh = function() {
-        console.log("refresh")
-        router.go()
+      const mouseOver = () => {
+        state.refresh = "el-icon-loading"
+      }
+      const mouseOut = () => {
+        state.refresh = "el-icon-refresh-left"
       }
 
-      return { state, clickRoom , handleCurrentChange, clickRefresh }
+      const clickRefresh = function() {
+        console.log("refresh")
+        //router.go()
+        state.roomData = []
+        state.type = router.currentRoute.value.params.type
+
+          // console.log("current ->", router.currentRoute)
+          // console.log("current ->", router.currentRoute.value.params.type)
+          // console.log("route ->", router.getRoutes())
+          // console.log("optios ->", router.options)
+
+          store.dispatch('root/requestRoomList')
+          .then(function (result) {
+            console.log(result.data)
+            result.data.forEach(item =>{
+              //console.log(roomData)
+              //console.log("requestRoomList : "+item.id + " / "+item.count);
+              let conference = {id: 0, title: "", type:"", member: 0, lock: true, password: "", state: "", desc: ""}
+              conference.id = item.id
+              conference.title = item.title
+              conference.type = item.category
+              conference.lock = item.private
+              conference.desc = item.description
+              //참가자 수 확인과 룸 상태 변경은 나중에 구현
+              conference.member = item.count;
+              conference.state = (item.count == 10)? "full" : "accessable"
+              //console.log(conference)
+              state.roomData.push(conference)
+            })
+
+            if(state.type === "all"){
+              state.filteredData = state.roomData;
+            }else{
+              state.roomData.forEach(item => {
+                if(item.type === state.type){
+                  state.filteredData.push(item);
+                }
+              })
+            }
+            //console.log("filteredData",filteredData)
+
+            state.listData = state.filteredData.slice((state.page-1)*8, state.page*8 );
+            state.index = parseInt(state.filteredData.length / 8);
+
+            if(state.filteredData.length % 8 != 0){
+              state.index = state.index + 1;
+            }
+            if(state.filteredData.length == 0){
+              state.noRoom = true;
+            }
+          })
+          .catch(function (err) {
+            alert(err)
+          })
+      }
+      clickRefresh()
+      return { state, clickRoom , handleCurrentChange, clickRefresh, mouseOver, mouseOut }
     },
 }
 </script>
@@ -137,5 +142,26 @@ export default {
   max-width: 25%;
   display: inline-block;
   cursor: pointer;
+}
+
+.gameroom-list-item {
+  -webkit-transform:scale(1);
+  -moz-transform:scale(1);
+  -ms-transform:scale(1);
+  -o-transform:scale(1);
+  transform:scale(1);
+  -webkit-transition:.3s;
+  -moz-transition:.3s;
+  -ms-transition:.3s;
+  -o-transition:.3s;
+  transition:.3s;
+}
+.gameroom-list-item:hover {
+  -webkit-transform:scale(1.1);
+  -moz-transform:scale(1.1);
+  -ms-transform:scale(1.1);
+  -o-transform:scale(1.1);
+  transform:scale(1.1);
+  z-index: 5000;
 }
 </style>
