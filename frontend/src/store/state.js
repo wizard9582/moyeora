@@ -9,4 +9,5 @@ export default {
   voteCount: null,
   gameTime: null,
   gameRound: null,
+  mafiaRoles: null,
 }
