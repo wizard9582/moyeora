@@ -14,6 +14,7 @@ public class Post extends BaseEntity{
     private Integer notice;
     private String title;
     private String description;
+    private String date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore

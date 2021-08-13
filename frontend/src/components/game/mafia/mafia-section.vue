@@ -6,7 +6,11 @@
         </el-row>
       </el-col>
       <el-col v-show="chatVisible" :span="state.chatSize" class="chat">
-        <GameChat/>
+        <GameChat
+          @openFinalVotePop="startFinalVotePopup"
+          @openDoctorVotePop="startDoctorVotePopup"
+          @openMafiaVotePop="startMafiaVotePopup"
+        />
       </el-col>
     </el-row>
   </div>
@@ -18,7 +22,7 @@ import GameChat from '@/components/game/game-chat.vue'
 import { watch, reactive, computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import { register, participants } from '@/common/lib/conferenceroom'
+import { register } from '@/common/lib/conferenceroom'
 
 export default {
   name: "MafiaSection",
@@ -65,8 +69,20 @@ export default {
       })
     }
 
-    register(state.roomNum, state.userName)
+    const startFinalVotePopup = () => {
+      emit('openFinalVotePopup')
+    }
 
+    const startDoctorVotePopup = () => {
+      emit('openDoctorVotePopup')
+    }
+
+    const startMafiaVotePopup = () => {
+      emit('openMafiaVotePopup')
+    }
+
+
+    register(state.roomNum, state.userName)
     enterRoom()
 
     // props로 넘어온 데이터가 변하면 size를 바꿔준다
@@ -74,7 +90,7 @@ export default {
       changeSize()
     })
 
-    return { state, chatVisible }
+    return { state, chatVisible, startFinalVotePopup, startDoctorVotePopup, startMafiaVotePopup }
   }
 }
 </script>

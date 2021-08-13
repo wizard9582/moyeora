@@ -114,4 +114,9 @@ public class RoomServiceImpl implements RoomService {
 	public long popRoom(long id) {
 		return roomRepositorySupport.popRoom(id);
 	}
+
+	@Override
+	public List<Mafia> getRoles(long roomId) {
+		return mafiaRepositorySupport.getPlayerByRoomId(roomId);
+	}
 }
