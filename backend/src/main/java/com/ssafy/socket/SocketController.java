@@ -96,23 +96,22 @@ public class SocketController {
 	// 게임 끝났는지 판단
 	@MessageMapping("/game/end/{roomId}")
 	public void getGameStatus(@DestinationVariable String roomId, HelloMessage helloMessage) {
-		List<Mafia> playerList = mafiaRepositorySupport.getPlayerByRoomId(Long.parseLong(roomId));
-
+		// 투표를 진행했을 때
 		if (helloMessage.getName().length() != 0) {
 			long userId = Long.parseLong(helloMessage.getName());
 			mafiaRepositorySupport.killUser(userId, Long.parseLong(roomId));
 		}
+		// Player 정보 가져오기 ( 나간 사람 포함)
+		List<Mafia> playerList = mafiaRepositorySupport.getPlayerByRoomId(Long.parseLong(roomId));
 		int liveMafiaCnt = 0;
 		int liveCitizenCnt =0;
 
 		//현재 생존한 직업별 플레이어 수 세기
 		for(Mafia m : playerList){
-			if(m.getStatus()==0){
-				if(m.getRole().equals("mafia")) {
-					liveMafiaCnt++;
-				}else{
-					liveCitizenCnt++;
-				}
+			if(m.getRole().equals("mafia")) {
+				liveMafiaCnt++;
+			}else{
+				liveCitizenCnt++;
 			}
 		}
 

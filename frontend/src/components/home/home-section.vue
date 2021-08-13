@@ -48,7 +48,7 @@ export default {
       .then(function (result) {
         console.log(result.data)
         result.data.forEach(item =>{
-          //console.log(roomData)
+          console.log(item.state)
           //console.log("requestRoomList : "+item.id + " / "+item.count);
           let conference = {id: 0, title: "", type:"", member: 0, lock: true, password: "", state: "", desc: ""}
           conference.id = item.id
@@ -58,7 +58,7 @@ export default {
           conference.desc = item.description
           //참가자 수 확인과 룸 상태 변경은 나중에 구현
           conference.member = item.count;
-          conference.state = (item.count == 10)? "full" : "accessable"
+          conference.state = item.state;
           //console.log(conference)
           state.roomData.push(conference)
         })

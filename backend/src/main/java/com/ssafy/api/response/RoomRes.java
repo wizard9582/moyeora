@@ -40,7 +40,10 @@ public class RoomRes {
 	List<User> member;
 	@ApiModelProperty(name="Room Participants length")
 	int count;
+	@ApiModelProperty(name = "Room State")
+	String state;
 
+	// 기본
 	public static RoomRes of(Conference conf, List<User> member, int count) {
 		RoomRes res = new RoomRes();
 		res.setId(conf.getId());
@@ -54,6 +57,24 @@ public class RoomRes {
 		res.setPrivate(conf.isPrivate());
 		res.setMember(member);
 		res.setCount(count);
+		res.setState("accessable");
+		return res;
+	}
+	// 게임중이거나 인원 수 다 찬 방일 경우 생성자
+	public static RoomRes of(Conference conf, List<User> member, int count, String state) {
+		RoomRes res = new RoomRes();
+		res.setId(conf.getId());
+		res.setOwnerId(conf.getOwnerId());
+		res.setCategory(conf.getConferenceCategory());
+		res.setCallStartTime(conf.getCallStartTime());
+		res.setCallEndTime(conf.getCallEndTime());
+		res.setTitle(conf.getTitle());
+		res.setDescription(conf.getDescription());
+		res.setActive(conf.isActive());
+		res.setPrivate(conf.isPrivate());
+		res.setMember(member);
+		res.setCount(count);
+		res.setState(state);
 		return res;
 	}
 }
