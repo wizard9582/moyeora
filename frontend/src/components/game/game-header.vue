@@ -8,7 +8,7 @@
       </div> -->
     </div>
     <div class="job-info" v-if="state.roomType=='mafia'">
-      <span>당신은 {{state.myJob}} 입니다.</span>
+      <el-button @click="openJob">내 직업확인</el-button>
     </div>
     <div class="game-info" v-if="state.roomType=='mafia'">
       <div class="game-status">
@@ -58,6 +58,7 @@
 
 <script>
 import { reactive, computed, watch } from 'vue'
+import { ElMessage } from 'element-plus';
 import { useStore } from 'vuex'
 import { useRoute } from 'vue-router'
 
@@ -201,6 +202,13 @@ export default {
       console.log('PASS')
     }
 
+    const openJob = () =>{
+        ElMessage({
+          dangerouslyUseHTMLString: true,
+          message: '<strong>당신의 직업은 <i>' + state.myJob + '</i>입니다</strong>',
+        });
+    }
+
     const detectChoose = (user) => {
       //console.log(user)
       //console.log("-------->직업:", state.jobList)
@@ -231,12 +239,18 @@ export default {
       }
     )
 
-    return { state, clickPass, clickInvite, clickOnQuestion, padMinute, padSecond, startTimer, nextStage, detectChoose }
+    return { state, clickPass, clickInvite, clickOnQuestion, padMinute, padSecond, startTimer, nextStage, detectChoose, openJob }
   }
 }
 </script>
 
 <style>
+.el-message{
+ position: absolute;
+ top: 300px;
+ z-index: 12000;
+}
+
 .game-header {
   padding: 10px 20px;
   border-bottom: 2px solid lightgray;
