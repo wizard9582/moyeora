@@ -72,13 +72,13 @@ public class PostController {
 
 	@GetMapping("/")
 	@ApiOperation(value = "", notes = "게시물을 보여주게 한다.")
-	public List<Post> getPosts(){
+	public List<PostRegisterPostReq> getPosts(){
 		return postService.getAllPost();
 	}
 
 	@GetMapping("/notice")
 	@ApiOperation(value = "", notes = "공지사항을 보여주게 한다.")
-	public List<Post> getNotice(){
+	public List<PostRegisterPostReq> getNotice(){
 		return postService.getAllNotice();
 	}
 

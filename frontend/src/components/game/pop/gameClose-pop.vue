@@ -36,6 +36,7 @@ export default {
       userName: computed(() => store.getters['root/getUserId']),
       ownerName: computed(() => store.getters['root/getRoomOwner']),
       stompClient: computed(() => store.getters['root/getStompClient']),
+      participantsList: computed(() => store.getters['root/getParticipantsList']),
     })
 
     console.log("루트: ",route)
@@ -79,6 +80,16 @@ export default {
           state.stompClient.send("/pub/game/end/"+ roomId, JSON.stringify(msg3), {});
         }
         store.commit('root/removeRoomOwner')
+        for (let player of state.participantsList) {
+          if (state.userName == player.userId) {
+            let msg = {
+              name: player.id
+            }
+            console.log(player.id)
+            state.stompClient.send("/pub/game/end/"+ roomId, JSON.stringify(msg), {});
+            break
+          }
+        }
         disconnectSocket()
         console.log('result : ', result)
         router.push("/home/" + 'all')

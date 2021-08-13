@@ -2,7 +2,6 @@
   <el-container>
     <GameHeader
       @openInvitePopup="onOpenInvitePopup"
-      @openGameClosePopup="onOpenGameClosePopup"
       @startNight="onStartNight"
       @startDay="onStartDay"
       v-bind:class="{ 'day': day, 'night':!day }"
@@ -10,8 +9,11 @@
     <el-main>
       <MafiaSection
         :openChat="gameChatOpen"
-        @closeGameChat="onCloseGameChat"
         v-bind:class="{ 'day': day, 'night':!day }"
+        @closeGameChat="onCloseGameChat"
+        @openFinalVotePopup="onOpenFinalVotePopup"
+        @openDoctorVotePopup="onOpenDoctorVotePopup"
+        @openMafiaVotePopup="onOpenMafiaVotePopup"
       />
     </el-main>
     <el-footer height="80px">
@@ -30,29 +32,50 @@
     :open="gameClosePopupOpen"
     @closeGameClosePopup="onCloseGameClosePopup"
   />
+  <FinalVotePop
+    :open="finalVotePopupOpen"
+    @closeFinalVotePopup="onCloseFinalVotePopup"
+  />
+  <DoctorVotePop
+    :open="doctorVotePopupOpen"
+    @closeDoctorVotePopup="onCloseDoctorVotePopup"
+  />
+  <MafiaVotePop
+    :open="mafiaVotePopupOpen"
+    @closeMafiaVotePopup="onCloseMafiaVotePopup"
+  />
 </template>
 
 <script>
 import GameHeader from '@/components/game/game-header.vue'
-import InvitePop from '@/components/game/pop/invite-pop.vue'
-import GameClosePop from '@/components/game/pop/gameClose-pop.vue'
 import MafiaSection from '@/components/game/mafia/mafia-section.vue'
 import GameController from '../components/game/game-controller.vue'
+import InvitePop from '@/components/game/pop/invite-pop.vue'
+import GameClosePop from '@/components/game/pop/gameClose-pop.vue'
+import FinalVotePop from '@/components/game/pop/finalVote-pop.vue'
+import DoctorVotePop from '@/components/game/pop/doctorVote-pop.vue'
+import MafiaVotePop from '@/components/game/pop/mafiaVote-pop.vue'
 
 
 export default {
   name: 'GamePage',
   components: {
     GameHeader,
+    MafiaSection,
+    GameController,
     InvitePop,
     GameClosePop,
-    MafiaSection,
-    GameController
+    FinalVotePop,
+    DoctorVotePop,
+    MafiaVotePop,
   },
   data () {
     return {
       invitePopupOpen: false,
       gameClosePopupOpen: false,
+      finalVotePopupOpen: false,
+      doctorVotePopupOpen: false,
+      mafiaVotePopupOpen: false,
       gameChatOpen: false,
       day: true,
     }
@@ -69,6 +92,24 @@ export default {
     },
     onCloseGameClosePopup () {
       this.gameClosePopupOpen = false
+    },
+    onOpenFinalVotePopup () {
+      this.finalVotePopupOpen = true
+    },
+    onCloseFinalVotePopup () {
+      this.finalVotePopupOpen = false
+    },
+    onOpenMafiaVotePopup () {
+      this.mafiaVotePopupOpen = true
+    },
+    onCloseMafiaVotePopup () {
+      this.mafiaVotePopupOpen = false
+    },
+    onOpenDoctorVotePopup () {
+      this.doctorVotePopupOpen = true
+    },
+    onCloseDoctorVotePopup () {
+      this.doctorVotePopupOpen = false
     },
     onOpenGameChat () {
       this.gameChatOpen = true

@@ -4,6 +4,7 @@ import com.ssafy.api.response.RoomRes;
 import com.ssafy.db.entity.*;
 
 import com.ssafy.db.repository.*;
+import com.ssafy.kurento.Room;
 import com.ssafy.kurento.RoomManager;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +56,6 @@ public class RoomServiceImpl implements RoomService {
 	public List<RoomRes> findRooms() {
 		List<Conference> conferenceList = roomRepositorySupport.getActiveRoom();
 		List<RoomRes> roomList = new ArrayList<>();
-
 		for(Conference c : conferenceList){
 			int count = 0;
 			try{
@@ -66,7 +66,14 @@ public class RoomServiceImpl implements RoomService {
 				System.out.println("findRooms: "+e);
 			}
 			finally {
-				roomList.add(RoomRes.of(c,null,count));
+				Optional<Mafia> mafia =  mafiaRepositorySupport.getMafiaInConference(c.getId());
+				if (count == 10) {
+					roomList.add(RoomRes.of(c, null, count, "full"));
+				}else if (mafia.isPresent()) {
+					roomList.add(RoomRes.of(c, null, count, "playing"));
+				} else{
+					roomList.add(RoomRes.of(c, null, count));
+				}
 			}
 
 		}

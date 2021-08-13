@@ -9,6 +9,7 @@ import com.ssafy.db.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,16 +22,40 @@ public class PostRepositorySupport {
     private JPAQueryFactory jpaQueryFactory;
     QPost qPost = QPost.post;
 
-    public List<Post> getAllPost() {
+    public List<PostRegisterPostReq> getAllPost() {
         List<Post> posts = jpaQueryFactory.select(qPost).from(qPost).
                 where(qPost.notice.eq(0)).fetch();
-        return  posts;
+        List<PostRegisterPostReq> res =new ArrayList<>();
+
+        for(Post p : posts){
+            PostRegisterPostReq pr= new PostRegisterPostReq();
+            pr.setTitle(p.getTitle());
+            pr.setNotice(p.getNotice());
+            pr.setDescription(p.getDescription());
+            pr.setDate(p.getDate());
+            pr.setUserId(p.getUser().getUserId());
+            res.add(pr);
+        }
+
+        return  res;
     }
 
-    public List<Post> getAllNotice() {
+    public List<PostRegisterPostReq> getAllNotice() {
         List<Post> Notices = jpaQueryFactory.select(qPost).from(qPost).
                 where(qPost.notice.eq(1)).fetch();
-        return Notices;
+
+        List<PostRegisterPostReq> res =new ArrayList<>();
+
+        for(Post p : Notices){
+            PostRegisterPostReq pr= new PostRegisterPostReq();
+            pr.setTitle(p.getTitle());
+            pr.setNotice(p.getNotice());
+            pr.setDescription(p.getDescription());
+            pr.setDate(p.getDate());
+            pr.setUserId(p.getUser().getUserId());
+            res.add(pr);
+        }
+        return res;
     }
 
     public void deletePostByPostId(Long postId) {

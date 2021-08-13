@@ -49,6 +49,31 @@ export function setGameRound(state, payload) {
   state.gameTime = payload.second
   state.gameRound = payload.round
 }
+
+export function setFinalVotePlayer(state, user) {
+  state.finalVotePlayer = user
+}
+
+export function setFinalVoteCount(state) {
+  state.finalVoteCount = [0, 0]
+}
+
+export function voteFinalVote(state, vote) {
+  if (vote === 'kill') {
+    state.finalVoteCount[0]++
+  } else {
+    state.finalVoteCount[1]++
+  }
+}
+
+export function setDoctorSelectPlayer(state, user) {
+  state.doctorSelectPlayer = user
+}
+
+export function setMafiaSelectPlayer(state, user) {
+  state.mafiaSelectPlayer = user
+}
+
 export function setMyJob(state, job) {
   if(job == "reset"){
     state.myJob = "(미정)"

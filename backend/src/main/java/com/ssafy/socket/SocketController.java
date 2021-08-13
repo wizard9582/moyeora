@@ -5,8 +5,6 @@ import com.ssafy.db.entity.UserConference;
 import com.ssafy.db.repository.MafiaRepository;
 import com.ssafy.db.repository.MafiaRepositorySupport;
 import com.ssafy.db.repository.UserConferenceRepositorySupport;
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -106,17 +104,16 @@ public class SocketController {
 			long userId = Long.parseLong(msg[1]);
 			mafiaRepositorySupport.killUser(userId, Long.parseLong(roomId));
 		}
+
 		int liveMafiaCnt = 0;
 		int liveCitizenCnt =0;
 
 		//현재 생존한 직업별 플레이어 수 세기
 		for(Mafia m : playerList){
-			if(m.getStatus()==0){
-				if(m.getRole().equals("mafia")) {
-					liveMafiaCnt++;
-				}else{
-					liveCitizenCnt++;
-				}
+			if(m.getRole().equals("mafia")) {
+				liveMafiaCnt++;
+			}else{
+				liveCitizenCnt++;
 			}
 		}
 
@@ -144,6 +141,9 @@ public class SocketController {
 	public void gameMorning(MafiaChat chat, @DestinationVariable String roomId) {
 		//직업 분배 시작
 		if(chat.getRound()==0){
+			Collections.shuffle(Arrays.asList(jobs[0]));
+			//System.out.println(Arrays.toString(jobs[0])+", "+jobs[0].length);
+
 			int idx = 0;
 			//System.out.println(chat.getUserId()+"가 소켓 통신 중");
 			List<UserConference> userConferenceList = userConferenceRepositorySupport.getUserConferenceByRoomNum(roomId);
