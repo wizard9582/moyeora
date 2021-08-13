@@ -49,3 +49,7 @@ export function setGameRound(state, payload) {
   state.gameTime = payload.second
   state.gameRound = payload.round
 }
+
+export function setMafiaRoles(state, payload) {
+  state.mafiaRoles = payload;
+}
