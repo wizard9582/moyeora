@@ -27,7 +27,14 @@ public class MafiaRepositorySupport {
 
     @Transactional
     public void deleteMafia(long roomId){
-        jpaQueryFactory.delete(qMafia).where(qMafia.userConference.conference.id.eq(roomId)).execute();
+        List<UserConference> ucList = jpaQueryFactory.select(qUserConference)
+                .from(qUserConference)
+                .where(qUserConference.id.eq(roomId)).fetch();
+
+        for(UserConference uc : ucList){
+            jpaQueryFactory.delete(qMafia)
+                    .where(qMafia.userConference.id.eq(uc.getId())).execute();
+        }
     }
 
     @Transactional
