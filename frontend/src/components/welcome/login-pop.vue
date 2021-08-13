@@ -91,13 +91,21 @@ export default {
             console.log('submit')
             store.dispatch('root/requestLogin', { id: state.form.id, password: state.form.password })
             .then(function (result) {
+              console.log("--------->", result)
               store.commit('root/setToken', result.data.accessToken)
               // 해당 유저의 정보를 받아오는 axios
               getUserId(result.data.accessToken)
               emit('closeLoginPopup')
             })
             .catch(function (err) {
-              alert(err)
+              //console.log(err.response.status);
+
+              if(err.response.status == 401){
+                alert('비밀번호를 잘못 입력하셨습니다.')
+              }
+              else if(err.response.status == 500){
+                alert('존재하지 않는 회원입니다.')
+              }
             })
           } else {
             alert('Validate error!')

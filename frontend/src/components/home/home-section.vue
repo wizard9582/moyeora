@@ -2,6 +2,9 @@
   <el-main>
     <div class="space"></div>
     <el-button class="btn-refresh" type="primary" icon="el-icon-refresh-left" @click="clickRefresh">새로고침</el-button>
+    <div v-if="state.noRoom">
+      현재 생성된 방이 없습니다!
+    </div>
     <ul class="gameroom-list">
       <li v-for="item in state.listData" class="gameroom-list-item" :key="item.id">
         <game-room :roomData="item" @click="clickRoom(item)"></game-room>
@@ -27,6 +30,7 @@ export default {
       const router = useRouter()
 
       const state = reactive({
+        noRoom: false,
         roomData: [],
         filteredData: [],
         listData: [],
@@ -80,16 +84,20 @@ export default {
         if(state.filteredData.length % 8 != 0){
           state.index = state.index + 1;
         }
+        if(state.filteredData.length == 0){
+          state.noRoom = true;
+        }
       })
       .catch(function (err) {
         alert(err)
       })
 
       const clickRoom = function(room) {
+        let route = room.type + "/" + room.id
         if(room.lock){
-          emit('openPwCheck', ["1234", room.id])
+          emit('openPwCheck', ["1234", route])
         }else{
-          router.push("/game/" + room.id)
+          router.push("/game/" + route)
         }
       }
       const handleCurrentChange = function(val) {
