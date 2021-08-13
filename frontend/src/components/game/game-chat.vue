@@ -277,9 +277,28 @@ export default {
           // 직업 분배 결과
           this.stompClient.subscribe('/sub/game/start/'+this.roomId+"/"+this.userName, function (chat) {
             // 직업 연동 아직 안됨
-            console.log("타이머 0 (직업 분배 결과) : ", chat.body)
-            alert("당신의 직업은 "+ chat.body +"입니다.")
-            myRole = chat.body;
+            console.log("타이머 0 (직업 분배 결과) : ", JSON.parse(chat.body))
+            let rchat = JSON.parse(chat.body);
+            let msg = "당신의 직업은 "+ rchat.role +"입니다.";
+            if(rchat.same){
+              msg += "\n마피아 목록: "
+              msg += rchat.same.substr(1,rchat.same.length-2)
+            }
+            alert(msg)
+            myRole = rchat.role;
+            scope.store.commit('root/setMyJob', myRole)
+            // 경찰이라면 참가자들의 직업을 미리 받아옴
+            if(myRole == "police"){
+              scope.store.dispatch('root/requestByPolice', { roomId: scope.roomId })
+              .then((result) => {
+                //console.log("경찰이 얻어온 직업들 : ", result.data)
+                scope.store.commit('root/setMafiaRoles', result.data);
+                console.log('경찰이 얻어온 직업들 뷰엑스 확인 : ',scope.store.getters['root/getMafiaRoles'])
+              })
+              .catch((error) => {
+                console.log(error)
+              })
+            }
           });
           // 메세지를 받을 때마다 게임 승리여부 판단과 라운드 체크를 해주어야 합니다.
           this.stompClient.subscribe('/sub/game/morning/'+this.roomId, function (chat) {

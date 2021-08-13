@@ -5,6 +5,8 @@ import com.ssafy.db.entity.UserConference;
 import com.ssafy.db.repository.MafiaRepository;
 import com.ssafy.db.repository.MafiaRepositorySupport;
 import com.ssafy.db.repository.UserConferenceRepositorySupport;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -96,10 +98,12 @@ public class SocketController {
 	// 게임 끝났는지 판단
 	@MessageMapping("/game/end/{roomId}")
 	public void getGameStatus(@DestinationVariable String roomId, HelloMessage helloMessage) {
+		String [] msg = helloMessage.getName().split(",");
+		//System.out.println("split 결과: "+Arrays.toString(msg));
 		List<Mafia> playerList = mafiaRepositorySupport.getPlayerByRoomId(Long.parseLong(roomId));
 
-		if (helloMessage.getName().length() != 0) {
-			long userId = Long.parseLong(helloMessage.getName());
+		if (msg.length != 1) {
+			long userId = Long.parseLong(msg[1]);
 			mafiaRepositorySupport.killUser(userId, Long.parseLong(roomId));
 		}
 		int liveMafiaCnt = 0;
@@ -133,19 +137,20 @@ public class SocketController {
 		}
 
 
-		template.convertAndSend("/sub/game/end/"+roomId, gameStatus);
+		template.convertAndSend("/sub/game/end/"+roomId, msg[0]+","+gameStatus);
 	}
 
 	@MessageMapping("/game/morning/{roomId}")
 	public void gameMorning(MafiaChat chat, @DestinationVariable String roomId) {
 		//직업 분배 시작
 		if(chat.getRound()==0){
-			Collections.shuffle(Arrays.asList(jobs[0]));
-			//System.out.println(Arrays.toString(jobs[0])+", "+jobs[0].length);
-
 			int idx = 0;
 			//System.out.println(chat.getUserId()+"가 소켓 통신 중");
 			List<UserConference> userConferenceList = userConferenceRepositorySupport.getUserConferenceByRoomNum(roomId);
+
+			Collections.shuffle(Arrays.asList(jobs[userConferenceList.size()-5]));
+			//System.out.println(Arrays.toString(jobs[0])+", "+jobs[0].length);
+			List<String> mafiaList = new ArrayList<>();
 
 			for(UserConference uc : userConferenceList){
 				Mafia mafia = new Mafia();
@@ -153,8 +158,17 @@ public class SocketController {
 				mafia.setRole(jobs[userConferenceList.size()-5][idx++]);
 				mafia.setStatus(0);
 				System.out.println(mafia.getUserConference().getUser().getUserId()+ " => " +mafia.getRole());
-				mafiaRepository.save(mafia);
-				template.convertAndSend("/sub/game/start/"+roomId+"/"+mafia.getUserConference().getUser().getUserId(),mafia.getRole());
+				mafiaRepositorySupport.saveRole(mafia);
+				String msg = "{\"role\":\""+mafia.getRole()+"\", \"same\":null}";
+				if(!mafia.getRole().equals("mafia"))
+					template.convertAndSend("/sub/game/start/"+roomId+"/"+mafia.getUserConference().getUser().getUserId(),msg);
+				else
+					mafiaList.add(mafia.getUserConference().getUser().getUserId());
+			}
+
+			for (int i = 0; i < mafiaList.size(); i++) {
+				String msg = "{\"role\":\"mafia\", \"same\":\""+mafiaList.toString()+"\"}";
+				template.convertAndSend("/sub/game/start/"+roomId+"/"+mafiaList.get(i), msg);
 			}
 		}
 		//직업 분배 끝

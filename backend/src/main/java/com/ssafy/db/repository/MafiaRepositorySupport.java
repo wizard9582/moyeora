@@ -16,6 +16,9 @@ public class MafiaRepositorySupport {
     QMafia qMafia = QMafia.mafia;
     QUserConference qUserConference = QUserConference.userConference;
 
+    @Autowired
+    MafiaRepository mafiaRepository;
+
     public List<Mafia> getPlayerByRoomId(long roomId){
         List<Mafia> result = jpaQueryFactory.select(qMafia).from(qMafia)
                 .where(qMafia.userConference.conference.id.eq(roomId)).fetch();
@@ -49,5 +52,18 @@ public class MafiaRepositorySupport {
                 .set(qMafia.status , 1)
                 .execute();
 
+    }
+
+    @Transactional
+    public void saveRole(Mafia mafia){
+        Mafia isIn = jpaQueryFactory.select(qMafia).from(qMafia).where(qMafia.userConference.id.eq(mafia.getUserConference().getId())).fetchOne();
+        if(isIn == null)
+            mafiaRepository.save(mafia);
+        else{
+            jpaQueryFactory.update(qMafia)
+                            .where(qMafia.userConference.id.eq(mafia.getUserConference().getId()))
+                            .set(qMafia.status,0)
+                            .set(qMafia.role,mafia.getRole()).execute();
+        }
     }
 }

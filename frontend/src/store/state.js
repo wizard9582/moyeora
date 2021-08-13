@@ -13,4 +13,6 @@ export default {
   finalVoteCount: null,
   doctorSelectPlayer: null,
   mafiaSelectPlayer: null,
+  myJob: "(미정)",
+  mafiaRoles: null,
 }

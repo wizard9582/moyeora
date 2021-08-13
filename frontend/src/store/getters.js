@@ -46,3 +46,11 @@ export function getDoctorSelectPlayer(state) {
 export function getMafiaSelectPlayer(state) {
   return state.mafiaSelectPlayer
 }
+
+export function getMyJob(state) {
+  return state.myJob
+}
+
+export function getMafiaRoles(state) {
+  return state.mafiaRoles
+}

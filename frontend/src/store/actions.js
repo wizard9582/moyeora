@@ -140,3 +140,10 @@ export function requestLeaveRoom ({ state }, payload) {
   // const params = { roomId: payload.roomId }
   return $axios.delete(url, {headers})
 }
+
+export function requestByPolice ({ state }, payload) {
+  console.log('requestByPolice', state, payload)
+  const url = `/mafia/police?roomId=${payload.roomId}`
+  // const params = { roomId: payload.roomId }
+  return $axios.get(url)
+}

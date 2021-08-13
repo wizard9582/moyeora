@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface PostService {
     Post createPost(User user,PostRegisterPostReq postInfo);
-    List<Post> getAllPost();
-    List<Post> getAllNotice();
+    List<PostRegisterPostReq> getAllPost();
+    List<PostRegisterPostReq> getAllNotice();
     void updatePostByPostId(PostRegisterPostReq postInfo, Long postId);
     void deletePostByPostId(Long postId);
     Post getPost(Long postId);
