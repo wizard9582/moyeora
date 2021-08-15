@@ -1,5 +1,5 @@
 <template>
-  <el-dialog title="최종 투표" v-model="state.popupVisible" width="50%" @close="handleClose">
+  <el-dialog title="최종 투표" v-model="state.popupVisible" width="50%" @close="handleClose" :close-on-click-modal="false">
     <div class="final-vote">
       <span>{{state.finalVotePlayer}} 님의 운명은?</span>
       <div>

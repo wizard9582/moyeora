@@ -2,11 +2,14 @@ package com.ssafy.api.controller;
 
 
 import com.ssafy.api.request.InvitePostReq;
+import com.ssafy.api.request.RelationPostReq;
 import com.ssafy.api.response.InviteRes;
 import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
+import com.ssafy.db.entity.Friend;
 import com.ssafy.db.entity.Invite;
 import com.ssafy.db.entity.User;
+import com.ssafy.db.repository.FriendRepository;
 import com.ssafy.db.repository.InviteRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
 import io.swagger.annotations.Api;
@@ -43,7 +46,7 @@ public class InviteController {
 	InviteRepository inviteRepository;
 
 	@Autowired
-	private SimpMessagingTemplate template;
+	FriendRepository friendRepository;
 
 	@PostMapping()
 	@ApiOperation(value = "초대하는 사람의 아이디", notes = "초대 기능 구현")
@@ -71,9 +74,7 @@ public class InviteController {
            hour : ,
            min :  }
 		 */
-		Invite res = inviteRepository.save(invite);
-		System.out.println(res.getToUser()+" / "+res.getFromUser());
-		template.convertAndSend("/invite/"+res.getToUser(), InviteRes.toConvertJson(res));
+		inviteRepository.save(invite);
 
 		return "success";
 	}
@@ -93,7 +94,7 @@ public class InviteController {
 	}
 
 	@GetMapping("/list")
-	@ApiOperation(value = "header의 token 값 넣어 보냄", notes = "초대 메세지들을  DB에서 가져옴.")
+	@ApiOperation(value = "header의 token 값 넣어 보냄", notes = "초대 메세지들을 DB에서 가져옴.")
 	public List<Invite> getUserInviteList(@ApiIgnore Authentication authentication) {
 
 		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
@@ -103,5 +104,4 @@ public class InviteController {
 
 		return res;
 	}
-
 }
