@@ -97,6 +97,7 @@
             팀원 : 이재상 (Backend)<br>
             팀원 : 이진영 (Backend)<br>
             <el-divider/>
+            Special thanks to<br><br>서울 3반<br>SSAFY 5th<br>...and <strong>You</strong>
           </el-col>
           <el-col :span="6"></el-col>
         </el-row >

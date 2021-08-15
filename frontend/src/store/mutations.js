@@ -137,3 +137,7 @@ export function startVote(state) {
 export function endVote(state) {
   state.voteStarted = false
 }
+
+export function skipStage(state, payload){
+  state.skipStage = payload.value
+}

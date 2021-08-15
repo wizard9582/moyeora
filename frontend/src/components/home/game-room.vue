@@ -22,45 +22,6 @@
   </el-card>
 </template>
 <style>
-.el-card {
-  margin: 0 8px;
-  margin-bottom: 20px;
-}
-.el-card .image-wrapper {
-  width: 100%;
-  height: 160px;
-}
-.el-card .title-wrapper {
-  text-align: left;
-  padding: 14px;
-}
-.el-card .title-wrapper .accessable{
-  background: green;
-  color: white;
-}
-.el-card .title-wrapper .full{
-  background: blue;
-  color: white;
-}
-.el-card .title-wrapper .playing{
-  background: tomato;
-  color: white;
-}
-.el-card .title-wrapper .empty{
-  background: gray;
-  color: white;
-}
-.el-card .title-wrapper .title {
-  font-weight: bold;
-}
-.el-card .bottom {
-  margin-top: 5px;
-  display:-webkit-box;
-  word-wrap:break-word;
-  -webkit-box-orient:vertical;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
 </style>
 <script>
 export default {

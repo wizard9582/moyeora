@@ -289,7 +289,7 @@ export default {
             ],
       })
 
-      
+
       store.dispatch('root/request')
       .then(function (result){
         console.log(result)
@@ -305,67 +305,4 @@ export default {
 </script>
 
 <style>
-#img-profile {
-  margin: 5%;
-}
-.info {
-  width: 60%;
-  margin-right: 15%;
-  margin-left: 15%;
-  padding: 5%;
-  text-align: left;
-  background: whitesmoke;
-}
-.info .sub-title {
-  margin: 5%;
-  font-weight: bold;
-  text-decoration: gray;
-}
-.info .info-item .friend-list .friend-list-item {
-  display: inline-block;
-  text-align: center;
-  min-width: 150px;
-  width: 20%;
-  margin-bottom: 15px;
-}
-.info .info-item {
-  background: whitesmoke;
-  text-align: left;
-}
-.anchor {
-  position: fixed;
-  top: 150px;
-  right: 20px;
-  width: 150px;
-  height: 200px;
-  border-radius: 10px;
-  background: lightgray;
-  opacity: 0.8;
-}
-.anchor .anchor-item {
-  height: 20%;
-  padding-left: 15px;
-  padding-right: 15px;
-  text-align: center;
-  line-height: 40px;
-}
-a:link {
-  color: black;
-  text-decoration: none;
-}
-a:visited {
-  color: black;
-  text-decoration: none;
-}
-a:active {
-  color: black;
-  text-decoration: none;
-}
-a:hover {
-  color: black;
-  text-decoration: none;
-}
-.anchor .anchor-item:nth-child(even) {
-  background: whitesmoke;
-}
 </style>

@@ -11,7 +11,7 @@
       border
       stripe
     >
-      <el-table-column prop="id" label="글번호" width="150"></el-table-column>
+      <el-table-column type="index" label="글번호" width="150"></el-table-column>
       <el-table-column
         prop="tag"
         label="태그"
@@ -66,7 +66,7 @@ export default {
 
       store.dispatch('root/requestBoard')
       .then(function (result){
-        console.log(result)
+        console.log("result---->",result)
         state.tableData = result.data
       })
       .catch(function (err){

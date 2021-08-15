@@ -62,3 +62,7 @@ export function getMylife(state) {
 export function getVoteStarted(state) {
   return state.voteStarted
 }
+
+export function getSkipStage(state) {
+  return state.skipStage
+}
