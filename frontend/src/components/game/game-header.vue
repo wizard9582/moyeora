@@ -245,10 +245,10 @@ export default {
 </script>
 
 <style>
-.el-message{
- position: absolute;
+.el-message--info {
+ /* position: absolute; */
  top: 300px;
- z-index: 12000;
+ z-index: 400;
 }
 
 .game-header {
@@ -258,7 +258,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  z-index: 9999;
+  z-index: 500;
 }
 
 .game-header .basic-info {

@@ -1,8 +1,8 @@
 <template>
-  <el-dialog title="제거할 플레이어 선택" v-model="state.popupVisible" width="30%" @close="handleClose">
+  <el-dialog title="제거할 플레이어 선택" v-model="state.popupVisible" width="30%" @close="handleClose" :close-on-click-modal="false">
     <div class="mafia-vote">
       <span>제거할 플레이어를 선택하세요!</span>
-      <el-table :data="state.participantsList" highlight-current-row @current-change="clickKillPlayer">
+      <el-table :data="state.participantsList" highlight-current-row @current-change="clickKillPlayer" :row-style = "tableRowClassName">
         <el-table-column property="userId" label="Player"></el-table-column>
       </el-table>
     </div>
@@ -61,11 +61,18 @@ export default {
       emit('closeMafiaVotePopup')
     }
 
+    const tableRowClassName = function ({row, rowIndex}) {
+      if (row.death) {
+        return 'background-color: #fecdcd; pointer-events: none;'
+      }
+      return ''
+    }
+
     const handleClose = function () {
       emit('closeMafiaVotePopup')
     }
 
-    return { state, handleClose, clickKillPlayer, finishVote }
+    return { state, handleClose, clickKillPlayer, finishVote, tableRowClassName }
   }
 }
 </script>

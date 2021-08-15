@@ -11,6 +11,7 @@
       </ul>
     </div>
     <el-select v-model="toName" clearable placeholder="Select">
+      <el-option label="모두" value="모두"></el-option>
       <el-option
         v-for="player in state.participantsList"
         :key="player.userId"
@@ -18,7 +19,7 @@
         :value="player.userId"
       ></el-option>
     </el-select>
-    <el-button @click="openDoctorVote">확인</el-button>
+    <!-- <el-button @click="openDoctorVote">확인</el-button> -->
     <!-- <el-input placeholder="모두에게" v-model="toName"></el-input> -->
     <el-input
       type="textarea"
@@ -31,12 +32,13 @@
 </template>
 
 <script>
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, h } from 'vue'
 import Stomp from 'webstomp-client'
 import SockJS from 'sockjs-client'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 import { leaveRoom, register } from '@/common/lib/conferenceroom'
+import { ElMessage } from 'element-plus'
 
 
 let scope = '';
@@ -61,7 +63,7 @@ export default {
 
     const router = useRouter();
     const store = useStore();
-    
+
     const state = reactive({
       participantsList: computed(() => store.getters['root/getParticipantsList']),
       ownerId : computed(()=> store.getters['root/getRoomOwner']),
@@ -292,7 +294,18 @@ export default {
               msg += "\n마피아 목록: "
               msg += rchat.same.substr(1,rchat.same.length-2)
             }
-            alert(msg)
+            ElMessage({
+              message: h('p', null, [
+                h('strong', null, '당신의 직업은 '),
+                h('i', { style: 'color: tomato' }, rchat.role),
+                h('strong', null, '입니다.'),
+              ])
+            })
+            // ElMessage({
+            //   dangerouslyUseHTMLString: true,
+            //   message: '<strong>당신의 직업은 <i>' + msg + '</i>입니다</strong>',
+            // });
+            // alert(msg)
             myRole = rchat.role;
             scope.store.commit('root/setMyJob', myRole)
             // 경찰이라면 참가자들의 직업을 미리 받아옴 => 경찰이 아닌 사람도 죽었을 때 직업을 밝히기 위해 받아오도록 바꿈.
@@ -345,7 +358,12 @@ export default {
               let msg = {}
               if (tiebreaker) { // 동점자가 있는 경우
                 msg = { round: 1 }
-                scope.recvList.push({message:`동점으로 인해 아무도 죽지 않았습니다.`})
+
+                ElMessage({
+                  message: h('strong', null, '동점으로 인해 아무도 죽지 않았습니다.'),
+                  type: 'warning',
+                })
+                // scope.recvList.push({message:`동점으로 인해 아무도 죽지 않았습니다.`})
                 // 방장만 메시지를 보낸다!
                 if (scope.userName === scope.state.ownerId) {
                   scope.stompClient.send("/pub/game/night/"+ scope.roomId, JSON.stringify(msg), {});
@@ -377,7 +395,7 @@ export default {
                 }catch{
                   console.log('유령')
                 }
-                  
+
               }
             }
             if(rchat.desc === 'end'){
@@ -397,7 +415,15 @@ export default {
                   }
                 }
                 scope.store.commit('root/setDeath',finalVotePlayer);
-                scope.recvList.push({message:`최종투표에서 ${finalVotePlayer}가 죽었습니다.`})
+                ElMessage({
+                  message: h('p', null, [
+                    h('strong', null, '최종투표에서 '),
+                    h('i', { style: 'color: tomato' }, finalVotePlayer),
+                    h('strong', null, '가 죽었습니다.'),
+                  ]),
+                  type: 'danger',
+                })
+                // scope.recvList.push({message:`최종투표에서 ${finalVotePlayer}가 죽었습니다.`})
                 console.log('죽은사람 처리 확인: ', scope.store.getters['root/getParticipantsList']);
                 // 만약 죽은게 나라면...ㅠㅠㅠㅠㅠ
                 if(finalVotePlayer == scope.userName){
@@ -409,13 +435,21 @@ export default {
                 }
               }else{
                 // 살리기로 결정
-                scope.recvList.push({message:`최종투표에서 ${finalVotePlayer}가 구사일생 했습니다.`})
+                ElMessage({
+                  message: h('p', null, [
+                    h('strong', null, '최종투표에서 '),
+                    h('i', { style: 'color: tomato' }, finalVotePlayer),
+                    h('strong', null, '가 구사일생 했습니다.'),
+                  ]),
+                  type: 'success',
+                })
+                // scope.recvList.push({message:`최종투표에서 ${finalVotePlayer}가 구사일생 했습니다.`})
                 if(scope.userName == scope.state.ownerId){
                   msg = {round : 1}
                   scope.stompClient.send("/pub/game/night/"+ scope.roomId, JSON.stringify(msg), {});
                 }
               }
-              
+
             }
           });
 
@@ -458,7 +492,12 @@ export default {
               if (doctorSelectPlayer === mafiaSelectPlayer || !mafiaSelectPlayer || mafiaSelectPlayer === 'mafia') {
                 // 마피아가 제거하지 못하는 경우
                 // let testMessage = new Object
-                scope.recvList.push({message:'밤 사이 아무일도 일어나지 않았습니다.'})
+
+                ElMessage({
+                  message: h('strong', null, '밤 사이 아무일도 일어나지 않았습니다.'),
+                  type: 'warning',
+                })
+                // scope.recvList.push({message:'밤 사이 아무일도 일어나지 않았습니다.'})
                 scope.state.didMafiaKillPlayer = false
               } else {
                 // 마피아가 제거하는 경우
@@ -480,7 +519,17 @@ export default {
                 else if(deadRole == 'police') deadRole = "경찰"
                 else if(deadRole == 'doctor') deadRole = "의사"
                 else deadRole = "시민"
-                scope.recvList.push({message:`마피아가 무고한 ${deadRole}, ${mafiaSelectPlayer}를 죽였습니다.`})
+
+                ElMessage({
+                  message: h('p', null, [
+                    h('strong', null, '마피아가 무고한 '),
+                    h('i', { style: 'color: black' }, deadRole),
+                    h('i', { style: 'color: tomato' }, mafiaSelectPlayer),
+                    h('strong', null, '를 죽였습니다.'),
+                  ]),
+                  type: 'danger',
+                })
+                // scope.recvList.push({message:`마피아가 무고한 ${deadRole}, ${mafiaSelectPlayer}를 죽였습니다.`})
                 scope.state.didMafiaKillPlayer = true
               }
 
@@ -532,11 +581,19 @@ export default {
                 }
               }else if(resMessage[1]=='citizen'){
                 //시민 이김
+                ElMessage({
+                  message: h('strong', null, '시민 승!!'),
+                  type: 'success',
+                })
                 alert('시민 승!!!')
                 scope.store.commit('root/resetDeath');
               }else{
                 //마피아 이김
                 alert('마피아 승!!!')
+                ElMessage({
+                  message: h('strong', null, '시민 승!!'),
+                  type: 'success',
+                })
                 scope.store.commit('root/resetDeath');
               }
           });

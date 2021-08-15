@@ -1,8 +1,12 @@
 <template>
-  <el-dialog title="보호할 플레이어 선택" v-model="state.popupVisible" width="30%" @close="handleClose">
+  <el-dialog title="보호할 플레이어 선택" v-model="state.popupVisible" width="30%" @close="handleClose" :close-on-click-modal="false">
     <div class="doctor-vote">
       <span>의사의 보호를 받을 플레이어를 선택하세요!</span>
-      <el-table :data="state.participantsList" highlight-current-row @current-change="clickSavePlayer">
+      <el-table :data="state.participantsList"
+        highlight-current-row
+        @current-change="clickSavePlayer"
+        :row-style = "tableRowClassName"
+      >
         <el-table-column property="userId" label="Player"></el-table-column>
       </el-table>
     </div>
@@ -61,11 +65,18 @@ export default {
       emit('closeDoctorVotePopup')
     }
 
+    const tableRowClassName = function ({row, rowIndex}) {
+      if (row.death) {
+        return 'background-color: #fecdcd; pointer-events: none;'
+      }
+      return ''
+    }
+
     const handleClose = function () {
       emit('closeDoctorVotePopup')
     }
 
-    return { state, handleClose, clickSavePlayer, finishVote }
+    return { state, handleClose, clickSavePlayer, finishVote, tableRowClassName }
   }
 }
 </script>
@@ -78,5 +89,14 @@ export default {
 
 .doctor-vote > div {
   padding-top: 20px;
+}
+
+.el-table .dead-user-row {
+  background-color: red;
+  pointer-events: 'none';
+}
+
+.el-table .game-user-row {
+  background-color: blue;
 }
 </style>
