@@ -126,6 +126,7 @@ export default {
         window.history.go(1);
     };
 
+    
     return { state, clickGameStart, clickPlayerList, clickChat, clickGameClose, micOff, cameraOff, gameTimerStart, isOwner, canStart }
   }
 }
