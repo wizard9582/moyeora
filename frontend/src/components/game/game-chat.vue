@@ -61,7 +61,7 @@ export default {
 
     const router = useRouter();
     const store = useStore();
-    
+
     const state = reactive({
       participantsList: computed(() => store.getters['root/getParticipantsList']),
       ownerId : computed(()=> store.getters['root/getRoomOwner']),
@@ -351,12 +351,14 @@ export default {
               if (tiebreaker) { // 동점자가 있는 경우
                 msg = { round: 1, second: scope.nightTime }
                 scope.recvList.push({message:`동점으로 인해 아무도 죽지 않았습니다.`})
+                scope.store.commit('root/skipStage', {value: true})
                 // 방장만 메시지를 보낸다!
                 if (scope.userName === scope.state.ownerId) {
                   scope.stompClient.send("/pub/game/night/"+ scope.roomId, JSON.stringify(msg), {});
                 }
               } else { // 동점자가 없는 경우
                 msg = { round: 1, second : scope.judgeTime };
+                scope.store.commit('root/skipStage', {value: false})
                 scope.store.commit('root/setFinalVotePlayer', maxUser[0])
                  if (scope.userName === scope.state.ownerId) {
                    scope.stompClient.send("/pub/game/judge/"+ scope.roomId, JSON.stringify(msg), {});
@@ -383,7 +385,7 @@ export default {
                 }catch{
                   console.log('유령')
                 }
-                  
+
               }
             }
             if(rchat.desc === 'end'){
@@ -421,7 +423,7 @@ export default {
                   scope.stompClient.send("/pub/game/night/"+ scope.roomId, JSON.stringify(msg), {});
                 }
               }
-              
+
             }
           });
 

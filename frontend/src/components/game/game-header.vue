@@ -2,10 +2,6 @@
   <el-header class="game-header" :height="'70px'">
     <div class="basic-info">
       <img :src="require('@/assets/img-logo.png')" alt="IceBreaking logo" width="80" height="60"/>
-      <!-- <div>
-        <span class="gameroom-desc">김싸피의 마피아게임</span>
-        <span><i class="el-icon-user-solid"></i> 10/10</span>
-      </div> -->
     </div>
     <div class="job-info" v-if="state.roomType=='mafia'">
       <el-button @click="openJob">내 직업확인</el-button>
@@ -14,18 +10,14 @@
       <div class="game-status">
         <span :class="state.statusIcon"></span>
         <span>{{state.round}}라운드 - {{state.stageTitle}}</span>
-        <!-- <el-button @click="nextStage(true)" size="mini">DevTrue</el-button>
-        <el-button @click="nextStage(false)" size="mini">DevFalse</el-button> -->
       </div>
       <span class="game-timer" v-bind:class="{ 'danger': state.danger }">
         <span class="minute">{{ padMinute(state.minute) }}</span>
         <span>:</span>
         <span class="seconds">{{ padSecond(state.second) }}</span>
-        <!-- <el-button @click="startTimer(10)" size="mini">Dev</el-button> -->
       </span>
       <button @click="clickPass">넘어가기 {{state.clicked}}/{{state.total}}</button>
     </div>
-    <!-- <div>당신은 마피아입니다. ~~~ 하세요.</div> -->
     <div class="button-wrapper">
       <el-button @click="state.detectOpen = true">dev.Police</el-button>
       <el-button icon="el-icon-message" @click="clickInvite">초대하기</el-button>
@@ -68,7 +60,7 @@ export default {
   setup(props, {emit}) {
     const store = useStore()
     const route = useRoute()
-    const stages = ["대기중","아침회의","투표","최후변론","최종투표","밤","지난 밤"]
+    const stages = ["아침회의","투표","최후변론","최종투표","밤","지난 밤"]
     class Queue {
       constructor() {
         this._arr = [];
@@ -94,7 +86,7 @@ export default {
       myJob: computed(() => store.getters['root/getMyJob']),
       jobList: computed(() => store.getters['root/getMafiaRoles']),
       gameTime: computed(() => store.getters['root/getGameTime']),
-      gameRound: computed(() => store.getters['root/getGameRound']),
+      skipStage: computed(() => store.getters['root/getSkipStage']),
       statusIcon: 'el-icon-sunny',
       clicked: 2,
       total: 4,
@@ -105,7 +97,7 @@ export default {
       danger: false,
       //라운드
       round: 1,
-      stage: 1,
+      stage: 0,
       stageTitle: stages[0]
     })
 
@@ -118,61 +110,55 @@ export default {
     }
 
     const startTimer = (val)=> {
-      console.log("------------->", state.stompClient)
+      //console.log("------------->", state.stompClient)
       state.minute = parseInt(val/60)
       state.second = parseInt(val)%60
       state.timer = setInterval(() => countdown(), 1000);
-      console.log('state.timer : ', state.timer)
+      //console.log('state.timer : ', state.timer)
     }
 
     const countdown = () =>{
-      if(state.second == 0 && state.minute != 0){
+      if(state.second <= 0 && state.minute == 0){
+        clearInterval(state.timer)
+        state.second == 0
+        queue.dequeue()
+        nextStage()
+        if(queue._arr.length > 0){
+          let nextTime = queue.peek()
+          startTimer(nextTime)
+        }
+      }else if(state.second == 0 && state.minute != 0){
           state.minute --
           state.second = 59
-      }else if(state.second != 0){
-        state.second --
       }else{
-        clearInterval(state.timer)
-        nextStage(true)
+        state.second --
       }
-
       //  타이머에 색 입히기
       if(state.minute == 0 && state.second < 20){
         state.danger = (parseInt(state.second) % 2 == 1)? true : false
       }
     }
 
-    const nextStage = (val) =>{
-
-      if(state.stage == 2){
-        //아침투표 끝, 로직 구현
-      }else if(state.stage == 4){
-        //최종투표 끝, 로직 구현
-      }
-
-      if(val){
-        if(++state.stage == 7){
+    const nextStage = () =>{
+      if(!state.skipStage){
+        if(++state.stage == 6){
           state.round++
-          state.stage = 1
+          state.stage = 0
         }
       }else{
-        state.stage += 3
+        state.stage = 4
+        store.commit('root/skipStage', {value: false})
       }
       state.stageTitle = stages[state.stage]
-      if(state.stage == 5){
+      if(state.stage == 4){
         emit('startNight')
         state.statusIcon = "el-icon-moon"
       }
-      if(state.stage == 1){
+      if(state.stage == 0){
         emit('startDay')
         state.statusIcon = "el-icon-sunny"
       }
       //console.log("stage---------->", queue)
-      queue.dequeue()
-      if(queue._arr.length > 0){
-        let nextTime = queue.peek()
-        startTimer(nextTime)
-      }
     }
 
     // 초대하기 팝업 열기
@@ -224,14 +210,14 @@ export default {
       state.detectOpen = false
     }
 
-    watch(
-      () => state.gameTime,
+    watch(() => state.gameTime,
       (gameTime, prevGameTime) => {
         //console.log("---------->",queue)
-        //console.log(queue.length)
-        if(gameTime!=0){
+        console.log("&&&&*&*&*&*&&*&*&*&&*8---->",gameTime)
+        if(gameTime!=-1){
           if(queue._arr.length == 0){
             //console.log("new timer", queue)
+            console.log("round------------->",state.gameRound)
             startTimer(gameTime)
           }
           queue.enqueue(gameTime)
