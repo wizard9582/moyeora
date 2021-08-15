@@ -41,10 +41,12 @@ export default {
       })
       const clickRoom = function(room) {
         let route = room.type + "/" + room.id
-        if(room.lock){
-          emit('openPwCheck', ["1234", route])
-        }else{
-          router.push("/game/" + route)
+        if(room.state == "accessable"){
+          if(room.lock){
+            emit('openPwCheck', ["1234", route])
+          }else{
+            router.push("/game/" + route)
+          }
         }
       }
       const handleCurrentChange = function(val) {
@@ -83,7 +85,7 @@ export default {
               conference.desc = item.description
               //참가자 수 확인과 룸 상태 변경은 나중에 구현
               conference.member = item.count;
-              conference.state = (item.count == 10)? "full" : "accessable"
+              conference.state = item.state;
               //console.log(conference)
               state.roomData.push(conference)
             })
