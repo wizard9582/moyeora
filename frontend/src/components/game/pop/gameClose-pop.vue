@@ -77,7 +77,9 @@ export default {
               name: "bye,",
           };
           state.stompClient.send("/pub/bye/room/"+ roomId, JSON.stringify(msg2), {});
-          state.stompClient.send("/pub/game/end/"+ roomId, JSON.stringify(msg3), {});
+          if (route.params.type === 'mafia') {
+            state.stompClient.send("/pub/game/end/"+ roomId, JSON.stringify(msg3), {});
+          }
         }
         store.commit('root/removeRoomOwner')
         for (let player of state.participantsList) {
@@ -86,7 +88,9 @@ export default {
               name: player.id
             }
             console.log(player.id)
-            state.stompClient.send("/pub/game/end/"+ roomId, JSON.stringify(msg), {});
+            if (route.params.type === 'mafia') {
+              state.stompClient.send("/pub/game/end/"+ roomId, JSON.stringify(msg3), {});
+            }
             break
           }
         }
