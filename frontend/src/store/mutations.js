@@ -35,6 +35,9 @@ export function setStompClient(state, payload) {
 
 export function setParticipantsList(state, payload) {
   state.participantsList = payload
+  for (let player of state.participantsList) {
+    player.death = false;
+  }
 }
 
 export function setVoteCount(state, payload) {
@@ -110,4 +113,27 @@ export function newRoundStart(state) {
 
 export function setMylife(state, payload) {
   state.mylife = payload;
+}
+
+export function setDeath(state, payload) {
+  for (let player of state.participantsList) {
+    if (player.userId === payload) {
+      player.death = true;
+      break
+    }
+  }
+}
+
+export function resetDeath(state) {
+  for (let player of state.participantsList) {
+    player.death = false;
+  }
+}
+
+export function startVote(state) {
+  state.voteStarted = true
+}
+
+export function endVote(state) {
+  state.voteStarted = false
 }

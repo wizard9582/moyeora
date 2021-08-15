@@ -3,8 +3,8 @@
     <div class="final-vote">
       <span>{{state.finalVotePlayer}} 님의 운명은?</span>
       <div>
-        <el-button class="kill-button" type="danger" @click="clickKill" :disabled="state.selected">죽이자</el-button>
-        <el-button class="save-button" type="primary" @click="clickSave" :disabled="state.selected">살리자</el-button>
+        <el-button class="kill-button" type="danger" @click="clickKill" :disabled="!state.selected">죽이자</el-button>
+        <el-button class="save-button" type="primary" @click="clickSave" :disabled="!state.selected">살리자</el-button>
       </div>
     </div>
     <!-- <template #footer>
@@ -32,6 +32,7 @@ export default {
   setup(props, {emit}) {
     const route = useRoute()
     const store = useStore()
+    const roomId = route.params.no;
 
     const state = reactive({
       popupVisible: computed(() => props.open),
@@ -41,19 +42,29 @@ export default {
       participantsList: computed(() => store.getters['root/getParticipantsList']),
       finalVotePlayer: computed(() => store.getters['root/getFinalVotePlayer']),
       voteCount: computed(() => store.getters['root/getFinalVoteCount']),
-      selected: false,
+      selected: computed(() => store.getters['root/getVoteStarted']),
     })
 
     const clickKill = function () {
-      store.commit('root/voteFinalVote', 'kill')
+      //store.commit('root/voteFinalVote', 'kill')
       document.querySelector('.kill-button').style.backgroundColor = 'red'
       state.selected = !state.selected
+      if (state.stompClient && state.stompClient.connected) {
+        const msg = { round : 1, fromName: 'final', toName: 'kill' }
+        state.stompClient.send("/pub/vote/room/"+ roomId, JSON.stringify(msg), {});
+      }
+      emit('closeFinalVotePopup')
     }
 
     const clickSave = function () {
-      store.commit('root/voteFinalVote', 'save')
+      //store.commit('root/voteFinalVote', 'save')
       document.querySelector('.save-button').style.backgroundColor = 'blue'
       state.selected = !state.selected
+      if (state.stompClient && state.stompClient.connected) {
+        const msg = { round : 1, fromName: 'final', toName: 'save' }
+        state.stompClient.send("/pub/vote/room/"+ roomId, JSON.stringify(msg), {});
+      }
+      emit('closeFinalVotePopup')
     }
 
     const handleClose = function () {

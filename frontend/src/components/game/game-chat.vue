@@ -61,7 +61,7 @@ export default {
 
     const router = useRouter();
     const store = useStore();
-
+    
     const state = reactive({
       participantsList: computed(() => store.getters['root/getParticipantsList']),
       ownerId : computed(()=> store.getters['root/getRoomOwner']),
@@ -258,6 +258,11 @@ export default {
                   scope.store.commit('root/setMafiaSelectPlayer', 'mafia')
                 }
               }
+            } else if(voteResult.fromName === 'final'){
+                if(voteResult.toName == 'kill')
+                  scope.store.commit('root/voteFinalVote', 'kill')
+                else
+                  scope.store.commit('root/voteFinalVote', 'save')
             } else {
               scope.store.commit('root/voteTo', voteResult['toName'])
 
@@ -310,21 +315,20 @@ export default {
             scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second})
 
             // 아침 시작
-            if(rchat.desc == 'morning'){
+            if(rchat.desc === 'morning'){
               // 투표 및 선택된 사람 초기화
               scope.store.commit('root/newRoundStart');
-              // // voteCount 세팅하기
-              // // voteCount 구조 = [{ userId : [0, pk] }]
-              // let votePlayerList = new Object
-              // for (let player of scope.state.participantsList) {
-              // let greetingUserId = player.userId
-              //   votePlayerList[greetingUserId] = [0, player.id]
-              // }
-              // console.log('votePlayerList', votePlayerList)
-              // scope.store.commit('root/setVoteCount', votePlayerList)
+            }
+
+            if(rchat.desc === 'vote') {
+              scope.store.commit('root/startVote');
             }
 
             if(rchat.desc=='end'){
+              // 투표 리프레시
+              scope.store.commit('root/endVote');
+              document.getElementById('participants').style.pointerEvents = 'auto'
+
               // 투표 완료 후 처리
               let maxUser = ['', 0, 0] // 유저 아이디, 총 득표수, 유저 PK
               let tiebreaker = false // 동점자 유무
@@ -362,10 +366,22 @@ export default {
             let rchat = JSON.parse(chat.body);
             // 최종 투표 팝업 오픈
             if(rchat.desc === 'finalvote') {
+              scope.store.commit('root/startVote');
               scope.store.commit('root/setFinalVoteCount')
               scope.openFinalVote()
+              for (let player of scope.state.participantsList) {
+                try{
+                  console.log('확인: ',document.querySelector(`#${player.userId}`))
+                  const voteSpan = document.querySelector(`#${player.userId}`).children[2]
+                  voteSpan.innerText = '';
+                }catch{
+                  console.log('유령')
+                }
+                  
+              }
             }
             if(rchat.desc === 'end'){
+              scope.store.commit('root/endVote');
               let msg = {}
               let playerPK = ''
               console.log("최종 투표 사람1 : ",scope.store.getters['root/getFinalVotePlayer'])
@@ -376,10 +392,13 @@ export default {
                 for (let player of scope.state.participantsList) {
                   if (player.userId === finalVotePlayer) {
                     playerPK = player.id
+                    /// player.death = true;
                     break
                   }
                 }
+                scope.store.commit('root/setDeath',finalVotePlayer);
                 scope.recvList.push({message:`최종투표에서 ${finalVotePlayer}가 죽었습니다.`})
+                console.log('죽은사람 처리 확인: ', scope.store.getters['root/getParticipantsList']);
                 // 만약 죽은게 나라면...ㅠㅠㅠㅠㅠ
                 if(finalVotePlayer == scope.userName){
                   scope.store.commit('root/setMylife', false);
@@ -444,8 +463,9 @@ export default {
               } else {
                 // 마피아가 제거하는 경우
                 console.log('마피아가 죽인 사람: ',mafiaSelectPlayer);
+                scope.store.commit('root/setDeath',mafiaSelectPlayer);
                 // 그게 나라면...!!!ㅠㅠㅠㅠㅠㅠ
-                if(finalVotePlayer == scope.userName){
+                if(mafiaSelectPlayer == scope.userName){
                   scope.store.commit('root/setMylife', false);
                 }
                 let roles = scope.store.getters['root/getMafiaRoles'];
@@ -465,27 +485,31 @@ export default {
               }
 
             } else if(rchat.desc=='end'){
-              if((scope.userName == scope.state.ownerId)){
+              // 죽은 사람이 있다면
                 if (scope.state.didMafiaKillPlayer) {
                   let playerPK = ''
                   let deadPlayer = scope.store.getters['root/getMafiaSelectPlayer']
                   for (let player of scope.state.participantsList) {
                     if (player.userId === deadPlayer) {
                       playerPK = player.id
+                      player.death = true;
                       break
                     }
                   }
-                  const msg = {
-                    name: `night,${playerPK}`,
+                  if((scope.userName == scope.state.ownerId)){
+                    const msg = {
+                      name: `night,${playerPK}`,
+                    }
+                    scope.stompClient.send("/pub/game/end/"+ scope.roomId, JSON.stringify(msg), {});
                   }
-                  scope.stompClient.send("/pub/game/end/"+ scope.roomId, JSON.stringify(msg), {});
-                }else{
-                  const msg = {
-                    round : 1,
-                  }
-                  scope.stompClient.send("/pub/game/morning/"+ scope.roomId, JSON.stringify(msg), {});
+                }else{ // 죽은 사람이 없다면
+                 if((scope.userName == scope.state.ownerId)){
+                    const msg = {
+                      round : 1,
+                    }
+                    scope.stompClient.send("/pub/game/morning/"+ scope.roomId, JSON.stringify(msg), {});
+                 }
                 }
-              }
             }
           });
 
@@ -509,9 +533,11 @@ export default {
               }else if(resMessage[1]=='citizen'){
                 //시민 이김
                 alert('시민 승!!!')
+                scope.store.commit('root/resetDeath');
               }else{
                 //마피아 이김
                 alert('마피아 승!!!')
+                scope.store.commit('root/resetDeath');
               }
           });
         },

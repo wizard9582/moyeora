@@ -58,3 +58,7 @@ export function getMafiaRoles(state) {
 export function getMylife(state) {
   return state.mylife
 }
+
+export function getVoteStarted(state) {
+  return state.voteStarted
+}
