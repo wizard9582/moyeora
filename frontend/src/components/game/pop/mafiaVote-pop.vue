@@ -53,7 +53,7 @@ export default {
         const msg = {
           roomId: route.params.no,
           fromName: "mafia",
-          toName: state.selectedPlayer,
+          toName: state.selectedPlayer.userId,
           message: "mafia"
         };
         state.stompClient.send("/pub/vote/room/"+ route.params.no, JSON.stringify(msg), {});

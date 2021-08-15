@@ -54,3 +54,7 @@ export function getMyJob(state) {
 export function getMafiaRoles(state) {
   return state.mafiaRoles
 }
+
+export function getMylife(state) {
+  return state.mylife
+}

@@ -68,6 +68,7 @@ export default {
       voteCountList: computed(() => store.getters['root/getVoteCount']),
       finalVoteCount: computed(() => store.getters['root/getFinalVoteCount']),
       didMafiaKillPlayer: false,
+      mylife : computed(() => store.getters['root/getMylife']), // 현재 내가 죽었는지 살았는지에 대한 정보
     })
 
     const openFinalVote = () => {
@@ -211,15 +212,15 @@ export default {
               console.log('새로운 목록: ',result.data.member)
               scope.store.commit('root/setParticipantsList', result.data.member)
 
-              // voteCount 세팅하기
-              // voteCount 구조 = [{ userId : [0, pk] }]
-              let votePlayerList = new Object
-              for (let player of result.data.member) {
-                let greetingUserId = player.userId
-                votePlayerList[greetingUserId] = [0, player.id]
-              }
-              console.log('votePlayerList', votePlayerList)
-              scope.store.commit('root/setVoteCount', votePlayerList)
+              // // voteCount 세팅하기
+              // // voteCount 구조 = [{ userId : [0, pk] }]
+              // let votePlayerList = new Object
+              // for (let player of result.data.member) {
+              //   let greetingUserId = player.userId
+              //   votePlayerList[greetingUserId] = [0, player.id]
+              // }
+              // console.log('votePlayerList', votePlayerList)
+              // scope.store.commit('root/setVoteCount', votePlayerList)
             })
           });
 
@@ -248,7 +249,7 @@ export default {
             if (voteResult.fromName === 'doctor') {
               scope.store.commit('root/setDoctorSelectPlayer', voteResult.toName)
             } else if (voteResult.fromName === 'mafia') {
-              let currentMafiaSelectPlayer = computed(() => scope.store.getters['root/getMafiaSelectPlayer'])
+              let currentMafiaSelectPlayer = scope.store.getters['root/getMafiaSelectPlayer']
               if (!currentMafiaSelectPlayer) {
                 scope.store.commit('root/setMafiaSelectPlayer', voteResult.toName)
               } else {
@@ -259,6 +260,7 @@ export default {
               }
             } else {
               scope.store.commit('root/voteTo', voteResult['toName'])
+
               // 받은 투표 수를 화면에 표시
               const voteSpan = document.querySelector(`#${voteResult['toName']}`).children[2]
               voteSpan.innerText = scope.state.voteCountList[voteResult['toName']][0]
@@ -276,6 +278,7 @@ export default {
           var myRole = "";
           // 직업 분배 결과
           this.stompClient.subscribe('/sub/game/start/'+this.roomId+"/"+this.userName, function (chat) {
+            scope.store.commit('root/setMylife', true);
             // 직업 연동 아직 안됨
             console.log("타이머 0 (직업 분배 결과) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
@@ -287,25 +290,41 @@ export default {
             alert(msg)
             myRole = rchat.role;
             scope.store.commit('root/setMyJob', myRole)
-            // 경찰이라면 참가자들의 직업을 미리 받아옴
-            if(myRole == "police"){
+            // 경찰이라면 참가자들의 직업을 미리 받아옴 => 경찰이 아닌 사람도 죽었을 때 직업을 밝히기 위해 받아오도록 바꿈.
+            //if(myRole == "police"){
               scope.store.dispatch('root/requestByPolice', { roomId: scope.roomId })
               .then((result) => {
                 //console.log("경찰이 얻어온 직업들 : ", result.data)
                 scope.store.commit('root/setMafiaRoles', result.data);
-                console.log('경찰이 얻어온 직업들 뷰엑스 확인 : ',scope.store.getters['root/getMafiaRoles'])
+                console.log('참가자들의 직업 뷰엑스 확인 : ',scope.store.getters['root/getMafiaRoles'])
               })
               .catch((error) => {
                 console.log(error)
               })
-            }
+            //}
           });
           // 메세지를 받을 때마다 게임 승리여부 판단과 라운드 체크를 해주어야 합니다.
           this.stompClient.subscribe('/sub/game/morning/'+this.roomId, function (chat) {
             console.log("타이머 1 (아침, 투표) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
             scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second})
-            if((scope.userName == scope.state.ownerId) && rchat.desc=='end'){
+
+            // 아침 시작
+            if(rchat.desc == 'morning'){
+              // 투표 및 선택된 사람 초기화
+              scope.store.commit('root/newRoundStart');
+              // // voteCount 세팅하기
+              // // voteCount 구조 = [{ userId : [0, pk] }]
+              // let votePlayerList = new Object
+              // for (let player of scope.state.participantsList) {
+              // let greetingUserId = player.userId
+              //   votePlayerList[greetingUserId] = [0, player.id]
+              // }
+              // console.log('votePlayerList', votePlayerList)
+              // scope.store.commit('root/setVoteCount', votePlayerList)
+            }
+
+            if(rchat.desc=='end'){
               // 투표 완료 후 처리
               let maxUser = ['', 0, 0] // 유저 아이디, 총 득표수, 유저 PK
               let tiebreaker = false // 동점자 유무
@@ -322,14 +341,17 @@ export default {
               let msg = {}
               if (tiebreaker) { // 동점자가 있는 경우
                 msg = { round: 1 }
+                scope.recvList.push({message:`동점으로 인해 아무도 죽지 않았습니다.`})
                 // 방장만 메시지를 보낸다!
                 if (scope.userName === scope.state.ownerId) {
                   scope.stompClient.send("/pub/game/night/"+ scope.roomId, JSON.stringify(msg), {});
                 }
               } else { // 동점자가 없는 경우
                 msg = { round: 1 };
-                scope.store.commit('root/setFinalVotePlayer', maxUser[1])
-                scope.stompClient.send("/pub/game/judge/"+ scope.roomId, JSON.stringify(msg), {});
+                scope.store.commit('root/setFinalVotePlayer', maxUser[0])
+                 if (scope.userName === scope.state.ownerId) {
+                   scope.stompClient.send("/pub/game/judge/"+ scope.roomId, JSON.stringify(msg), {});
+                 }
               }
               console.log(tiebreaker, msg)
             }
@@ -343,20 +365,38 @@ export default {
               scope.store.commit('root/setFinalVoteCount')
               scope.openFinalVote()
             }
-            if((scope.userName == scope.state.ownerId) && rchat.desc === 'end'){
+            if(rchat.desc === 'end'){
               let msg = {}
               let playerPK = ''
+              console.log("최종 투표 사람1 : ",scope.store.getters['root/getFinalVotePlayer'])
+              console.log("최종 투표 사람2 : ",computed(() => scope.store.getters['root/getFinalVotePlayer']))
+              let finalVotePlayer = scope.store.getters['root/getFinalVotePlayer'];
               if (scope.state.finalVoteCount[0] > scope.state.finalVoteCount[1]) {
-                let finalVotePlayer = computed(() => scope.store.getters['root/getFinalVotePlayer'])
+                // 죽이기로 결정
                 for (let player of scope.state.participantsList) {
                   if (player.userId === finalVotePlayer) {
                     playerPK = player.id
                     break
                   }
                 }
+                scope.recvList.push({message:`최종투표에서 ${finalVotePlayer}가 죽었습니다.`})
+                // 만약 죽은게 나라면...ㅠㅠㅠㅠㅠ
+                if(finalVotePlayer == scope.userName){
+                  scope.store.commit('root/setMylife', false);
+                }
+                if(scope.userName == scope.state.ownerId){
+                  msg = { name: `judge,${playerPK}` }
+                  scope.stompClient.send("/pub/game/end/"+ scope.roomId, JSON.stringify(msg), {});
+                }
+              }else{
+                // 살리기로 결정
+                scope.recvList.push({message:`최종투표에서 ${finalVotePlayer}가 구사일생 했습니다.`})
+                if(scope.userName == scope.state.ownerId){
+                  msg = {round : 1}
+                  scope.stompClient.send("/pub/game/night/"+ scope.roomId, JSON.stringify(msg), {});
+                }
               }
-              msg = { name: `judge,${playerPK}` }
-              scope.stompClient.send("/pub/game/night/"+ scope.roomId, JSON.stringify(msg), {});
+              
             }
           });
 
@@ -364,9 +404,9 @@ export default {
             console.log("타이머 3 (저녁, 결과) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
             if (rchat.desc === 'night') {
-              leaveRoom()
-              if(true){
-                // 살아있으면
+              // 살아있으면
+              if(scope.state.mylife){
+                leaveRoom()
                 console.log("내 직업",myRole)
                 if(myRole=='mafia'){
                   // 마피아인 경우 : 마피아끼리 모임
@@ -380,32 +420,55 @@ export default {
                   // 경찰인 경우 : 투표창 열림
 
                 }
+              }else{
+                // 죽은사람들은 원래 기본세션 그대로 연결해놓는다.
+
               }
             } else if (rchat.desc === 'result') {
-              let doctorSelectPlayer = computed(() => scope.store.getters['root/getDoctorSelectPlayer'])
-              let mafiaSelectPlayer = computed(() => scope.store.getters['root/getMafiaSelectPlayer'])
-              if (doctorSelectPlayer === mafiaSelectPlayer || !mafiaSelectPlayer || mafiaSelectPlayer === 'mafia') {
-                // 마피아가 제거하지 못하는 경우
-                // let testMessage = new Object
-                scope.recvList.push({message:'아무도 안죽었다'})
-                scope.state.didMafiaKillPlayer = false
-              } else {
-                // 마피아가 제거하는 경우
-                scope.recvList.push({message:`${mafiaSelectPlayer}가 죽었다.`})
-                scope.state.didMafiaKillPlayer = true
-              }
-
-            } else if(rchat.desc=='end'){
-              // 죽었으면 leaveRoom에서 끝남
+              /////////////////////////////////////////// 세션 합치기
               if(myRole=='mafia'){
                 // 마피아인 경우 : 마피아끼리 모임
                 leaveRoom()
               }
-              scope.waitSecond(scope.roomId,scope.userName)
+              if(scope.state.mylife)
+                scope.waitSecond(scope.roomId,scope.userName)
+
+              /////////////////////////////////////////// 밤 사이에 일어난 결과 발표
+              let doctorSelectPlayer = scope.store.getters['root/getDoctorSelectPlayer']
+              let mafiaSelectPlayer = scope.store.getters['root/getMafiaSelectPlayer']
+              if (doctorSelectPlayer === mafiaSelectPlayer || !mafiaSelectPlayer || mafiaSelectPlayer === 'mafia') {
+                // 마피아가 제거하지 못하는 경우
+                // let testMessage = new Object
+                scope.recvList.push({message:'밤 사이 아무일도 일어나지 않았습니다.'})
+                scope.state.didMafiaKillPlayer = false
+              } else {
+                // 마피아가 제거하는 경우
+                console.log('마피아가 죽인 사람: ',mafiaSelectPlayer);
+                // 그게 나라면...!!!ㅠㅠㅠㅠㅠㅠ
+                if(finalVotePlayer == scope.userName){
+                  scope.store.commit('root/setMylife', false);
+                }
+                let roles = scope.store.getters['root/getMafiaRoles'];
+                let deadRole = '';
+                for (let player of roles) {
+                  if (player.userId === mafiaSelectPlayer) {
+                    deadRole = player.role;
+                    break
+                  }
+                }
+                if(deadRole == 'mafia') deadRole = "마피아"
+                else if(deadRole == 'police') deadRole = "경찰"
+                else if(deadRole == 'doctor') deadRole = "의사"
+                else deadRole = "시민"
+                scope.recvList.push({message:`마피아가 무고한 ${deadRole}, ${mafiaSelectPlayer}를 죽였습니다.`})
+                scope.state.didMafiaKillPlayer = true
+              }
+
+            } else if(rchat.desc=='end'){
               if((scope.userName == scope.state.ownerId)){
                 if (scope.state.didMafiaKillPlayer) {
                   let playerPK = ''
-                  let deadPlayer = computed(() => scope.store.getters['root/getMafiaSelectPlayer'])
+                  let deadPlayer = scope.store.getters['root/getMafiaSelectPlayer']
                   for (let player of scope.state.participantsList) {
                     if (player.userId === deadPlayer) {
                       playerPK = player.id
@@ -416,6 +479,11 @@ export default {
                     name: `night,${playerPK}`,
                   }
                   scope.stompClient.send("/pub/game/end/"+ scope.roomId, JSON.stringify(msg), {});
+                }else{
+                  const msg = {
+                    round : 1,
+                  }
+                  scope.stompClient.send("/pub/game/morning/"+ scope.roomId, JSON.stringify(msg), {});
                 }
               }
             }
@@ -429,10 +497,14 @@ export default {
                 //게임 계속 진행
                 if (resMessage[0] === 'judge') {
                   const msg = { round : 1 }
-                  scope.stompClient.send("/pub/game/night/"+ scope.roomId, JSON.stringify(msg), {})
+                   if (scope.userName === scope.state.ownerId) {
+                    scope.stompClient.send("/pub/game/night/"+ scope.roomId, JSON.stringify(msg), {})
+                   }
                 } else if (resMessage[0] === 'night') {
                   const msg = { round : 1 }
-                  scope.stompClient.send("/pub/game/morning/"+ scope.roomId, JSON.stringify(msg), {})
+                   if (scope.userName === scope.state.ownerId) {
+                    scope.stompClient.send("/pub/game/morning/"+ scope.roomId, JSON.stringify(msg), {})
+                   }
                 }
               }else if(resMessage[1]=='citizen'){
                 //시민 이김

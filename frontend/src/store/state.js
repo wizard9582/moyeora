@@ -15,4 +15,5 @@ export default {
   mafiaSelectPlayer: null,
   myJob: "(미정)",
   mafiaRoles: null,
+  mylife: true, // 현재 내가 죽었는지 살았는지에 대한 boolean 값
 }
