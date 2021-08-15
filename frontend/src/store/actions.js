@@ -147,3 +147,34 @@ export function requestByPolice ({ state }, payload) {
   // const params = { roomId: payload.roomId }
   return $axios.get(url)
 }
+
+// ----------------초대 하기 및 초대 받기 API 시작----------------------
+export function requestRecommandFriendList ({ state }, payload) {
+  console.log('requestRecommandFriendList', state, payload)
+  const url = `/search?name=${payload.friendName}`
+  return $axios.get(url)
+}
+
+export function requestInvite ({ state }, payload) {
+  console.log('requestInvite', state, payload)
+  const url = '/invite'
+  let body = payload
+  return $axios.post(url,body)
+}
+
+export function requestInviteList ({ state }, payload) {
+  const url = '/invite/list'
+  const headers = {
+    'Authorization': 'Bearer ' + payload.token
+  }
+  // const params = { roomId: payload.roomId }
+  return $axios.get(url, {headers})
+}
+
+export function deleteInvite ({ state }, payload) {
+  console.log('deleteInvite', state, payload)
+  const url = '/invite/delete/' + payload.id
+  let body = payload
+  return $axios.delete(url,body)
+}
+// ----------------초대 하기 및 초대 받기 API 끝----------------------

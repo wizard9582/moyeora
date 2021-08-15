@@ -61,22 +61,13 @@ export default {
       }
 
       const clickRefresh = function() {
-        console.log("refresh")
-        //router.go()
+        //console.log("refresh")
         state.roomData = []
         state.type = router.currentRoute.value.params.type
 
-          // console.log("current ->", router.currentRoute)
-          // console.log("current ->", router.currentRoute.value.params.type)
-          // console.log("route ->", router.getRoutes())
-          // console.log("optios ->", router.options)
-
           store.dispatch('root/requestRoomList')
           .then(function (result) {
-            //console.log(result.data)
             result.data.forEach(item =>{
-              //console.log(roomData)
-              //console.log("requestRoomList : "+item.id + " / "+item.count);
               let conference = {id: 0, title: "", type:"", member: 0, lock: true, password: "", state: "", desc: ""}
               conference.id = item.id
               conference.title = item.title
@@ -116,6 +107,7 @@ export default {
           })
       }
       clickRefresh()
+      setInterval(function(){clickRefresh()},10000);
       return { state, clickRoom , handleCurrentChange, clickRefresh, mouseOver, mouseOut }
     },
 }
