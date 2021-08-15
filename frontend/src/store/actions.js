@@ -170,4 +170,11 @@ export function requestInviteList ({ state }, payload) {
   // const params = { roomId: payload.roomId }
   return $axios.get(url, {headers})
 }
+
+export function deleteInvite ({ state }, payload) {
+  console.log('deleteInvite', state, payload)
+  const url = '/invite/delete/' + payload.id
+  let body = payload
+  return $axios.delete(url,body)
+}
 // ----------------초대 하기 및 초대 받기 API 끝----------------------

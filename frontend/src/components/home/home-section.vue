@@ -39,116 +39,14 @@ export default {
         page: 1,
         index:  0
       })
-
-      //type = this.$route.params.type;
-      //console.log("type ->", router.currentRoute.value.params.type)
-      state.type = router.currentRoute.value.params.type
-
-      // console.log("current ->", router.currentRoute)
-      // console.log("current ->", router.currentRoute.value.params.type)
-      // console.log("route ->", router.getRoutes())
-      // console.log("optios ->", router.options)
-
-      store.dispatch('root/requestRoomList')
-      .then(function (result) {
-        console.log(result.data)
-        state.roomData=[];
-        result.data.forEach(item =>{
-          //console.log(roomData)
-          //console.log("requestRoomList : "+item.id + " / "+item.count);
-          let conference = {id: 0, title: "", type:"", member: 0, lock: true, password: "", state: "", desc: ""}
-          conference.id = item.id
-          conference.title = item.title
-          conference.type = item.category
-          conference.lock = item.private
-          conference.desc = item.description
-          //참가자 수 확인과 룸 상태 변경은 나중에 구현
-          conference.member = item.count;
-          conference.state = (item.count == 10)? "full" : "accessable"
-          //console.log(conference)
-          state.roomData.push(conference)
-        })
-
-        if(state.type === "all"){
-          state.filteredData = state.roomData;
-        }else{
-          state.roomData.forEach(item => {
-            if(item.type === state.type){
-              state.filteredData.push(item);
-            }
-          })
-        }
-        //console.log("filteredData",filteredData)
-
-        state.listData = state.filteredData.slice((state.page-1)*8, state.page*8 );
-        state.index = parseInt(state.filteredData.length / 8);
-
-        if(state.filteredData.length % 8 != 0){
-          state.index = state.index + 1;
-        }
-        if(state.filteredData.length == 0){
-          state.noRoom = true;
-        }
-      })
-      .catch(function (err) {
-        alert(err)
-      })
-      
-    setInterval(function(){
-       store.dispatch('root/requestRoomList')
-      .then(function (result) {
-        console.log(result.data)
-        state.roomData=[];
-        result.data.forEach(item =>{
-          //console.log(roomData)
-          //console.log("requestRoomList : "+item.id + " / "+item.count);
-          let conference = {id: 0, title: "", type:"", member: 0, lock: true, password: "", state: "", desc: ""}
-          conference.id = item.id
-          conference.title = item.title
-          conference.type = item.category
-          conference.lock = item.private
-          conference.desc = item.description
-          //참가자 수 확인과 룸 상태 변경은 나중에 구현
-          conference.member = item.count;
-          conference.state = (item.count == 10)? "full" : "accessable"
-          //console.log(conference)
-          state.roomData.push(conference)
-        })
-
-        if(state.type === "all"){
-          state.filteredData = state.roomData;
-        }else{
-          state.roomData.forEach(item => {
-            if(item.type === state.type){
-              state.filteredData.push(item);
-            }
-          })
-        }
-        //console.log("filteredData",filteredData)
-
-        state.listData = state.filteredData.slice((state.page-1)*8, state.page*8 );
-        state.index = parseInt(state.filteredData.length / 8);
-
-        if(state.filteredData.length % 8 != 0){
-          state.index = state.index + 1;
-        }
-        if(state.filteredData.length == 0){
-          state.noRoom = true;
-        }
-      })
-      .catch(function (err) {
-        alert(err)
-      })
-    },5000);
-
-
-
       const clickRoom = function(room) {
         let route = room.type + "/" + room.id
-        if(room.lock){
-          emit('openPwCheck', ["1234", route])
-        }else{
-          router.push("/game/" + route)
+        if(room.state == "accessable"){
+          if(room.lock){
+            emit('openPwCheck', ["1234", route])
+          }else{
+            router.push("/game/" + route)
+          }
         }
       }
       const handleCurrentChange = function(val) {
@@ -163,22 +61,13 @@ export default {
       }
 
       const clickRefresh = function() {
-        console.log("refresh")
-        //router.go()
+        //console.log("refresh")
         state.roomData = []
         state.type = router.currentRoute.value.params.type
 
-          // console.log("current ->", router.currentRoute)
-          // console.log("current ->", router.currentRoute.value.params.type)
-          // console.log("route ->", router.getRoutes())
-          // console.log("optios ->", router.options)
-
           store.dispatch('root/requestRoomList')
           .then(function (result) {
-            console.log(result.data)
             result.data.forEach(item =>{
-              //console.log(roomData)
-              //console.log("requestRoomList : "+item.id + " / "+item.count);
               let conference = {id: 0, title: "", type:"", member: 0, lock: true, password: "", state: "", desc: ""}
               conference.id = item.id
               conference.title = item.title
@@ -187,7 +76,7 @@ export default {
               conference.desc = item.description
               //참가자 수 확인과 룸 상태 변경은 나중에 구현
               conference.member = item.count;
-              conference.state = (item.count == 10)? "full" : "accessable"
+              conference.state = item.state;
               //console.log(conference)
               state.roomData.push(conference)
             })
@@ -218,6 +107,7 @@ export default {
           })
       }
       clickRefresh()
+      setInterval(function(){clickRefresh()},10000);
       return { state, clickRoom , handleCurrentChange, clickRefresh, mouseOver, mouseOut }
     },
 }
