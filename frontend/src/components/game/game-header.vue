@@ -1,5 +1,5 @@
 <template>
-  <el-header class="game-header">
+  <el-header class="game-header" :height="'70px'">
     <div class="basic-info">
       <img :src="require('@/assets/img-logo.png')" alt="IceBreaking logo" width="80" height="60"/>
       <!-- <div>
@@ -245,74 +245,4 @@ export default {
 </script>
 
 <style>
-.el-message{
- position: absolute;
- top: 300px;
- z-index: 12000;
-}
-
-.game-header {
-  padding: 10px 20px;
-  border-bottom: 2px solid lightgray;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: fixed;
-  z-index: 9999;
-}
-
-.game-header .basic-info {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.gameroom-desc {
-  padding: 0px 15px;
-}
-.game-status {
-  margin-right: 10px;
-}
-
-.game-info {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-
-  width: 30%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  /* padding: 6px 0px; */
-  text-align: center;
-  border-radius: 6px;
-  font-size: 20px;
-  background-color: #e8eef3;
-}
-
-.job-info {
-  position: absolute;
-  left: 20%;
-  transform: translateX(-50%);
-
-  width: 15%;
-  display: flex;
-  text-align: center;
-  border-radius: 6px;
-  font-size: 15px;
-  background-color: #e8eef3;
-}
-
-.danger{
-  color: red;
-  font-weight: bold;
-}
-
-.user-tag{
-  min-width: 30px;
-  max-width: 30%;
-  display: inline-block;
-  cursor: pointer;
-  margin: 5px;
-}
 </style>
