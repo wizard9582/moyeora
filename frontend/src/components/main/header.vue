@@ -1,7 +1,7 @@
 <template>
   <el-header v-if="isLoggedIn()" class="main-header" :height="'70px'">
     <a href="/home/all" class="logo">
-      <img :src="require('@/assets/img-logo.png')" alt="IceBreaking logo" width="80" height="60"/>
+      <img :src="require('@/assets/img-logo.png')" alt="IceBreaking logo" width="80" height="60" />
     </a>
     <ul class="nav">
       <li>
@@ -35,7 +35,7 @@
   </el-header>
   <el-header v-if="!isLoggedIn()" class="main-header" :height="'70px'">
     <a href="/home/all" class="logo">
-      <img :src="require('@/assets/img-logo.png')" alt="IceBreaking logo" width="80" height="60"/>
+      <img :src="require('@/assets/img-logo.png')" alt="IceBreaking logo" width="80" height="60" />
     </a>
     <div class="button-wrapper">
       <el-button icon="el-icon-circle-plus-outline" @click="clickSignup">회원 가입</el-button>
@@ -84,8 +84,27 @@ export default {
       router.push("/home/user/id")
     }
 
+    setInterval(function(){
+          store.dispatch('root/requestInviteList', { token: localStorage.getItem('jwt') })
+          .then((result) => {
+            //받아온 JSON 형태의 초대 리스트를 html에 달아놓는 작업 필요
+            // id;
+            // fromUser;
+            // toUser;
+            // url;
+            // month;
+            // day;
+            // hour;
+            // min;
+            // 삭제시 @DeleteMapping("/delete/{inviteId}") 이 주소
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+    },5000);
+
     return { state, isLoggedIn, clickLogin, clickSignup, clickLogout, clickUserInfo }
-  }
+  },
 }
 </script>
 
@@ -94,12 +113,12 @@ export default {
   float: left;
   margin-top: 10px;
 }
-.nav{
+.nav {
   float: right;
   list-style: none;
   margin-right: 5px;
 }
-.nav li{
+.nav li {
   float: left;
   margin: 5px;
 }
@@ -118,5 +137,4 @@ export default {
 .button-wrapper {
   display: inline;
 }
-
 </style>

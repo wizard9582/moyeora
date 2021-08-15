@@ -48,9 +48,10 @@ export default {
       // console.log("route ->", router.getRoutes())
       // console.log("optios ->", router.options)
 
-      store.dispatch('root/requestRoomList')
+          store.dispatch('root/requestRoomList')
       .then(function (result) {
         console.log(result.data)
+        state.roomData=[];
         result.data.forEach(item =>{
           //console.log(roomData)
           //console.log("requestRoomList : "+item.id + " / "+item.count);
@@ -91,6 +92,55 @@ export default {
       .catch(function (err) {
         alert(err)
       })
+      
+    setInterval(function(){
+       store.dispatch('root/requestRoomList')
+      .then(function (result) {
+        console.log(result.data)
+        state.roomData=[];
+        result.data.forEach(item =>{
+          //console.log(roomData)
+          //console.log("requestRoomList : "+item.id + " / "+item.count);
+          let conference = {id: 0, title: "", type:"", member: 0, lock: true, password: "", state: "", desc: ""}
+          conference.id = item.id
+          conference.title = item.title
+          conference.type = item.category
+          conference.lock = item.private
+          conference.desc = item.description
+          //참가자 수 확인과 룸 상태 변경은 나중에 구현
+          conference.member = item.count;
+          conference.state = (item.count == 10)? "full" : "accessable"
+          //console.log(conference)
+          state.roomData.push(conference)
+        })
+
+        if(state.type === "all"){
+          state.filteredData = state.roomData;
+        }else{
+          state.roomData.forEach(item => {
+            if(item.type === state.type){
+              state.filteredData.push(item);
+            }
+          })
+        }
+        //console.log("filteredData",filteredData)
+
+        state.listData = state.filteredData.slice((state.page-1)*8, state.page*8 );
+        state.index = parseInt(state.filteredData.length / 8);
+
+        if(state.filteredData.length % 8 != 0){
+          state.index = state.index + 1;
+        }
+        if(state.filteredData.length == 0){
+          state.noRoom = true;
+        }
+      })
+      .catch(function (err) {
+        alert(err)
+      })
+    },5000);
+
+
 
       const clickRoom = function(room) {
         let route = room.type + "/" + room.id
