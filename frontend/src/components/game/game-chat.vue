@@ -363,7 +363,7 @@ export default {
               let msg = {}
               if (tiebreaker) { // 동점자가 있는 경우
                 msg = { round: 1, second: scope.nightTime }
-
+                scope.store.commit('root/skipStage', {value: true})
                 ElMessage({
                   message: h('strong', null, '동점으로 인해 아무도 죽지 않았습니다.'),
                   type: 'warning',
@@ -375,6 +375,7 @@ export default {
                 }
               } else { // 동점자가 없는 경우
                 msg = { round: 1, second : scope.judgeTime };
+                scope.store.commit('root/skipStage', {value: false})
                 scope.store.commit('root/setFinalVotePlayer', maxUser[0])
                  if (scope.userName === scope.state.ownerId) {
                    scope.stompClient.send("/pub/game/judge/"+ scope.roomId, JSON.stringify(msg), {});

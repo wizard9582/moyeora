@@ -13,10 +13,10 @@
     <el-form-item label="글씨 크기" :label-width="state.form.labelWidth">
     <el-slider v-model="state.form.fontSize" :min="8" :max="16"></el-slider>
     </el-form-item>
-    <el-form-item label="알람설정" :label-width="state.form.labelWidth">
+    <el-form-item label="초대받기" :label-width="state.form.labelWidth">
     <el-radio-group v-model="state.form.alarm" size="small">
-      <el-radio label="on" border>알람 켜기</el-radio>
-      <el-radio label="off" border>알람 끄기</el-radio>
+      <el-radio label="on" border>초대 받기</el-radio>
+      <el-radio label="off" border>초대 받지 않기</el-radio>
     </el-radio-group>
     </el-form-item>
     <el-form-item>

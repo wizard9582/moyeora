@@ -6,7 +6,7 @@
     <ul class="nav">
       <li>
         <el-dropdown trigger="click">
-          <el-badge :value="state.inviteCount">
+          <el-badge :value="state.inviteCount" type="danger">
             <el-button icon="el-icon-bell" circle></el-button>
           </el-badge>
           <template #dropdown>
@@ -61,8 +61,9 @@ export default {
   setup(props, {emit}){
     const store = useStore()
     const router = useRouter()
+    const alarm = localStorage.getItem('alarm')
     const state = reactive({
-      inviteCount: 3,
+      inviteCount: 0,
       inviteData: [],
       fullscreenLoading: false,
     })
@@ -100,6 +101,9 @@ export default {
       getInvite()
     }
     const getInvite = ()=>{
+      if(alarm == "off"){
+        return
+      }
         store.dispatch('root/requestInviteList', { token: localStorage.getItem('jwt') })
           .then((result) => {
             let today = new Date();
@@ -151,51 +155,4 @@ export default {
 </script>
 
 <style>
-.logo {
-  float: left;
-  margin-top: 10px;
-  cursor: pointer;
-  -webkit-transform:scale(1);
-  -moz-transform:scale(1);
-  -ms-transform:scale(1);
-  -o-transform:scale(1);
-  transform:scale(1);
-  -webkit-transition:.3s;
-  -moz-transition:.3s;
-  -ms-transition:.3s;
-  -o-transition:.3s;
-  transition:.3s;
-}
-.logo:hover {
-  -webkit-transform:scale(1.2);
-  -moz-transform:scale(1.2);
-  -ms-transform:scale(1.2);
-  -o-transform:scale(1.2);
-  transform:scale(1.2);
-  z-index: 5000;
-}
-.nav {
-  float: right;
-  list-style: none;
-  margin-right: 5px;
-}
-.nav li {
-  float: left;
-  margin: 5px;
-}
-
-.main-header {
-  padding: 10px 20px;
-  border-bottom: 2px solid lightgray;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: fixed;
-  z-index: 100;
-}
-
-.main-logo,
-.button-wrapper {
-  display: inline;
-}
 </style>

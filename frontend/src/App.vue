@@ -17,10 +17,7 @@ export default {
 };
 </script>
 
-<style>
-@import "https://unpkg.com/element-plus/lib/theme-chalk/index.css";
-/* @import 'common/css/common.css';
-@import 'common/css/element-plus.css'; */
+<style src="./common/css/main.css">
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
