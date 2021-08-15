@@ -6,6 +6,7 @@
       @startDay="onStartDay"
       v-bind:class="{ 'day': day, 'night':!day }"
     />
+    <div class="space"></div>
     <el-main>
       <MafiaSection
         :openChat="gameChatOpen"
@@ -128,20 +129,6 @@ export default {
 </script>
 
 <style scoped>
-.el-header{
-  position: fixed;
-  top: 0;
-	left: 0;
-  width: 100%;
-  height: 70px;
-  /* border: solid; */
-}
-.el-main {
-  color: #333;
-  text-align: center;
-  width: 100%;
-  height: 100%;
-}
 .day{
   background: white;
 }
@@ -153,6 +140,7 @@ export default {
   color: #333;
   text-align: center;
   position: fixed;
+  left: 0;
   bottom: 0;
   display: flex;
   justify-content: space-between;

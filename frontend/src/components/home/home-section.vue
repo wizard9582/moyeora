@@ -113,49 +113,4 @@ export default {
 }
 </script>
 <style>
-.btn-refresh {
-  position: fixed;
-  top: 80px;
-  right: 50px;
-}
-.gameroom-list {
-  max-height: calc(100% - 35px);
-}
-@media (min-width: 701px) and (max-width: 1269px) {
-  .gameroom-list {
-    min-width: 700px;
-  }
-}
-@media (min-width: 1270px) {
-  .gameroom-list {
-    min-width: 1021px;
-  }
-}
-.gameroom-list .gameroom-list-item {
-  min-width: 320px;
-  max-width: 25%;
-  display: inline-block;
-  cursor: pointer;
-}
-
-.gameroom-list-item {
-  -webkit-transform:scale(1);
-  -moz-transform:scale(1);
-  -ms-transform:scale(1);
-  -o-transform:scale(1);
-  transform:scale(1);
-  -webkit-transition:.3s;
-  -moz-transition:.3s;
-  -ms-transition:.3s;
-  -o-transition:.3s;
-  transition:.3s;
-}
-.gameroom-list-item:hover {
-  -webkit-transform:scale(1.1);
-  -moz-transform:scale(1.1);
-  -ms-transform:scale(1.1);
-  -o-transform:scale(1.1);
-  transform:scale(1.1);
-  z-index: 5000;
-}
 </style>

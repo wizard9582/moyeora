@@ -104,46 +104,4 @@ export default {
 </script>
 
 <style>
-@import "https://unpkg.com/element-plus/lib/theme-chalk/index.css";
-.space {
-  height: 100px;
-  width: 100%;
-}
-.el-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 70px;
-  /* border: solid; */
-  background: white;
-  opacity: 0.9;
-}
-.el-aside {
-  position: fixed;
-  top: 70px;
-  left: 0;
-  width: 120px;
-  height: 100%;
-  /* border: solid; */
-  background: whitesmoke;
-}
-.el-main {
-  width: 100% - 100px;
-  /* margin-left: 100px; */
-  background-color: #e8eef3;
-  color: #333;
-  text-align: center;
-}
-
-body > .el-container {
-  margin-bottom: 40px;
-}
-.el-footer {
-  background-color: #e9eef3;
-  color: #333;
-  text-align: center;
-  width: 100%;
-}
-/* 차후 main.css로 통합? */
 </style>
