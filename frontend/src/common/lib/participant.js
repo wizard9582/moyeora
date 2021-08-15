@@ -58,14 +58,28 @@ function Participant(name) {
     }
   }
 
-  function votePlayer() {
-    if (container.id !== root.state.userId) {
-      console.log('check!!! : ', container.id, root.state.userId)
-      sendVoteMessage(container.id)
-      // console.log('clicked : ', root.state)
-    } else {
-      alert('자기 자신에게는 투표할 수 없습니다!')
-    }
+	function votePlayer() {
+	  console.log('투표할 수 있나요?? ', root.state.voteStarted)
+		if (root.state.voteStarted) {
+			if (!root.state.mylife) {
+				alert('죽은 사람은 투표할 수 없습니다!')
+			}
+			else if (container.id !== root.state.userId) {
+				for (let player of root.state.participantsList) {
+					if (player.userId == container.id) {
+						if (player.death) {
+							alert('죽은 사람에게는 투표할 수 없습니다!')
+						} else {
+							console.log('check!!! : ', container.id, root.state.userId)
+							sendVoteMessage(container.id)
+						}
+						break;
+					}
+				}
+			} else {
+				alert('자기 자신에게는 투표할 수 없습니다!')
+			}
+		}
   }
 
   // style cursor none 만들기 좋은 함수
