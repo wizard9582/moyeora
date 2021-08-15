@@ -105,7 +105,7 @@ public class SocketController {
 		}
 
 		List<Mafia> playerList = mafiaRepositorySupport.getPlayerByRoomId(Long.parseLong(roomId));
-		
+
 		int liveMafiaCnt = 0;
 		int liveCitizenCnt =0;
 

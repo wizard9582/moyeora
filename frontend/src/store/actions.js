@@ -178,3 +178,65 @@ export function deleteInvite ({ state }, payload) {
   return $axios.delete(url,body)
 }
 // ----------------초대 하기 및 초대 받기 API 끝----------------------
+
+// ----------------친구 요청 API 시작----------------------
+
+//친구 목록 불러오기
+export function requestFriendList ({ state }, payload) {
+  const url = '/relation'
+  const headers = {
+    'Authorization': 'Bearer ' + payload.token
+  }
+  // const params = { roomId: payload.roomId }
+  return $axios.get(url, {headers})
+}
+
+//친구 요청 하기
+export function requestFriend ({ state }, payload) {
+  console.log('requestFriend', state, payload)
+  const url = '/relation'
+  //body => { toUser : 친구할 사람 }
+  let body = payload 
+  let token = localStorage.getItem('jwt')
+
+  return $axios({
+    method:'post',
+    url: url,
+    headers: {'Authorization': 'Bearer ' + token},
+    data: body
+  })
+}
+
+//친구 요청 수락 하기
+export function requestMakeFriend ({ state }, payload) {
+  console.log('requestMakeFriend', state, payload)
+  const url = '/relation/make'
+  //body => { toUser : 친구할 사람 }
+  let body = payload 
+  let token = localStorage.getItem('jwt')
+  
+  return $axios({
+    method:'post',
+    url: url,
+    headers: {'Authorization': 'Bearer ' + token},
+    data: body
+  })
+}
+
+//친구 삭제 하기 
+export function requestDeleteFriend ({ state }, payload) {
+  console.log('requestDeleteFriend', state, payload)
+  const url = '/relation/delete'
+
+   //body => { toUser : 친구할 사람 }
+  let body = payload 
+  let token = localStorage.getItem('jwt')
+  
+  return $axios({
+    method:'delete',
+    url: url,
+    headers: {'Authorization': 'Bearer ' + token},
+    data: body
+  })
+}
+// ----------------친구 요청 API 끝----------------------

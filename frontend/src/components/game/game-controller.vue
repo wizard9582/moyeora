@@ -120,6 +120,11 @@ export default {
       }
     }
 
+    window.history.pushState(null, null, window.location.href);
+    window.onpopstate = function () {
+        window.history.go(1);
+    };
+    
     return { state, clickGameStart, clickPlayerList, clickChat, clickGameClose, micOff, cameraOff, gameTimerStart, isOwner, canStart }
   }
 }

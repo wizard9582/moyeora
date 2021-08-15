@@ -13,4 +13,5 @@ import java.util.List;
 public interface InviteRepository extends JpaRepository<Invite, Long> {
 
     List<Invite> getInviteByToUser(String toUser);
+    void deleteInviteByToUserAndFromUser(String toUser,String FromUser);
 }
