@@ -85,7 +85,12 @@ export default {
       emit('openMafiaVotePop')
     }
 
-    return { count, disabled, load, roomId, router, store, state, openFinalVote, openDoctorVote, openMafiaVote };
+    // 타이머 시간 조정
+    const morningTime = 18;
+    const judgeTime = 14;
+    const nightTime = 18;
+
+    return { count, disabled, load, roomId, router, store, state, openFinalVote, openDoctorVote, openMafiaVote, morningTime, judgeTime, nightTime };
   },
   data() {
     return {
@@ -325,7 +330,7 @@ export default {
           this.stompClient.subscribe('/sub/game/morning/'+this.roomId, function (chat) {
             console.log("타이머 1 (아침, 투표) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
-            scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second})
+            scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second-1})
 
             // 아침 시작
             if(rchat.desc === 'morning'){
@@ -357,7 +362,7 @@ export default {
 
               let msg = {}
               if (tiebreaker) { // 동점자가 있는 경우
-                msg = { round: 1 }
+                msg = { round: 1, second: scope.nightTime }
 
                 ElMessage({
                   message: h('strong', null, '동점으로 인해 아무도 죽지 않았습니다.'),
@@ -369,7 +374,7 @@ export default {
                   scope.stompClient.send("/pub/game/night/"+ scope.roomId, JSON.stringify(msg), {});
                 }
               } else { // 동점자가 없는 경우
-                msg = { round: 1 };
+                msg = { round: 1, second : scope.judgeTime };
                 scope.store.commit('root/setFinalVotePlayer', maxUser[0])
                  if (scope.userName === scope.state.ownerId) {
                    scope.stompClient.send("/pub/game/judge/"+ scope.roomId, JSON.stringify(msg), {});
@@ -382,6 +387,7 @@ export default {
           this.stompClient.subscribe('/sub/game/judge/'+this.roomId, function (chat) {
             console.log("타이머 2 (변론, 투표) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
+            scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second-1})
             // 최종 투표 팝업 오픈
             if(rchat.desc === 'finalvote') {
               scope.store.commit('root/startVote');
@@ -445,7 +451,7 @@ export default {
                 })
                 // scope.recvList.push({message:`최종투표에서 ${finalVotePlayer}가 구사일생 했습니다.`})
                 if(scope.userName == scope.state.ownerId){
-                  msg = {round : 1}
+                  msg = {round : 1, second : scope.nightTime}
                   scope.stompClient.send("/pub/game/night/"+ scope.roomId, JSON.stringify(msg), {});
                 }
               }
@@ -456,6 +462,7 @@ export default {
           this.stompClient.subscribe('/sub/game/night/'+this.roomId, function (chat) {
             console.log("타이머 3 (저녁, 결과) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
+            scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second-1})
             if (rchat.desc === 'night') {
               // 살아있으면
               if(scope.state.mylife){
@@ -555,6 +562,7 @@ export default {
                  if((scope.userName == scope.state.ownerId)){
                     const msg = {
                       round : 1,
+                      second : scope.morningTime,
                     }
                     scope.stompClient.send("/pub/game/morning/"+ scope.roomId, JSON.stringify(msg), {});
                  }
@@ -569,12 +577,12 @@ export default {
               if(resMessage[1]=='on'){
                 //게임 계속 진행
                 if (resMessage[0] === 'judge') {
-                  const msg = { round : 1 }
+                  const msg = { round : 1, second : scope.nightTime }
                    if (scope.userName === scope.state.ownerId) {
                     scope.stompClient.send("/pub/game/night/"+ scope.roomId, JSON.stringify(msg), {})
                    }
                 } else if (resMessage[0] === 'night') {
-                  const msg = { round : 1 }
+                  const msg = { round : 1, second : scope.morningTime }
                    if (scope.userName === scope.state.ownerId) {
                     scope.stompClient.send("/pub/game/morning/"+ scope.roomId, JSON.stringify(msg), {})
                    }
