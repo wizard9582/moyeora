@@ -98,13 +98,14 @@ public class SocketController {
 	public void getGameStatus(@DestinationVariable String roomId, HelloMessage helloMessage) {
 		String [] msg = helloMessage.getName().split(",");
 		//System.out.println("split 결과: "+Arrays.toString(msg));
-		List<Mafia> playerList = mafiaRepositorySupport.getPlayerByRoomId(Long.parseLong(roomId));
 
 		if (msg.length != 1) {
 			long userId = Long.parseLong(msg[1]);
 			mafiaRepositorySupport.killUser(userId, Long.parseLong(roomId));
 		}
 
+		List<Mafia> playerList = mafiaRepositorySupport.getPlayerByRoomId(Long.parseLong(roomId));
+		
 		int liveMafiaCnt = 0;
 		int liveCitizenCnt =0;
 
