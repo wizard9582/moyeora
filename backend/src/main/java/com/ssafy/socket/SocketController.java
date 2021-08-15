@@ -219,7 +219,7 @@ public class SocketController {
 					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), 2+check[0], period, roomId));
 				}else if(check[0] == 1){
 					// 최종 투표할 시간이다!!
-					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), 2+check[0]-1, period, roomId));
+					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), 2+check[0], period, roomId));
 				}else if(check[0] == 2){
 					// 타이머 끝!! 밤으로 넘어가자
 					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), descs.length-1, 0, roomId));
