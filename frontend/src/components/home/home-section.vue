@@ -73,7 +73,7 @@ export default {
 
           store.dispatch('root/requestRoomList')
           .then(function (result) {
-            console.log(result.data)
+            //console.log(result.data)
             result.data.forEach(item =>{
               //console.log(roomData)
               //console.log("requestRoomList : "+item.id + " / "+item.count);

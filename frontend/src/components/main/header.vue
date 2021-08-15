@@ -6,16 +6,18 @@
     <ul class="nav">
       <li>
         <el-dropdown trigger="click">
-          <el-badge :value="6">
+          <el-badge :value="state.inviteCount">
             <el-button icon="el-icon-bell" circle></el-button>
           </el-badge>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item icon="el-icon-circle-check">Action 1</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-circle-check">Action 2</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-circle-check">Action 3</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-circle-check">Action 4</el-dropdown-item>
-              <el-dropdown-item icon="el-icon-circle-check">Action 5</el-dropdown-item>
+              <el-dropdown-item v-if="state.inviteCount==0" icon="el-icon-check">확인하지 않은 초대가 없습니다.</el-dropdown-item>
+              <el-dropdown-item v-else v-for="item in state.inviteData" :key="item.id" >
+                <div>
+                  <i type="success" class="el-icon-right" @click="clickInvite"></i>
+                  <i type="danger" class="el-icon-delete" @click="clickDelete"></i>
+                </div>
+              </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -56,6 +58,8 @@ export default {
     const store = useStore()
     const router = useRouter()
     const state = reactive({
+      inviteCount: 3,
+      inviteData: [{id:"1"},{id:"2"},{id:"3"}],
       fullscreenLoading: false,
     })
 
@@ -83,8 +87,14 @@ export default {
       //console.log('user') 밑에 router 자기 id로 옮겨지게
       router.push("/home/user/id")
     }
+    const clickInvite = () =>{
+      console.log("invite")
+    }
+    const clickDelete = () =>{
+      console.log("delete")
+    }
 
-    return { state, isLoggedIn, clickLogin, clickSignup, clickLogout, clickUserInfo }
+    return { state, isLoggedIn, clickLogin, clickSignup, clickLogout, clickUserInfo, clickInvite, clickDelete }
   }
 }
 </script>
