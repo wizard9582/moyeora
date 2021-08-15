@@ -11,7 +11,7 @@ window.onbeforeunload = function() {
 
 ws.onmessage = function(message) {
 	var parsedMessage = JSON.parse(message.data);
-	console.info('Received message: ' + message.data);
+	// console.info('Received message: ' + message.data);
 
 	switch (parsedMessage.id) {
 	case 'existingParticipants':
@@ -35,7 +35,7 @@ ws.onmessage = function(message) {
 	    });
 	    break;
 	default:
-		console.error('Unrecognized message', parsedMessage);
+		// console.error('Unrecognized message', parsedMessage);
 	}
 }
 
@@ -63,7 +63,7 @@ function receiveVideoResponse(result) {
 
 function callResponse(message) {
 	if (message.response != 'accepted') {
-		console.info('Call not accepted by peer. Closing call');
+		// console.info('Call not accepted by peer. Closing call');
 		stop();
 	} else {
 		webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
@@ -83,10 +83,10 @@ function onExistingParticipants(msg) {
 			}
 		}
 	};
-	console.log(name + " registered in room " + room);
+	// console.log(name + " registered in room " + room);
 	var participant = new Participant(name);
 	participants[name] = participant;
-	console.log('in conference room : ', Object.keys(participants).length)
+	// console.log('in conference room : ', Object.keys(participants).length)
 	var video = participant.getVideoElement();
 
 	var options = {

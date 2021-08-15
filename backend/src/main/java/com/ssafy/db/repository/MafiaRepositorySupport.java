@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class MafiaRepositorySupport {
@@ -21,7 +22,10 @@ public class MafiaRepositorySupport {
 
     public List<Mafia> getPlayerByRoomId(long roomId){
         List<Mafia> result = jpaQueryFactory.select(qMafia).from(qMafia)
-                .where(qMafia.userConference.conference.id.eq(roomId)).fetch();
+                // 현재 게임 방에 참여하고 살아있는 사람
+                .where(qMafia.userConference.conference.id.eq(roomId)
+                        .and(qMafia.status.eq(0)))
+                .fetch();
         return result;
     }
 
@@ -52,6 +56,11 @@ public class MafiaRepositorySupport {
                 .set(qMafia.status , 1)
                 .execute();
 
+    }
+    @Transactional
+    public Optional<Mafia> getMafiaInConference (long conferenceId) {
+        return Optional.ofNullable(jpaQueryFactory.select(qMafia).from(qMafia)
+                .where(qMafia.userConference.conference.id.eq(conferenceId)).fetchFirst());
     }
 
     @Transactional

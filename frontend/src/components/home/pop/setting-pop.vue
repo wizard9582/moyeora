@@ -64,7 +64,7 @@ export default {
       localStorage.setItem('theme', state.form.theme)
       localStorage.setItem('fontSize', state.form.fontSize)
       localStorage.setItem('alarm', state.form.alarm)
-      this.handleClose()
+      handleClose()
     }
 
     let theme = localStorage.getItem('theme')

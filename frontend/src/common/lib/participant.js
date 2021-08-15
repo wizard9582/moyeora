@@ -45,7 +45,7 @@ function Participant(name) {
     let roomNum = 0
     console.log(root.state.userId + " voted To " + toName);
     if (pathname[1] === 'game') {
-      roomNum = parseInt(pathname[2])
+      roomNum = parseInt(pathname[3])
       if (root.state.stompClient && root.state.stompClient.connected) {
         const msg = {
           roomId: roomNum,
@@ -72,7 +72,7 @@ function Participant(name) {
 	function switchContainerClass() {
 		if (container.className === PARTICIPANT_CLASS) {
       var elements = Array.prototype.slice.call(document.getElementsByClassName(PARTICIPANT_MAIN_CLASS));
-      console.log('elements : ', elements)
+    //   console.log('elements : ', elements)
       elements.forEach(function (item) {
           console.log('ITEM : ', item)
 					item.className = PARTICIPANT_CLASS;
@@ -91,7 +91,7 @@ function Participant(name) {
 
 	this.offerToReceiveVideo = function(error, offerSdp, wp){
 		if (error) return console.error ("sdp offer error")
-		console.log('Invoking SDP offer callback function');
+		// console.log('Invoking SDP offer callback function');
 		var msg =  { id : "receiveVideoFrom",
 				sender : name,
 				sdpOffer : offerSdp
@@ -101,7 +101,7 @@ function Participant(name) {
 
 
 	this.onIceCandidate = function (candidate, wp) {
-		  console.log("Local candidate" + JSON.stringify(candidate));
+		//   console.log("Local candidate" + JSON.stringify(candidate));
 
 		  var message = {
 		    id: 'onIceCandidate',

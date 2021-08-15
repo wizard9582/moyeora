@@ -49,6 +49,31 @@ export function setGameRound(state, payload) {
   state.gameTime = payload.second
   state.gameRound = payload.round
 }
+
+export function setFinalVotePlayer(state, user) {
+  state.finalVotePlayer = user
+}
+
+export function setFinalVoteCount(state) {
+  state.finalVoteCount = [0, 0]
+}
+
+export function voteFinalVote(state, vote) {
+  if (vote === 'kill') {
+    state.finalVoteCount[0]++
+  } else {
+    state.finalVoteCount[1]++
+  }
+}
+
+export function setDoctorSelectPlayer(state, user) {
+  state.doctorSelectPlayer = user
+}
+
+export function setMafiaSelectPlayer(state, user) {
+  state.mafiaSelectPlayer = user
+}
+
 export function setMyJob(state, job) {
   if(job == "reset"){
     state.myJob = "(미정)"
@@ -64,4 +89,25 @@ export function setMyJob(state, job) {
 }
 export function setMafiaRoles(state, payload) {
   state.mafiaRoles = payload;
+}
+
+export function newRoundStart(state) {
+  state.voteCount = null;
+  state.finalVotePlayer = null;
+  state.finalVoteCount = null;
+  state.doctorSelectPlayer = null;
+  state.mafiaSelectPlayer = null;
+
+  // voteCount 세팅하기
+  // voteCount 구조 = [{ userId : [0, pk] }]
+  state.voteCount = new Object
+  for (let player of state.participantsList) {
+    let greetingUserId = player.userId
+    state.voteCount[greetingUserId] = [0, player.id]
+  }
+  console.log('----- new Round Start ----- \n votePlayerList', state.voteCount)
+}
+
+export function setMylife(state, payload) {
+  state.mylife = payload;
 }
