@@ -128,6 +128,7 @@ export function resetDeath(state) {
   for (let player of state.participantsList) {
     player.death = false;
   }
+  state.gameRefresh = !state.gameRefresh
 }
 
 export function startVote(state) {
@@ -141,3 +142,4 @@ export function endVote(state) {
 export function skipStage(state, payload){
   state.skipStage = payload.value
 }
+

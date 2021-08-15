@@ -3,9 +3,6 @@
     <div class="basic-info">
       <img :src="require('@/assets/img-logo.png')" alt="IceBreaking logo" width="80" height="60"/>
     </div>
-    <div class="job-info" v-if="state.roomType=='mafia'">
-      <el-button @click="openJob">내 직업확인</el-button>
-    </div>
     <div class="game-info" v-if="state.roomType=='mafia'">
       <div class="game-status">
         <span :class="state.statusIcon"></span>
@@ -16,10 +13,9 @@
         <span>:</span>
         <span class="seconds">{{ padSecond(state.second) }}</span>
       </span>
-      <button @click="clickPass">넘어가기 {{state.clicked}}/{{state.total}}</button>
+      <el-button v-if="state.roomType=='mafia'" class="job-info" @click="openJob">내 직업확인</el-button>
     </div>
     <div class="button-wrapper">
-      <el-button @click="state.detectOpen = true">dev.Police</el-button>
       <el-button icon="el-icon-message" @click="clickInvite">초대하기</el-button>
       <el-tooltip class="item" effect="dark" content="도움말" placement="bottom">
         <el-button icon="el-icon-question" circle @click="clickOnQuestion" ></el-button>
@@ -32,15 +28,10 @@
     v-model="state.detectOpen"
     width="30%"
     :before-close="handleClose">
-    <span>
-      수사할 시민을 클릭하세요. <br>
-      <el-tag class="user-tag" :key="user" v-for="user in state.participantsList" @click="detectChoose(user)"> {{user.userId}} </el-tag>
-    </span>
-    <template #footer>
-      <span class="dialog-footer">
-        <el-button type="primary" @click="state.detectOpen = false">확인</el-button>
-      </span>
-    </template>
+    <span>수사할 플레이어를 선택하세요!</span>
+    <el-table :data="state.participantsList" highlight-current-row @click="detectChoose(user)" :row-style = "tableRowClassName">
+      <el-table-column property="userId" label="Player"></el-table-column>
+    </el-table>
   </el-dialog>
   <!-- 도움말 다이얼로그 -->
   <el-dialog title="도움말" v-model="state.questionOpen" width="30%" :before-close="handleClose">
@@ -87,9 +78,8 @@ export default {
       jobList: computed(() => store.getters['root/getMafiaRoles']),
       gameTime: computed(() => store.getters['root/getGameTime']),
       skipStage: computed(() => store.getters['root/getSkipStage']),
+      gameRefresh: computed(() => store.getters['root/getGameRefresh']),
       statusIcon: 'el-icon-sunny',
-      clicked: 2,
-      total: 4,
       //타이머
       timer: null,
       minute: 0,
@@ -153,6 +143,9 @@ export default {
       if(state.stage == 4){
         emit('startNight')
         state.statusIcon = "el-icon-moon"
+        if(state.myJob == 'police'){
+          state.detectOpen = true
+        }
       }
       if(state.stage == 0){
         emit('startDay')
@@ -205,25 +198,32 @@ export default {
           answer = target.role
         }
       });
-
-      alert("선택하신 대상의 직업은 " + answer + "입니다.")
+      ElMessage({
+        dangerouslyUseHTMLString: true,
+        message: '<strong>선택하신 대상의 직업은 <i>' + answer + '</i>입니다</strong>',
+      });
       state.detectOpen = false
     }
 
     watch(() => state.gameTime,
       (gameTime, prevGameTime) => {
         //console.log("---------->",queue)
-        console.log("&&&&*&*&*&*&&*&*&*&&*8---->",gameTime)
+        //console.log("&&&&*&*&*&*&&*&*&*&&*8---->",gameTime)
         if(gameTime!=-1){
           if(queue._arr.length == 0){
             //console.log("new timer", queue)
-            console.log("round------------->",state.gameRound)
+            //console.log("round------------->",state.gameRound)
             startTimer(gameTime)
           }
           queue.enqueue(gameTime)
         }
       }
     )
+
+    watch(()=> state.gameRefresh, ()=>{
+      state.round = 1
+      state.stage = 0
+    })
 
     return { state, clickPass, clickInvite, clickOnQuestion, padMinute, padSecond, startTimer, nextStage, detectChoose, openJob }
   }

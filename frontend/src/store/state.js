@@ -18,4 +18,5 @@ export default {
   mylife: true, // 현재 내가 죽었는지 살았는지에 대한 boolean 값
   voteStarted: false,
   skipStage: false,
+  gameRefresh: false,
 }

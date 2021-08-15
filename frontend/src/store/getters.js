@@ -66,3 +66,7 @@ export function getVoteStarted(state) {
 export function getSkipStage(state) {
   return state.skipStage
 }
+
+export function getGameRefresh(state) {
+  return state.gameRefresh
+}
