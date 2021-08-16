@@ -107,7 +107,7 @@ export default {
     sendMessage (e) {
       if(e.keyCode === 13 && this.userName !== '' && this.message !== ''){
         console.log('----------toName---------- ', this.toName)
-        if(this.toName == '')
+        if(this.toName == '' || this.toName == '모두')
           this.sendToRoom()
         else
           this.sendToPerson()
@@ -303,7 +303,7 @@ export default {
             ElMessage({
               message: h('p', null, [
                 h('strong', null, '당신의 직업은 '),
-                h('i', { style: 'color: tomato' }, rchat.role),
+                h('i', { style: ['color: tomato', 'font-weight: bold'] }, rchat.role),
                 h('strong', null, '입니다.'),
               ])
             })
@@ -335,11 +335,13 @@ export default {
 
             // 아침 시작
             if(rchat.desc === 'morning'){
+              ElMessage({message: h('strong', null, '아침이 되었습니다.')})
               // 투표 및 선택된 사람 초기화
               scope.store.commit('root/newRoundStart');
             }
 
             if(rchat.desc === 'vote') {
+              ElMessage({message: h('strong', null, '투표가 시작되었습니다.')})
               scope.store.commit('root/startVote');
             }
 
@@ -390,8 +392,15 @@ export default {
             console.log("타이머 2 (변론, 투표) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
             scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second-1})
+
+            let judgePerson = scope.store.getters['root/getFinalVotePlayer']
+            if(rchat.desc == 'judge'){
+              ElMessage({message: h('strong', null, judgePerson+'님, 최후의 변론 시간입니다.')})
+            }
+
             // 최종 투표 팝업 오픈
             if(rchat.desc === 'finalvote') {
+              ElMessage({message: h('strong', null, judgePerson+'님의 운명을 결정할 투표가 시작되었습니다.')})
               scope.store.commit('root/startVote');
               scope.store.commit('root/setFinalVoteCount')
               if (scope.state.mylife) {
@@ -399,11 +408,11 @@ export default {
               }
               for (let player of scope.state.participantsList) {
                 try{
-                  console.log('확인: ',document.querySelector(`#${player.userId}`))
+                  // console.log('확인: ',document.querySelector(`#${player.userId}`))
                   const voteSpan = document.querySelector(`#${player.userId}`).children[2]
                   voteSpan.innerText = '';
                 }catch{
-                  console.log('유령')
+                  // console.log('유령')
                 }
 
               }
@@ -425,10 +434,26 @@ export default {
                   }
                 }
                 scope.store.commit('root/setDeath',finalVotePlayer);
+                let img = document.querySelector(`#${finalVotePlayer}`).children[0].children[0];
+                img.style = 'height:50%;opacity:1;position:absolute;'
+                // 죽은 사람 직업 찾기
+                let roles = scope.store.getters['root/getMafiaRoles'];
+                let deadRole = '';
+                for (let player of roles) {
+                  if (player.userId === finalVotePlayer) {
+                    deadRole = player.role;
+                    break
+                  }
+                }
+                if(deadRole == 'mafia') deadRole = "마피아"
+                else if(deadRole == 'police') deadRole = "무고한 경찰"
+                else if(deadRole == 'doctor') deadRole = "무고한 의사"
+                else deadRole = "무고한 시민"
+
                 ElMessage({
                   message: h('p', null, [
                     h('strong', null, '최종투표에서 '),
-                    h('i', { style: 'color: tomato' }, finalVotePlayer),
+                    h('i', { style: ['color: tomato', 'font-weight: bold'] }, deadRole),
                     h('strong', null, '가 죽었습니다.'),
                   ]),
                   type: 'danger',
@@ -448,7 +473,7 @@ export default {
                 ElMessage({
                   message: h('p', null, [
                     h('strong', null, '최종투표에서 '),
-                    h('i', { style: 'color: tomato' }, finalVotePlayer),
+                    h('i', { style: ['color: tomato', 'font-weight: bold'] }, finalVotePlayer),
                     h('strong', null, '가 구사일생 했습니다.'),
                   ]),
                   type: 'success',
@@ -468,6 +493,7 @@ export default {
             let rchat = JSON.parse(chat.body);
             scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second-1})
             if (rchat.desc === 'night') {
+              ElMessage({message: h('strong', null, '밤이 되었습니다.')})
               // 살아있으면
               if(scope.state.mylife){
                 leaveRoom()
@@ -514,6 +540,8 @@ export default {
                 // 마피아가 제거하는 경우
                 console.log('마피아가 죽인 사람: ',mafiaSelectPlayer);
                 scope.store.commit('root/setDeath',mafiaSelectPlayer);
+                let img = document.querySelector(`#${mafiaSelectPlayer}`).children[0].children[0];
+                img.style = 'height:50%;opacity:1;position:absolute;'
                 // 그게 나라면...!!!ㅠㅠㅠㅠㅠㅠ
                 if(mafiaSelectPlayer == scope.userName){
                   scope.store.commit('root/setMylife', false);
@@ -534,8 +562,8 @@ export default {
                 ElMessage({
                   message: h('p', null, [
                     h('strong', null, '마피아가 무고한 '),
-                    h('i', { style: 'color: black' }, deadRole),
-                    h('i', { style: 'color: tomato' }, mafiaSelectPlayer),
+                    h('i', { style: ['color: black', 'font-weight: bold'] }, deadRole),
+                    h('i', { style: ['color: tomato', 'font-weight: bold'] }, mafiaSelectPlayer),
                     h('strong', null, '를 죽였습니다.'),
                   ]),
                   type: 'danger',
@@ -545,6 +573,13 @@ export default {
               }
 
             } else if(rchat.desc=='end'){
+                for (let player of scope.state.participantsList) {
+                  if (player.death){
+                    let img = document.querySelector(`#${player.userId}`).children[0].children[0];
+                    img.style = 'height:50%;opacity:1;position:absolute;'
+                  }
+                }
+
               // 죽은 사람이 있다면
                 if (scope.state.didMafiaKillPlayer) {
                   let playerPK = ''
