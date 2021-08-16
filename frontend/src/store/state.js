@@ -19,4 +19,7 @@ export default {
   voteStarted: false,
   skipStage: false,
   gameRefresh: false,
+  gameStarted: false,
+  micOff: false,
+  videoOff: false,
 }

@@ -143,3 +143,18 @@ export function skipStage(state, payload){
   state.skipStage = payload.value
 }
 
+export function startGame(state) {
+  state.gameStarted = true
+}
+
+export function endGame(state) {
+  state.gameStarted = false
+}
+
+export function setMicOff(state, payload) {
+  state.micOff = payload;
+}
+
+export function setVideoOff(state, payload) {
+  state.videoOff = payload;
+}

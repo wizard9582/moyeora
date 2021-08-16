@@ -66,11 +66,12 @@ export default {
 
     const state = reactive({
       participantsList: computed(() => store.getters['root/getParticipantsList']),
-      ownerId : computed(()=> store.getters['root/getRoomOwner']),
+      ownerId: computed(()=> store.getters['root/getRoomOwner']),
       voteCountList: computed(() => store.getters['root/getVoteCount']),
       finalVoteCount: computed(() => store.getters['root/getFinalVoteCount']),
+      mylife: computed(() => store.getters['root/getMylife']), // 현재 내가 죽었는지 살았는지에 대한 정보
+      gameStarted: computed(() => store.getters['root/getGameStarted']),
       didMafiaKillPlayer: false,
-      mylife : computed(() => store.getters['root/getMylife']), // 현재 내가 죽었는지 살았는지에 대한 정보
     })
 
     const openFinalVote = () => {
@@ -170,7 +171,7 @@ export default {
         let random = Math.floor(Math.random() * (1001 - 0)) + 0 - 500;
         setTimeout(function () {
               register(room, name);
-        }, 3000-random); // 랜덤 숫자 더하기 (-0.5~0.5)
+        }, 2000-random); // 랜덤 숫자 더하기 (-0.5~0.5)
     },
 
     //현재 게임이 끝났는지 판단해주는 API, 주의. 방장만 호출해줄 것!
@@ -393,7 +394,9 @@ export default {
             if(rchat.desc === 'finalvote') {
               scope.store.commit('root/startVote');
               scope.store.commit('root/setFinalVoteCount')
-              scope.openFinalVote()
+              if (scope.state.mylife) {
+                scope.openFinalVote()
+              }
               for (let player of scope.state.participantsList) {
                 try{
                   console.log('확인: ',document.querySelector(`#${player.userId}`))
@@ -469,11 +472,11 @@ export default {
               if(scope.state.mylife){
                 leaveRoom()
                 console.log("내 직업",myRole)
-                if(myRole=='mafia'){
+                if(myRole=='mafia' && scope.state.mylife){
                   // 마피아인 경우 : 마피아끼리 모임
                   scope.waitSecond(scope.roomId+"/mafia",scope.userName)
                   scope.openMafiaVote()
-                }else if(myRole == 'doctor'){
+                }else if(myRole == 'doctor' && scope.state.mylife){
                   // 의사인 경우 : 투표창 열림
                   scope.openDoctorVote()
                 }
@@ -590,20 +593,24 @@ export default {
                 }
               }else if(resMessage[1]=='citizen'){
                 //시민 이김
-                ElMessage({
-                  message: h('strong', null, '시민 승!!'),
-                  type: 'success',
-                })
-                alert('시민 승!!!')
-                scope.store.commit('root/resetDeath');
+                if (scope.state.gameStarted) {
+                  ElMessage({
+                    message: h('strong', null, '시민 승!!'),
+                    type: 'success',
+                  })
+                  // alert('시민 승!!!')
+                  scope.store.commit('root/resetDeath');
+                }
               }else{
-                //마피아 이김
-                alert('마피아 승!!!')
-                ElMessage({
-                  message: h('strong', null, '시민 승!!'),
-                  type: 'success',
-                })
-                scope.store.commit('root/resetDeath');
+                if (scope.state.gameStarted) {
+                  //마피아 이김
+                  ElMessage({
+                    message: h('strong', null, '마피아 승!!'),
+                    type: 'success',
+                  })
+                  // alert('마피아 승!!!')
+                  scope.store.commit('root/resetDeath');
+                }
               }
           });
         },
