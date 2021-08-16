@@ -10,17 +10,25 @@ function Participant(name) {
 	var container = document.createElement('div');
   container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
 	container.id = name;
+	var div = document.createElement('div');
 	var span = document.createElement('span');
 	var span2 = document.createElement('span');
 	var video = document.createElement('video');
+	var img = document.createElement('img');
 	var rtcPeer;
 
-	container.appendChild(video);
+	container.appendChild(div);
 	container.appendChild(span);
 	container.appendChild(span2);
+	div.appendChild(img);
+	div.appendChild(video);
   container.onclick = switchContainerClass;
   container.onclick = votePlayer;
 	document.getElementById('participants').appendChild(container);
+
+	div.style = 'position:relative;'
+	img.src = require('@/assets/img-dead.png');
+	img.style = 'height:50%;opacity:0;position:absolute;'
 
   span.appendChild(document.createTextNode(name));
   span2.style.color = 'red'
