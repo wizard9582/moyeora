@@ -97,26 +97,4 @@ export default {
 </script>
 
 <style>
-.board-list {
-  margin-left: 15%;
-  width: 70%;
-  margin-right: 15%;
-}
-.board-under-wrapper {
-  display: inline-block;
-  padding: 50px;
-}
-.board-under-wrapper .select-wrapper {
-  min-width: 300px;
-  max-width: 70%;
-  margin-left: 5%;
-}
-.board-under-wrapper .search-wrapper {
-  min-width: 100px;
-  max-width: 20%;
-  margin-left: 5%;
-}
-.board-under-wrapper .btn-write {
-  float: right;
-}
 </style>
