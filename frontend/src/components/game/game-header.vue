@@ -208,8 +208,8 @@ export default {
     watch(() => state.gameTime,
       (gameTime, prevGameTime) => {
         //console.log("---------->",queue)
-        //console.log("&&&&*&*&*&*&&*&*&*&&*8---->",gameTime)
-        if(gameTime!=-1){
+        console.log("&&&&*&*&*&*&&*&*&*&&*8---->",gameTime)
+        if(!(gameTime <= 0)){
           if(queue._arr.length == 0){
             //console.log("new timer", queue)
             //console.log("round------------->",state.gameRound)

@@ -28,7 +28,7 @@
       <div class="sub-title">내 전적</div>
       <el-divider></el-divider>
       <div class="info-item" id="statistic">
-        <el-table class="stat-list" ref="myStatTable" :data="myStat" stripe border>
+        <el-table class="stat-list" ref="myStatTable" :data="state.myStat" stripe border>
           <el-table-column prop="job" label="직업"></el-table-column>
           <el-table-column prop="win" label="승리" width="150"></el-table-column>
           <el-table-column prop="lose" label="패배" width="150"></el-table-column>
@@ -41,7 +41,7 @@
         <el-table
           class="history-list"
           ref="historyTable"
-          :data="historyData"
+          :data="state.historyData"
           :default-sort="{prop: 'date', order: 'descending'}"
           stripe
         >
@@ -77,14 +77,14 @@
       <div class="sub-title">랭킹</div>
       <el-divider></el-divider>
       <div class="info-item" id="ranking">
-        <el-table class="ranking-list" ref="rankingTable" :data="rankingData" stripe border>
+        <el-table class="ranking-list" ref="rankingTable" :data="state.rankingData" stripe border>
           <el-table-column type="index" label="순위"></el-table-column>
           <el-table-column prop="nickName" label="이름" width="150"></el-table-column>
           <el-table-column prop="win" label="승리" width="150"></el-table-column>
           <el-table-column prop="lose" label="패배" width="150"></el-table-column>
           <el-table-column prop label="승률" width="150"></el-table-column>
         </el-table>
-        <el-table class="ranking-list" ref="myRankingTable" :data="myRanking" stripe border>
+        <el-table class="ranking-list" ref="myRankingTable" :data="state.myRanking" stripe border>
           <el-table-column prop="my" label="순위"></el-table-column>
           <el-table-column prop="nickName" label="이름" width="150"></el-table-column>
           <el-table-column prop="win" label="승리" width="150"></el-table-column>
@@ -287,16 +287,6 @@ export default {
               lose: 23,
               },
             ],
-      })
-
-
-      store.dispatch('root/request')
-      .then(function (result){
-        console.log(result)
-        state.tableData = result.data
-      })
-      .catch(function (err){
-
       })
 
       return {state}
