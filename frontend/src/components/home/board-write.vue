@@ -92,15 +92,4 @@ export default {
 </script>
 
 <style>
-.write-wrapper{
-  margin-left: 15%;
-  width: 70%;
-  margin-right: 15%;
-}
-.main-write{
-  text-align: left;
-}
-.write-btn-wrapper{
-  text-align: center;
-}
 </style>

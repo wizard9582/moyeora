@@ -341,3 +341,59 @@ a:hover {
   transform:scale(1.1);
   z-index: 5000;
 }
+
+.board-list{
+  margin-left: 15%;
+  width: 70%;
+  margin-right: 15%;
+}
+.board-under-wrapper{
+  padding: 50px;
+}
+.board-under-wrapper .select-wrapper{
+  display: inline-block;
+  min-width: 300px;
+  max-width: 70%;
+  margin-left: 5%;
+}
+.board-under-wrapper .search-wrapper{
+  display: inline-block;
+  min-width: 100px;
+  max-width: 20%;
+  margin-left: 5%;
+}
+.write-wrapper{
+  margin-left: 15%;
+  width: 70%;
+  margin-right: 15%;
+}
+.main-write{
+  text-align: left;
+}
+.write-btn-wrapper{
+  text-align: center;
+}
+.pwPopup{
+  margin-left: 25%;
+  width: 50%;
+  text-align: center;
+}
+.pwInput{
+  width: 100px;
+  margin: 5px;
+}
+.gameFilter-list-item {
+  min-width: 200px;
+  max-width: 20%;
+  min-height: 200px;
+  max-height: 20%;
+  display: inline-block;
+  cursor: pointer;
+  margin: 10px;
+}
+.img-game{
+  border: 1px solid black;
+  padding: 0px;
+  width: 100%;
+  height: auto;
+}

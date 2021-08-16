@@ -205,7 +205,7 @@ public class SocketController {
 	@MessageMapping("/game/judge/{roomId}")
 	public void gameJudge(MafiaChat chat, @DestinationVariable String roomId) {
 		// 1 : 1
-		int period = chat.getSecond()/2;
+		int period = chat.getSecond()/3;
 		System.out.println("judge - 타이머 period 설정: "+period);
 		// 최후변론(judge)인지 최종투표(finalvote)인지 체크하는 변수 check
 		final int[] check = {0};
@@ -217,10 +217,10 @@ public class SocketController {
 				if(check[0] == 0){
 					// 최후 변론 시간이다!!
 					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), 2+check[0], period, roomId));
-				}else if(check[0] == 1){
-					// 최종 투표할 시간이다!!
-					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), 2+check[0], period, roomId));
 				}else if(check[0] == 2){
+					// 최종 투표할 시간이다!!
+					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), 2+check[0]-1, period, roomId));
+				}else if(check[0] == 3){
 					// 타이머 끝!! 밤으로 넘어가자
 					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), descs.length-1, 0, roomId));
 					timer.cancel();

@@ -48,13 +48,4 @@ export default {
 </script>
 
 <style>
-.pwPopup{
-  margin-left: 25%;
-  width: 50%;
-  text-align: center;
-}
-.pwInput{
-  width: 100px;
-  margin: 5px;
-}
 </style>
