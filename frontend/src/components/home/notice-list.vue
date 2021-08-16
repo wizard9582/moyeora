@@ -83,24 +83,4 @@ export default {
 </script>
 
 <style>
-.board-list{
-  margin-left: 15%;
-  width: 70%;
-  margin-right: 15%;
-}
-.board-under-wrapper{
-  padding: 50px;
-}
-.board-under-wrapper .select-wrapper{
-  display: inline-block;
-  min-width: 300px;
-  max-width: 70%;
-  margin-left: 5%;
-}
-.board-under-wrapper .search-wrapper{
-  display: inline-block;
-  min-width: 100px;
-  max-width: 20%;
-  margin-left: 5%;
-}
 </style>

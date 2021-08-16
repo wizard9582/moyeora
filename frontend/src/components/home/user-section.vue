@@ -96,29 +96,38 @@
       <el-divider></el-divider>
       <div class="info-item" id="friend">
         <ul class="friend-list">
-          <li v-for="item in friendList" class="friend-list-item" :key="item">
+          <li v-for="item in state.friendList" class="friend-list-item" :key="item">
             <el-avatar icon="el-icon-user-solid" :size="100"></el-avatar>
-            <div class="sub-title">{{ item }}</div>
+            <div class="sub-title">{{ item }}
+              <i class="el-icon-close" @click="clickDelete(item)"></i>
+            </div>
           </li>
           <li class="friend-list-item">
-            <el-avatar icon="el-icon-plus" :size="100"></el-avatar>
+            <el-avatar icon="el-icon-plus" :size="100" @click="state.friendPopOpen = true"></el-avatar>
             <div class="sub-title">친구추가</div>
           </li>
         </ul>
       </div>
     </div>
+    <friend-pop :open="state.friendPopOpen" @closeFriendPopup="state.friendPopOpen = false"
+    ></friend-pop>
   </el-main>
 </template>
 
 <script>
+import FriendPop from '@/components/home/pop/friend-pop.vue';
 import { reactive, computed } from 'vue'
 import { useStore } from 'vuex'
 
 export default {
     name:"UserSection",
+    components:{
+      FriendPop,
+    },
     setup(props, {emit}) {
       const store = useStore()
       const state = reactive({
+        friendPopOpen: false,
         userName: "",
         userId: "",
         userDepartment: "",
@@ -156,140 +165,50 @@ export default {
           title: '김철수의 마피아게임',
           date: '2016-05-03',
           result: 'Win',
-          job: 'mafia'},
-          {
-          no: 13921,
-          tag: 'mafia',
-          title: '김철수의 마피아게임',
-          date: '2016-05-03',
-          result: 'Lose',
-          job: 'mafia'},
-          {
-            no: 13921,
-          tag: 'mafia',
-          title: '김철수의 마피아게임',
-          date: '2016-05-03',
-          result: 'Win',
-          job: 'citizen'
-          },
-          {
-          no: 13921,
-          tag: 'mafia',
-          title: '김철수의 마피아게임',
-          date: '2016-05-03',
-          result: 'Lose',
-          job: 'mafia'
-          },
-          {
-          no: 13921,
-          tag: 'mafia',
-          title: '김철수의 마피아게임',
-          date: '2016-05-03',
-          result: 'Win',
-          job: 'mafia'
-          },
-          {
-          no: 13921,
-          tag: 'mafia',
-          title: '김철수의 마피아게임',
-          date: '2016-05-03',
-          result: 'Lose',
-          job: 'mafia'
-          },
-          {
-          no: 13921,
-          tag: 'mafia',
-          title: '김철수의 마피아게임',
-          date: '2016-05-03',
-          result: 'Win',
-          job: 'mafia'
-          },
-          {
-          no: 13921,
-          tag: 'mafia',
-          title: '김철수의 마피아게임',
-          date: '2016-05-03',
-          result: 'Win',
-          job: 'citizen'
-          },
-          {
-          no: 13921,
-          tag: 'mafia',
-          title: '김철수의 마피아게임',
-          date: '2016-05-03',
-          result: 'Lose',
-          job: 'citizen'
-          },
-          {
-          no: 13921,
-          tag: 'mafia',
-          title: '김철수의 마피아게임',
-          date: '2016-05-03',
-          result: 'Win',
-          job: 'police'
-          },],
+          job: 'mafia'},],
           rankingData: [
             {
               nickName: "김철수",
               win: 123,
               lose: 35,
             },
-            {
-              nickName: "김철수",
-              win: 123,
-              lose: 35,
-            },
-            {
-              nickName: "김철수",
-              win: 123,
-              lose: 35,
-            },
-            {
-              nickName: "김철수",
-              win: 123,
-              lose: 35,
-            },
-            {
-              nickName: "김철수",
-              win: 123,
-              lose: 35,
-            },
-            {
-              nickName: "김철수",
-              win: 123,
-              lose: 35,
-            },
-            {
-              nickName: "김철수",
-              win: 123,
-              lose: 35,
-            },
-            {
-              nickName: "김철수",
-              win: 123,
-              lose: 35,
-            },
-            {
-              nickName: "김철수",
-              win: 123,
-              lose: 35,
-            },
-            {
-              nickName: "김철수",
-              win: 123,
-              lose: 35,
-            },
-          ],
-          myRanking: [{
-              my: "나의 순위",
-              nickName: "김싸피",
-              win: 11,
-              lose: 23,
-              },
             ],
       })
 
-      return {state}
+      const getmyStat = () => {
+
+      }
+      const getHistoryData = () => {
+
+      }
+      const getRankingData = () => {
+
+      }
+      const getFriendList = () => {
+        store.dispatch('root/requestFriendList', { token: localStorage.getItem('jwt') })
+        .then((result)=>{
+          state.friendList = result.data
+        })
+        .catch((err)=>{
+
+        })
+      }
+
+      const clickDelete = (id) =>{
+        store.dispatch('root/requestDeleteFriend', { toUser: id })
+        .then((result)=>{
+          getFriendList()
+        })
+        .catch((err)=>{
+
+        })
+      }
+
+      getmyStat()
+      getHistoryData()
+      getRankingData()
+      getFriendList()
+      return {state, clickDelete}
     }
 }
 </script>
