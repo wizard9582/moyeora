@@ -1,5 +1,5 @@
 <template>
-    <el-button class="game-start-button" v-if="isOwner && state.roomType=='mafia'" :disabled="!canStart" @click="clickGameStart">게임 시작</el-button>
+    <el-button class="game-start-button" v-if="isOwner() && state.roomType=='mafia'" :disabled="!canStart" @click="clickGameStart">게임 시작</el-button>
     <div class="main-controller">
       <el-button :icon="state.micIcon" @click="micOff" v-bind:class="{ 'el-button--primary': !state.micOff }" >음소거</el-button>
       <el-button :icon="state.videoIcon" @click="cameraOff" v-bind:class="{ 'el-button--primary': !state.videoOff }" >비디오</el-button>
@@ -66,7 +66,7 @@ export default {
     // 게임 시작 버튼
     const clickGameStart = () => {
       console.log('게임 시작!!')
-      state.gameStart = !state.gameStart
+      store.commit('root/startGame')
       gameTimerStart();
     }
 
@@ -87,11 +87,15 @@ export default {
       console.log('마이크 끄기 클릭')
       state.micOff = !state.micOff
       if(!state.micOff){
+        store.commit('root/setMicOff', false);
         state.micIcon = 'el-icon-microphone'
+        muteMic(state.userName, false);
       }else{
+        //console.log('마이크 스토어 확인: ', store.getters['root/getMicOff'])
+        store.commit('root/setMicOff', true);
         state.micIcon = 'el-icon-close'
+        muteMic(state.userName, true);
       }
-      muteMic(state.userName);
     }
 
     // 카메라 버튼
@@ -99,11 +103,14 @@ export default {
       console.log('카메라 끄기 클릭')
       state.videoOff = !state.videoOff
       if(!state.videoOff){
+        store.commit('root/setVideoOff', false);
         state.videoIcon = 'el-icon-camera-solid'
+        offCam(state.userName, false);
       }else{
+        store.commit('root/setVideoOff', true);
         state.videoIcon = 'el-icon-close'
+        offCam(state.userName, true);
       }
-      offCam(state.userName);
     }
 
     // 게임 시작 시 타이머 시작
@@ -126,7 +133,7 @@ export default {
         window.history.go(1);
     };
 
-    
+
     return { state, clickGameStart, clickPlayerList, clickChat, clickGameClose, micOff, cameraOff, gameTimerStart, isOwner, canStart }
   }
 }

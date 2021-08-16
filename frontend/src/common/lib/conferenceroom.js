@@ -1,6 +1,7 @@
 import { Participant } from './participant';
 import { sendMessage, ws } from './webSocket';
 import kurentoUtils from 'kurento-utils'
+import root from '@/store/index.js'
 
 var participants = {};
 var name;
@@ -58,7 +59,16 @@ function onNewParticipant(request) {
 function receiveVideoResponse(result) {
 	participants[result.name].rtcPeer.processAnswer (result.sdpAnswer, function (error) {
 		if (error) return console.error (error);
-	});
+  });
+
+  if (root.state.micOff) {
+    console.log('마이크가 꺼져있다면 시작 전에 꺼버리자 : ', participants[name].rtcPeer)
+    console.log('마이크가 꺼져있다면 시작 전에 꺼버리자 : ', participants[name].rtcPeer.peerConnection.getLocalStreams())
+    participants[name].rtcPeer.audioEnabled = false;
+  }
+  if (root.state.videoOff) {
+    participants[name].rtcPeer.videoEnabled = false;
+  }
 }
 
 function callResponse(message) {
@@ -146,12 +156,19 @@ function onParticipantLeft(request) {
 	delete participants[request.name];
 }
 
-function muteMic(name) {
-	participants[name].rtcPeer.audioEnabled = !participants[name].rtcPeer.audioEnabled;
+function muteMic(name, payload) {
+  console.log('마이크 끄기 .js : ', participants[name].rtcPeer)
+  if(payload)
+    participants[name].rtcPeer.audioEnabled = false;
+  else
+    participants[name].rtcPeer.audioEnabled = true;
 }
 
-function offCam(name) {
-	participants[name].rtcPeer.videoEnabled = !participants[name].rtcPeer.videoEnabled;
+function offCam(name, payload) {
+  if (payload)
+    participants[name].rtcPeer.videoEnabled = false;
+  else
+    participants[name].rtcPeer.videoEnabled = true;
 }
 
 

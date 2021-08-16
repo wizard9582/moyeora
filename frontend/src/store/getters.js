@@ -70,3 +70,15 @@ export function getSkipStage(state) {
 export function getGameRefresh(state) {
   return state.gameRefresh
 }
+
+export function getGameStarted(state) {
+  return state.gameStarted
+}
+
+export function getMicOff(state) {
+  return state.micOff
+}
+
+export function getVideoOff(state) {
+  return state.videoOff
+}
