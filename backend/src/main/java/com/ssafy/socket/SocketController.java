@@ -216,7 +216,7 @@ public class SocketController {
 				//System.out.println("타이머 작동 "+round[0]+", "+desc[0]+", 라운드 수: "+chat.getRound());
 				if(check[0] == 0){
 					// 최후 변론 시간이다!!
-					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), 2+check[0], period, roomId));
+					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), 2+check[0], period*2, roomId));
 				}else if(check[0] == 2){
 					// 최종 투표할 시간이다!!
 					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), 2+check[0]-1, period, roomId));
