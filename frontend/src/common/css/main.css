@@ -1,8 +1,47 @@
 /* css 순서는 element plus 관련이 위쪽으로, 같은 레벨에선 실제 page에 위치하는 순서대로 */
 /*z-index 기준 : 백그라운드 설정안함, 사이드바 50 헤더 100 반응형변화 150 팝업 200 기타 500*/
+/*theme 설정 -> 필요한 색상은 다섯가지, (밝은,중간,어둡),버튼,폰트*/
 
 @import "https://unpkg.com/element-plus/lib/theme-chalk/index.css";
 
+:root{
+  /*기본테마*/
+  --main-light: white;
+  --main-default: #F4F9F9;
+  --main-dark: lightgray;
+  --main-button: #0F52BA;
+  --main-font: black;
+  /*다크테마*/
+  --dark-light: #082032;
+  --dark-default: #2C394B;
+  --dark-dark: #334756;
+  --dark-button: #FF4C29;
+  --dark-font: whitesmoke;
+  /*레트로펑크테마*/
+  --punk-light: #334756;
+  --punk-default: #3D087B;
+  --punk-dark: #11052C;
+  --punk-button: #F43B86;
+  --punk-font: #FFC947;
+  /*여름테마*/
+  --summer-light: #A2DBFA;
+  --summer-default: #39A2DB;
+  --summer-dark: #185ADB;
+  --summer-button: #FFC947;
+  --summer-font: wheat;
+  /*핑크테마*/
+  --pink-light: #FABFDF;
+  --pink-default: #F8A1D1;;
+  --pink-dark: #E36BAE;
+  --pink-button: #FF577F;
+  --pink-font: white;
+  /*테마적용 var*/
+  --color-light: var(--main-light);
+  --color-default: var(--main-default);
+  --color-dark: var(--main-dark);
+  --color-button: var(--main-button);
+  --color-font: var(--main-font);
+}
 
 .space {
   height: 60px;
@@ -14,8 +53,7 @@
   left: 0;
   width: 100%;
   /* border: solid; */
-  background: white;
-  opacity: 0.9;
+  background: var(--color-light);
 }
 .el-aside {
   position: fixed;
@@ -24,13 +62,14 @@
   width: 120px;
   height: 100%;
   /* border: solid; */
-  background: whitesmoke;
+  background: var(--color-default);
 }
 .el-main {
   width: 100% - 100px;
+  min-height: 600px;
   /* margin-left: 100px; */
-  background-color: #e8eef3;
-  color: #333;
+  background-color: var(--color-light);
+  color: var(--color-font);
   text-align: center;
 }
 
@@ -38,8 +77,9 @@ body > .el-container {
   margin-bottom: 40px;
 }
 .el-footer {
-  background-color: #e9eef3;
-  color: #333;
+  min-height: 200px;
+  background-color: var(--color-dark);
+  color: var(--color-font);
   text-align: center;
   width: 100%;
 }
@@ -53,7 +93,7 @@ body > .el-container {
  .el-menu-item{
   cursor: pointer;
   margin-left: 0px;
-  background: whitesmoke;
+  background: var(--color-default);
   -webkit-transform:scale(1);
   -moz-transform:scale(1);
   -ms-transform:scale(1);
@@ -88,19 +128,15 @@ body > .el-container {
 }
 .el-card .title-wrapper .accessable{
   background: green;
-  color: white;
+  color: var(--color-light);;
 }
 .el-card .title-wrapper .full{
-  background: blue;
-  color: white;
+  background: gray;
+  color: var(--color-light);;
 }
 .el-card .title-wrapper .playing{
   background: tomato;
-  color: white;
-}
-.el-card .title-wrapper .empty{
-  background: gray;
-  color: white;
+  color: var(--color-light);;
 }
 .el-card .title-wrapper .title {
   font-weight: bold;
@@ -116,7 +152,7 @@ body > .el-container {
 
  .game-header {
    padding: 10px 20px;
-   border-bottom: 2px solid lightgray;
+   border-bottom: 2px solid var(--color-dark);
    display: flex;
    justify-content: space-between;
    align-items: center;
@@ -159,7 +195,7 @@ body > .el-container {
 
 .main-header {
   padding: 10px 20px;
-  border-bottom: 2px solid lightgray;
+  border-bottom: 2px solid var(--color-dark);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -198,7 +234,7 @@ body > .el-container {
    text-align: center;
    border-radius: 6px;
    font-size: 20px;
-   background-color: #e8eef3;
+   background-color: var(--color-light);
  }
 
  .job-info {
@@ -228,12 +264,12 @@ body > .el-container {
   margin-left: 15%;
   padding: 5%;
   text-align: left;
-  background: whitesmoke;
+  background: var(--color-default);
 }
 .info .sub-title{
   margin: 5%;
   font-weight: bold;
-  text-decoration: gray;
+  text-decoration: var(--color-dark);;
 }
 .info .info-item .friend-list .friend-list-item{
   display: inline-block;
@@ -243,7 +279,7 @@ body > .el-container {
   margin-bottom: 15px;
 }
 .info .info-item{
-  background: whitesmoke;
+  background: var(--color-default);
   text-align: left;
 }
 .anchor{
@@ -253,7 +289,7 @@ body > .el-container {
   width: 150px;
   height: 200px;
   border-radius: 10px;
-  background: lightgray;
+  background: var(--color-default);
   opacity: 0.8;
 }
 .anchor .anchor-item{
@@ -264,23 +300,23 @@ body > .el-container {
   line-height: 40px;
 }
 a:link {
-  color: black;
+  color: var(--color-font);
   text-decoration: none;
 }
 a:visited {
-  color: black;
+  color: var(--color-font);
   text-decoration: none;
 }
 a:active {
-  color: black;
+  color: var(--color-font);
   text-decoration: none;
 }
 a:hover {
-  color: black;
+  color: var(--color-font);
   text-decoration: none;
 }
 .anchor .anchor-item:nth-child(even){
-  background: whitesmoke;
+  background: var(--color-default);
 }
 .board-text{
   margin-left: 15%;
@@ -291,7 +327,7 @@ a:hover {
   text-align: left;
   margin: 5%;
   padding: 5%;
-  background: white;
+  background: var(--color-light);
   min-height: 500px;
 }
 
@@ -392,7 +428,7 @@ a:hover {
   margin: 10px;
 }
 .img-game{
-  border: 1px solid black;
+  border: 1px solid var(--color-font);
   padding: 0px;
   width: 100%;
   height: auto;

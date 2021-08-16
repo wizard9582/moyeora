@@ -120,7 +120,7 @@ export default {
         const msg = {
           round: 0,
           desc: "morning",
-          second : 18,
+          second : 90,
           userId : state.userName,
         };
         state.stompClient.send("/pub/game/morning/"+ roomId, JSON.stringify(msg), {});

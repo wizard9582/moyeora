@@ -14,6 +14,30 @@ export default {
     HomePage,
     WelcomePage,
   },
+
+  setup(){
+    let theme = localStorage.getItem('theme')
+    if(theme == null){
+      theme = "main"
+    }else if(theme == "기본테마"){
+      theme = "main"
+    }else if(theme == "어둠의자식"){
+      theme = "dark"
+    }else if(theme == "레트로펑크"){
+      theme = "punk"
+    }else if(theme == "여름감성"){
+      theme = "summer"
+    }else if(theme == "핑크 핫"){
+      theme = "pink"
+    }
+
+    const style = document.documentElement.style;
+    style.setProperty('--color-light', 'var(--'+theme+'-light)');
+    style.setProperty('--color-default', 'var(--'+theme+'-default)');
+    style.setProperty('--color-dark', 'var(--'+theme+'-dark)');
+    style.setProperty('--color-button', 'var(--'+theme+'-button)');
+    style.setProperty('--color-font', 'var(--'+theme+'-font)');
+  }
 };
 </script>
 

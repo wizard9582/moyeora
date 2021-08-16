@@ -87,9 +87,9 @@ export default {
     }
 
     // 타이머 시간 조정
-    const morningTime = 18;
-    const judgeTime = 14;
-    const nightTime = 18;
+    const morningTime = 90;
+    const judgeTime = 90;
+    const nightTime = 90;
 
     return { count, disabled, load, roomId, router, store, state, openFinalVote, openDoctorVote, openMafiaVote, morningTime, judgeTime, nightTime };
   },

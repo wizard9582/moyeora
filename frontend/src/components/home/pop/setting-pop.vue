@@ -62,6 +62,26 @@ export default {
     const clickAccept = function() {
       //console.log(this.form.theme + " " + this.form.fontSize + " " + this.form.alarm)
       localStorage.setItem('theme', state.form.theme)
+      let theme = ""
+      if(state.form.theme == "기본테마"){
+        theme = "main"
+      }else if(state.form.theme == "어둠의자식"){
+        theme = "dark"
+      }else if(state.form.theme == "레트로펑크"){
+        theme = "punk"
+      }else if(state.form.theme == "여름감성"){
+        theme = "summer"
+      }else if(state.form.theme == "핑크 핫"){
+        theme = "pink"
+      }
+
+      const style = document.documentElement.style;
+      style.setProperty('--color-light', 'var(--'+theme+'-light)');
+      style.setProperty('--color-default', 'var(--'+theme+'-default)');
+      style.setProperty('--color-dark', 'var(--'+theme+'-dark)');
+      style.setProperty('--color-button', 'var(--'+theme+'-button)');
+      style.setProperty('--color-font', 'var(--'+theme+'-font)');
+
       localStorage.setItem('fontSize', state.form.fontSize)
       localStorage.setItem('alarm', state.form.alarm)
       handleClose()
