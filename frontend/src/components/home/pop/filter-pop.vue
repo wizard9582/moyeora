@@ -42,19 +42,4 @@ export default {
 </script>
 
 <style>
-.gameFilter-list-item {
-  min-width: 200px;
-  max-width: 20%;
-  min-height: 200px;
-  max-height: 20%;
-  display: inline-block;
-  cursor: pointer;
-  margin: 10px;
-}
-.img-game{
-  border: 1px solid black;
-  padding: 0px;
-  width: 100%;
-  height: auto;
-}
 </style>

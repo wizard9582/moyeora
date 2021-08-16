@@ -91,16 +91,4 @@ export default {
 </script>
 
 <style>
-.board-text{
-  margin-left: 15%;
-  width: 70%;
-  margin-right: 15%;
-}
-.board-text .context-text{
-  text-align: left;
-  margin: 5%;
-  padding: 5%;
-  background: white;
-  min-height: 500px;
-}
 </style>

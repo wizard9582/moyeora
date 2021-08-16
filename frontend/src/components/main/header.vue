@@ -13,12 +13,16 @@
             <el-dropdown-menu style="overflow:auto">
               <el-dropdown-item v-if="state.inviteCount==0" icon="el-icon-check">알림이 없습니다.</el-dropdown-item>
               <el-dropdown-item v-else v-for="item in state.inviteData" :key="item.id" >
-                <div>
+                <div v-if="item.type == 'invite'">
                   <i class="el-icon-bell"></i>{{item.fromUser}}님이 {{item.toUser}}님을 초대하셨습니다.
+                </div>
+                <div v-else>
+                  <i class="el-icon-bell"></i>{{item.fromUser}}님의 친구요청.
                 </div>
                 <div style="text-align:right">
                   {{item.await}}
-                  <i style="color:green" class="el-icon-right" @click="clickInvite(item.url, item.id)">참가</i>
+                  <i v-if="item.type == 'invite'" style="color:green" class="el-icon-right" @click="clickInvite(item.url, item.id)">참가</i>
+                  <i v-else style="color:green" class="el-icon-check" @click="clickAccept(item.id, item.fromUser)">수락</i>
                   <i style="color:red" class="el-icon-delete" @click="clickDelete(item.id)">삭제</i>
                 </div>
               </el-dropdown-item>
@@ -96,6 +100,18 @@ export default {
       store.dispatch('root/deleteInvite', { id: id })
       window.location.href = url;
     }
+
+    const clickAccept = (id, fromUser) =>{
+      store.dispatch('root/requestMakeFriend',{ toUser: fromUser})
+          .then((result) => {
+            store.dispatch('root/deleteInvite', { id: id })
+            getInvite()
+          })
+          .catch((err)=>{
+            alert("오류! 다시 시도해주세요.")
+          })
+    }
+
     const clickDelete = (id) =>{
       store.dispatch('root/deleteInvite', { id: id })
       getInvite()
@@ -106,6 +122,7 @@ export default {
       }
         store.dispatch('root/requestInviteList', { token: localStorage.getItem('jwt') })
           .then((result) => {
+            console.log(result)
             let today = new Date();
             let month = today.getMonth() + 1;  // 월
             let day = today.getDate();  // 날짜
@@ -119,7 +136,7 @@ export default {
               invite.fromUser = item.fromUser
               invite.toUser = item.toUser
               invite.url = item.url
-
+              invite.type = (invite.url == null)? "friend" : "invite"
               if(month!=item.month){
                 invite.await = (parseInt(month)-parseInt(item.month)) + "달 전"
               }else if(day != item.day){
@@ -149,7 +166,7 @@ export default {
     getInvite()
     setInterval(function(){getInvite()},5000);
 
-      return { state, isLoggedIn, clickLogin, clickSignup, clickLogout, clickUserInfo, clickInvite, clickDelete }
+      return { state, isLoggedIn, clickLogin, clickSignup, clickLogout, clickUserInfo, clickInvite, clickAccept, clickDelete }
   },
 }
 </script>
