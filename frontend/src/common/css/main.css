@@ -202,16 +202,8 @@ body > .el-container {
  }
 
  .job-info {
-   position: absolute;
-   left: 20%;
-   transform: translateX(-50%);
-
-   width: 15%;
-   display: flex;
-   text-align: center;
    border-radius: 6px;
    font-size: 15px;
-   background-color: #e8eef3;
  }
 
  .danger{

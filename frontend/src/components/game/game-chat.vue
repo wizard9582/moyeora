@@ -10,7 +10,7 @@
         </li>
       </ul>
     </div>
-    <el-select v-model="toName" clearable placeholder="Select">
+    <el-select v-model="toName" clearable>
       <el-option label="모두" value="모두"></el-option>
       <el-option
         v-for="player in state.participantsList"
