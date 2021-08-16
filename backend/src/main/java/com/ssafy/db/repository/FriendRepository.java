@@ -4,6 +4,7 @@ import com.ssafy.db.entity.Friend;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -13,5 +14,6 @@ import java.util.List;
 public interface FriendRepository extends JpaRepository<Friend, Long> {
     List<Friend> getFriendsByFromUser(String fromUser);
     Friend getFriendByFromUserAndToUser(String fromUser,String toUser);
-    void  deleteFriendByFromUserAndToUser(String fromUser,String toUser);
+    @Transactional
+    void deleteFriendByFromUserAndToUser(String fromUser,String toUser);
 }
