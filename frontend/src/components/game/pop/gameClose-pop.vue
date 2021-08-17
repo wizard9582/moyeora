@@ -37,6 +37,7 @@ export default {
       ownerName: computed(() => store.getters['root/getRoomOwner']),
       stompClient: computed(() => store.getters['root/getStompClient']),
       participantsList: computed(() => store.getters['root/getParticipantsList']),
+      getGameStarted: computed(()=> store.getters['root/getGameStarted']),
     })
 
     console.log("루트: ",route)
@@ -70,30 +71,33 @@ export default {
           sendToLeave()
         }
         if (state.stompClient && state.stompClient.connected) {
+          // 방에서 떠남
           const msg2 = {
               name: state.userName,
           };
-          const msg3 = {
-              name: "bye,",
-          };
           state.stompClient.send("/pub/bye/room/"+ roomId, JSON.stringify(msg2), {});
-          if (route.params.type === 'mafia') {
+
+          // 마피아 게임일 때 나가면 죽음 처리
+          if (route.params.type === 'mafia' && state.getGameStarted) {
+            const msg3 = {
+                name: "bye,"+state.userName,
+            };
             state.stompClient.send("/pub/game/end/"+ roomId, JSON.stringify(msg3), {});
           }
         }
         store.commit('root/removeRoomOwner')
-        for (let player of state.participantsList) {
-          if (state.userName == player.userId) {
-            let msg = {
-              name: player.id
-            }
-            console.log(player.id)
-            if (route.params.type === 'mafia') {
-              state.stompClient.send("/pub/game/end/"+ roomId, JSON.stringify(msg3), {});
-            }
-            break
-          }
-        }
+        // for (let player of state.participantsList) {
+        //   if (state.userName == player.userId) {
+        //     let msg = {
+        //       name: player.id
+        //     }
+        //     console.log(player.id)
+        //     if (route.params.type === 'mafia') {
+        //       state.stompClient.send("/pub/game/end/"+ roomId, JSON.stringify(msg3), {});
+        //     }
+        //     break
+        //   }
+        // }
         disconnectSocket()
         console.log('result : ', result)
         router.push("/home/" + 'all')

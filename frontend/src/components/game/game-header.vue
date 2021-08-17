@@ -184,7 +184,7 @@ export default {
     const openJob = () =>{
         ElMessage({
           dangerouslyUseHTMLString: true,
-          message: '<strong>당신의 직업은 <i>' + state.myJob + '</i>입니다</strong>',
+          message: '<strong>당신의 직업은 <i><strong>' + state.myJob + '</strong></i> 입니다</strong>',
         });
     }
 
@@ -200,7 +200,7 @@ export default {
       });
       ElMessage({
         dangerouslyUseHTMLString: true,
-        message: '<strong>선택하신 대상의 직업은 <i>' + answer + '</i>입니다</strong>',
+        message: '<strong>선택하신 대상의 직업은 <i><strong>' + answer + '</strong></i> 입니다</strong>',
       });
       state.detectOpen = false
     }
