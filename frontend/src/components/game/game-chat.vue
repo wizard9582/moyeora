@@ -422,6 +422,15 @@ export default {
               }
               console.log(tiebreaker, msg)
             }
+
+            // 투표들 지우기
+            for (let player of scope.state.participantsList) {
+              let playerVoteSpace = document.querySelector(`#vote-space-${player.userId}`)
+              console.log('투표 진행 상황 지우기!!! : ', playerVoteSpace)
+              while (playerVoteSpace.hasChildNodes) {
+                playerVoteSpace.removeChild(playerVoteSpace.firstChild)
+              }
+            }
           });
 
           this.stompClient.subscribe('/sub/game/judge/'+this.roomId, function (chat) {
@@ -444,9 +453,17 @@ export default {
               }
               for (let player of scope.state.participantsList) {
                 try{
+                  // 투표들 지우기
+                  for (let player of scope.state.participantsList) {
+                    let playerVoteSpace = document.querySelector(`#vote-space-${player.userId}`)
+                    console.log('투표 진행 상황 지우기!!! : ', playerVoteSpace)
+                    while (playerVoteSpace.hasChildNodes) {
+                      playerVoteSpace.removeChild(playerVoteSpace.firstChild)
+                    }
+                  }
                   // console.log('확인: ',document.querySelector(`#${player.userId}`))
-                  const voteSpan = document.querySelector(`#${player.userId}`).children[2]
-                  voteSpan.innerText = '';
+                  // const voteSpan = document.querySelector(`#${player.userId}`).children[2]
+                  // voteSpan.innerText = '';
                 }catch{
                   // console.log('유령')
                 }
