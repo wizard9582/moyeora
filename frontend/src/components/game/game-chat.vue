@@ -19,7 +19,7 @@
         :value="player.userId"
       ></el-option>
     </el-select>
-    <!-- <el-button @click="openDoctorVote">확인</el-button> -->
+    <!-- <el-button @click="openFinalVote">확인</el-button> -->
     <!-- <el-input placeholder="모두에게" v-model="toName"></el-input> -->
     <el-input
       type="textarea"
@@ -74,6 +74,8 @@ export default {
       didMafiaKillPlayer: false,
     })
 
+    const voteIndex = ref(0)
+
     const openFinalVote = () => {
       emit('openFinalVotePop')
     }
@@ -87,6 +89,7 @@ export default {
     }
 
     // 타이머 시간 조정
+
     const morningTime = 30;
     const judgeTime = 30;
     const nightTime = 30;
@@ -275,8 +278,23 @@ export default {
               scope.store.commit('root/voteTo', voteResult['toName'])
 
               // 받은 투표 수를 화면에 표시
-              const voteSpan = document.querySelector(`#${voteResult['toName']}`).children[2]
-              voteSpan.innerText = scope.state.voteCountList[voteResult['toName']][0]
+              const voteSpace = document.querySelector(`#${voteResult['toName']}`).children[1].children[1]
+              console.log(document.querySelector(`#${voteResult['toName']}`).children[1])
+              let voteImg = document.createElement('img');
+              let leftIndex = 100 + 25*scope.state.voteCountList[voteResult['toName']][0]
+              voteImg.src = require('@/assets/favicon-white.png');
+
+              voteImg.style.position = 'absolute'
+              voteImg.style.top = '-8px'
+              voteImg.style.width = '40px'
+              voteImg.style.height = '40px'
+              voteImg.style.left = `${leftIndex}px`
+
+              voteImg.id = `vote-${voteResult['toName']}-${leftIndex}`
+              voteSpace.appendChild(voteImg)
+	            // let voteImg = document.createElement('img');
+              // voteImg.src = require('@/assets/favicon.png');
+              // voteImg.style = 'height:50%; opacity:1; position:absolute;'
             }
           });
 
