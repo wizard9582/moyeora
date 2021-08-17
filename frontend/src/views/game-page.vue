@@ -145,5 +145,6 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 0px;
 }
 </style>
