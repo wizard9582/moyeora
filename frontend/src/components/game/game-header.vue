@@ -78,8 +78,6 @@ export default {
       myJob: computed(() => store.getters['root/getMyJob']),
       jobList: computed(() => store.getters['root/getMafiaRoles']),
       gameTime: computed(() => store.getters['root/getGameTime']),
-      skipStage: computed(() => store.getters['root/getSkipStage']),
-      gameStage: computed(() => store.getters['root/getGameRound']),
       gameRefresh: computed(() => store.getters['root/getGameRefresh']),
       statusIcon: 'el-icon-sunny',
       //타이머
@@ -88,7 +86,7 @@ export default {
       second: 0,
       danger: false,
       //라운드
-      round: 1,
+      round: 0,
       stage: 0,
       stageTitle: stages[0]
     })
@@ -104,6 +102,7 @@ export default {
     const startTimer = (val)=> {
       state.gameStarted = true
       //console.log("------------->", state.stompClient)
+      nextStage(val)
       state.minute = parseInt(val/60)
       state.second = parseInt(val)%60
       state.timer = setInterval(() => countdown(), 1000);
@@ -115,7 +114,6 @@ export default {
         clearInterval(state.timer)
         state.second == 0
         queue.dequeue()
-        nextStage()
         if(queue._arr.length > 0){
           let nextTime = queue.peek()
           startTimer(nextTime)
@@ -132,34 +130,22 @@ export default {
       }
     }
 
-    const nextStage = () =>{
-      if(!state.skipStage){
-        if(++state.stage == 6){
-          state.round++
-          state.stage = 0
-        }
-      }else{
+    const nextStage = (val) =>{
+      if(val == 31){
+        state.round ++
+        state.stage = 0
+      }else if(val == 15){
+        state.stage = 1
+      }else if(val == 23){
+        state.stage = 2
+      }else if(val == 11){
+        state.stage = 3
+      }else if(val == 17){
         state.stage = 4
-        store.commit('root/skipStage', {value: false})
+      }else if(val == 8){
+        state.stage = 5
       }
       state.stageTitle = stages[state.stage]
-      if(state.stage == 4){
-        emit('startNight')
-        state.statusIcon = "el-icon-moon"
-        if(state.myJob == '경찰'){
-          state.detectOpen = true
-        }
-      }
-      if(state.stage == 0){
-        emit('startDay')
-        state.statusIcon = "el-icon-sunny"
-      }
-      //console.log("stage---------->", queue)
-    }
-
-    const stageFix = (target) =>{
-      state.stage = target
-      state.stageTitle = stages[target]
       if(state.stage == 4){
         emit('startNight')
         state.statusIcon = "el-icon-moon"
@@ -244,13 +230,9 @@ export default {
 
     watch(()=> state.gameRefresh, ()=>{
       state.gameStarted = false,
-      state.round = 1
+      state.round = 0
       state.stage = 0
-    })
-
-    watch(()=> state.gameStage, (gameStage)=>{
-      let target = (parseInt(gameStage) * 2) - 2
-      stageFix(target)
+      state.stageTitle = stages[0]
     })
 
     return { state, clickPass, clickInvite, clickOnQuestion, padMinute, padSecond, startTimer, nextStage, detectChoose, openJob }
