@@ -305,7 +305,8 @@ export default {
                 h('strong', null, '당신의 직업은 '),
                 h('i', { style: ['color: tomato', 'font-weight: bold'] }, rchat.role),
                 h('strong', null, '입니다.'),
-              ])
+              ]),
+              duration: 10000,
             })
             // ElMessage({
             //   dangerouslyUseHTMLString: true,
@@ -365,11 +366,12 @@ export default {
 
               let msg = {}
               if (tiebreaker) { // 동점자가 있는 경우
-                msg = { round: 1, second: scope.nightTime }
+                msg = { round: 3, second: scope.nightTime }
                 scope.store.commit('root/skipStage', {value: true})
                 ElMessage({
                   message: h('strong', null, '동점으로 인해 아무도 죽지 않았습니다.'),
                   type: 'warning',
+                  duration: 10000,
                 })
                 // scope.recvList.push({message:`동점으로 인해 아무도 죽지 않았습니다.`})
                 // 방장만 메시지를 보낸다!
@@ -377,7 +379,7 @@ export default {
                   scope.stompClient.send("/pub/game/night/"+ scope.roomId, JSON.stringify(msg), {});
                 }
               } else { // 동점자가 없는 경우
-                msg = { round: 1, second : scope.judgeTime };
+                msg = { round: 2, second : scope.judgeTime };
                 scope.store.commit('root/skipStage', {value: false})
                 scope.store.commit('root/setFinalVotePlayer', maxUser[0])
                  if (scope.userName === scope.state.ownerId) {
@@ -457,6 +459,7 @@ export default {
                     h('strong', null, '가 죽었습니다.'),
                   ]),
                   type: 'danger',
+                  duration: 10000,
                 })
                 // scope.recvList.push({message:`최종투표에서 ${finalVotePlayer}가 죽었습니다.`})
                 console.log('죽은사람 처리 확인: ', scope.store.getters['root/getParticipantsList']);
@@ -477,6 +480,7 @@ export default {
                     h('strong', null, '가 구사일생 했습니다.'),
                   ]),
                   type: 'success',
+                  duration: 10000,
                 })
                 // scope.recvList.push({message:`최종투표에서 ${finalVotePlayer}가 구사일생 했습니다.`})
                 if(scope.userName == scope.state.ownerId){
@@ -493,7 +497,7 @@ export default {
             let rchat = JSON.parse(chat.body);
             scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second-1})
             if (rchat.desc === 'night') {
-              ElMessage({message: h('strong', null, '밤이 되었습니다.')})
+              ElMessage({message: h('strong', null, '밤이 되었습니다.'),duration: 10000,})
               // 살아있으면
               if(scope.state.mylife){
                 leaveRoom()
@@ -533,6 +537,7 @@ export default {
                 ElMessage({
                   message: h('strong', null, '밤 사이 아무일도 일어나지 않았습니다.'),
                   type: 'warning',
+                  duration: 10000,
                 })
                 // scope.recvList.push({message:'밤 사이 아무일도 일어나지 않았습니다.'})
                 scope.state.didMafiaKillPlayer = false
@@ -567,6 +572,7 @@ export default {
                     h('strong', null, '를 죽였습니다.'),
                   ]),
                   type: 'danger',
+                  duration: 10000,
                 })
                 // scope.recvList.push({message:`마피아가 무고한 ${deadRole}, ${mafiaSelectPlayer}를 죽였습니다.`})
                 scope.state.didMafiaKillPlayer = true
@@ -632,6 +638,7 @@ export default {
                   ElMessage({
                     message: h('strong', null, '시민 승!!'),
                     type: 'success',
+                    duration: 10000,
                   })
                   // alert('시민 승!!!')
                   scope.store.commit('root/resetDeath');
@@ -642,6 +649,7 @@ export default {
                   ElMessage({
                     message: h('strong', null, '마피아 승!!'),
                     type: 'success',
+                    duration: 10000,
                   })
                   // alert('마피아 승!!!')
                   scope.store.commit('root/resetDeath');
