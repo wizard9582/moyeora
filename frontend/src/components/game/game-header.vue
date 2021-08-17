@@ -16,7 +16,7 @@
       <el-button v-if="state.roomType=='mafia'" class="job-info" @click="openJob">내 직업확인</el-button>
     </div>
     <div class="button-wrapper">
-      <el-button icon="el-icon-message" @click="clickInvite">초대하기</el-button>
+      <el-button icon="el-icon-message" @click="clickInvite" :disabled="state.gameStarted">초대하기</el-button>
       <el-tooltip class="item" effect="dark" content="도움말" placement="bottom">
         <el-button icon="el-icon-question" circle @click="clickOnQuestion" ></el-button>
       </el-tooltip>
@@ -69,6 +69,7 @@ export default {
     const queue = new Queue();
 
     const state = reactive({
+      gameStarted: false,
       roomType: route.params.type,
       detectOpen: false,
       questionOpen: false,
@@ -78,6 +79,7 @@ export default {
       jobList: computed(() => store.getters['root/getMafiaRoles']),
       gameTime: computed(() => store.getters['root/getGameTime']),
       skipStage: computed(() => store.getters['root/getSkipStage']),
+      gameStage: computed(() => store.getters['root/getGameRound']),
       gameRefresh: computed(() => store.getters['root/getGameRefresh']),
       statusIcon: 'el-icon-sunny',
       //타이머
@@ -100,6 +102,7 @@ export default {
     }
 
     const startTimer = (val)=> {
+      state.gameStarted = true
       //console.log("------------->", state.stompClient)
       state.minute = parseInt(val/60)
       state.second = parseInt(val)%60
@@ -143,7 +146,24 @@ export default {
       if(state.stage == 4){
         emit('startNight')
         state.statusIcon = "el-icon-moon"
-        if(state.myJob == 'police'){
+        if(state.myJob == '경찰'){
+          state.detectOpen = true
+        }
+      }
+      if(state.stage == 0){
+        emit('startDay')
+        state.statusIcon = "el-icon-sunny"
+      }
+      //console.log("stage---------->", queue)
+    }
+
+    const stageFix = (target) =>{
+      state.stage = target
+      state.stageTitle = stages[target]
+      if(state.stage == 4){
+        emit('startNight')
+        state.statusIcon = "el-icon-moon"
+        if(state.myJob == '경찰'){
           state.detectOpen = true
         }
       }
@@ -185,6 +205,7 @@ export default {
         ElMessage({
           dangerouslyUseHTMLString: true,
           message: '<strong>당신의 직업은 <i><strong>' + state.myJob + '</strong></i> 입니다</strong>',
+          duration: 10000,
         });
     }
 
@@ -201,6 +222,7 @@ export default {
       ElMessage({
         dangerouslyUseHTMLString: true,
         message: '<strong>선택하신 대상의 직업은 <i><strong>' + answer + '</strong></i> 입니다</strong>',
+        duration: 10000,
       });
       state.detectOpen = false
     }
@@ -221,8 +243,14 @@ export default {
     )
 
     watch(()=> state.gameRefresh, ()=>{
+      state.gameStarted = false,
       state.round = 1
       state.stage = 0
+    })
+
+    watch(()=> state.gameStage, (gameStage)=>{
+      let target = (parseInt(gameStage) * 2) - 2
+      stageFix(target)
     })
 
     return { state, clickPass, clickInvite, clickOnQuestion, padMinute, padSecond, startTimer, nextStage, detectChoose, openJob }
