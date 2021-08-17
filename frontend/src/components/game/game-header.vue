@@ -29,9 +29,19 @@
     width="30%"
     :before-close="handleClose">
     <span>수사할 플레이어를 선택하세요!</span>
-    <el-table :data="state.participantsList" highlight-current-row @click="detectChoose(user)" :row-style = "tableRowClassName">
+    <el-table
+      :data="state.participantsList"
+      highlight-current-row
+      @current-change="clickDetectPlayer"
+      :row-style = "tableRowClassName"
+    >
       <el-table-column property="userId" label="Player"></el-table-column>
     </el-table>
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button type="primary" @click="detectChoose">확인하기</el-button>
+      </span>
+    </template>
   </el-dialog>
   <!-- 도움말 다이얼로그 -->
   <el-dialog title="도움말" v-model="state.questionOpen" width="30%" :before-close="handleClose">
@@ -81,6 +91,7 @@ export default {
       gameRefresh: computed(() => store.getters['root/getGameRefresh']),
       mylife: computed(() => store.getters['root/getMylife']),
       statusIcon: 'el-icon-sunny',
+      selectedPlayer: null,
       //타이머
       timer: null,
       minute: 0,
@@ -222,13 +233,16 @@ export default {
         });
     }
 
-    const detectChoose = (user) => {
-      //console.log(user)
-      //console.log("-------->직업:", state.jobList)
+    const clickDetectPlayer = function (val) {
+      state.selectedPlayer = val
+    }
+
+    const detectChoose = () => {
+      // console.log("-------->직업:", state.jobList)
       //직업확인하는 로직, 태그 후처리
       let answer = ""
       state.jobList.forEach(target => {
-        if(target.userId == user.userId){
+        if(target.userId === state.selectedPlayer.userId){
           answer = target.role
         }
       });
@@ -239,6 +253,7 @@ export default {
       });
       state.detectOpen = false
     }
+
 
     watch(() => state.gameTime,
       (gameTime, prevGameTime) => {
@@ -262,7 +277,7 @@ export default {
       state.stageTitle = stages[0]
     })
 
-    return { state, clickPass, clickInvite, clickOnQuestion, padMinute, padSecond, startTimer, nextStage, detectChoose, openJob }
+    return { state, clickPass, clickInvite, clickOnQuestion, padMinute, padSecond, startTimer, nextStage, clickDetectPlayer, detectChoose, openJob }
   }
 }
 </script>
