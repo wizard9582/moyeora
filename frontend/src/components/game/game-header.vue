@@ -79,6 +79,7 @@ export default {
       jobList: computed(() => store.getters['root/getMafiaRoles']),
       gameTime: computed(() => store.getters['root/getGameTime']),
       gameRefresh: computed(() => store.getters['root/getGameRefresh']),
+      mylife: computed(() => store.getters['root/getMylife']),
       statusIcon: 'el-icon-sunny',
       //타이머
       timer: null,
@@ -90,6 +91,13 @@ export default {
       stage: 0,
       stageTitle: stages[0]
     })
+
+    const skyloop = require('@/assets/sounds/skyloop.mp3')
+    let audio = new Audio(skyloop);
+    audio.volume = 0.3
+    if(state.roomType == 'mafia'){
+      audio.play();
+    }
 
     const padMinute = (val) =>{
       return val.toString().padStart(2,'0')
@@ -131,17 +139,33 @@ export default {
     }
 
     const nextStage = (val) =>{
+      audio.pause()
+      const morningSound = require('@/assets/sounds/morning.mp3')
+      const nightSound = require('@/assets/sounds/night.mp3')
+      const judgeSound = require('@/assets/sounds/judge.mp3')
+      const doctorSound = require('@/assets/sounds/doctor.mp3')
+      const policeSound = require('@/assets/sounds/police.mp3')
+      const mafiaSound = require('@/assets/sounds/mafia.mp3')
+
       if(val == 31){
         state.round ++
         state.stage = 0
+        audio = new Audio(morningSound)
+        audio.volume = 0.2
+        audio.play()
       }else if(val == 15){
         state.stage = 1
       }else if(val == 23){
         state.stage = 2
       }else if(val == 11){
+        audio = new Audio(judgeSound)
+        audio.play()
         state.stage = 3
       }else if(val == 17){
         state.stage = 4
+        audio = new Audio(nightSound)
+        audio.volume = 0.2
+        audio.play()
       }else if(val == 8){
         state.stage = 5
       }
@@ -149,7 +173,7 @@ export default {
       if(state.stage == 4){
         emit('startNight')
         state.statusIcon = "el-icon-moon"
-        if(state.myJob == '경찰'){
+        if(state.myJob == '경찰' && state.mylife){
           state.detectOpen = true
         }
       }
@@ -188,6 +212,9 @@ export default {
     }
 
     const openJob = () =>{
+        var job = new Audio('http://soundbible.com/mp3/Air Plane Ding-SoundBible.com-496729130.mp3')
+        job.volume = 0.3
+        job.play()
         ElMessage({
           dangerouslyUseHTMLString: true,
           message: '<strong>당신의 직업은 <i><strong>' + state.myJob + '</strong></i> 입니다</strong>',
