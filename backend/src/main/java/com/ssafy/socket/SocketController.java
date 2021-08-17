@@ -1,9 +1,11 @@
 package com.ssafy.socket;
 
 import com.ssafy.db.entity.Mafia;
+import com.ssafy.db.entity.MatchHistory;
 import com.ssafy.db.entity.UserConference;
 import com.ssafy.db.repository.MafiaRepository;
 import com.ssafy.db.repository.MafiaRepositorySupport;
+import com.ssafy.db.repository.MatchHistoryRepositorySupport;
 import com.ssafy.db.repository.UserConferenceRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -81,6 +83,9 @@ public class SocketController {
 	@Autowired
 	UserConferenceRepositorySupport userConferenceRepositorySupport;
 
+	@Autowired
+	MatchHistoryRepositorySupport matchHistoryRepositorySupport;
+
 	String[] descs = {"morning", "vote", "judge", "finalvote", "night", "result", "end"};
 	int[] seconds = {20, 10, 20, 10, 20, 10, 0};
 
@@ -104,6 +109,10 @@ public class SocketController {
 			mafiaRepositorySupport.killUser(userId, Long.parseLong(roomId));
 		}
 
+		// 전체 방에 있는 사람 리스트
+		List<Mafia> allPlayerList = mafiaRepositorySupport.getAllPlayerByRoomId(Long.parseLong(roomId));
+
+		// 살아있는 사람들 리스트
 		List<Mafia> playerList = mafiaRepositorySupport.getPlayerByRoomId(Long.parseLong(roomId));
 		
 		int liveMafiaCnt = 0;
@@ -132,6 +141,19 @@ public class SocketController {
 		}else if(liveMafiaCnt>=liveCitizenCnt){
 			gameStatus="mafia";
 			mafiaRepositorySupport.deleteMafia(Long.parseLong(roomId));
+		}
+
+		if (!gameStatus.equals("on")) {
+			for (Mafia m : allPlayerList) {
+				// total ++
+				long userId = m.getUserConference().getUser().getId();
+				MatchHistory matchHistory = matchHistoryRepositorySupport.getMatchHistoryByRole(userId, m.getRole());
+				matchHistoryRepositorySupport.updateTotalMatchHistory(matchHistory, userId, m.getRole());
+				if ((m.getRole().equals("mafia") && gameStatus.equals("mafia")) || (!m.getRole().equals("mafia") && gameStatus.equals("citizen"))) {
+					// win++
+					matchHistoryRepositorySupport.updateWinMatchHistory(matchHistory, userId, m.getRole());
+				}
+			}
 		}
 
 

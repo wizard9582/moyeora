@@ -1,8 +1,6 @@
 package com.ssafy.db.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +19,7 @@ import lombok.Setter;
 @Table(name = "match_history")
 public class MatchHistory extends BaseEntity {
 
-    @OneToOne
+    @ManyToOne
     User user;
 
     String type;
