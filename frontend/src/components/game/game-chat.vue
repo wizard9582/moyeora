@@ -355,7 +355,7 @@ export default {
               .then((result) => {
                 //console.log("경찰이 얻어온 직업들 : ", result.data)
                 scope.store.commit('root/setMafiaRoles', result.data);
-                console.log('참가자들의 직업 뷰엑스 확인 : ',scope.store.getters['root/getMafiaRoles'])
+                console.log('참가자들의 직업 뷰엑스 확인, 모닝x : ',scope.store.getters['root/getMafiaRoles'])
               })
               .catch((error) => {
                 console.log(error)
@@ -403,7 +403,7 @@ export default {
                 msg = { round: 3, second: scope.nightTime }
                 scope.store.commit('root/skipStage', {value: true})
                 ElMessage({
-                  message: h('strong', null, '동점으로 인해 아무도 죽지 않았습니다.'),
+                  message: h('strong', null, '아침 투표에서 동점으로 인해 아무도 죽지 않았습니다.'),
                   type: 'warning',
                   duration: 10000,
                 })
@@ -690,6 +690,8 @@ export default {
                   // alert('시민 승!!!')
                   scope.store.commit('root/resetDeath');
                   scope.store.commit('root/endGame');
+                  scope.store.commit('root/setMafiaRoles', null);
+                  scope.store.commit('root/setMylife', true);
 
                   // 도장 제거
                   for (let player of scope.state.participantsList) {
@@ -712,6 +714,8 @@ export default {
                   // alert('마피아 승!!!')
                   scope.store.commit('root/resetDeath');
                   scope.store.commit('root/endGame');
+                  scope.store.commit('root/setMafiaRoles', null);
+                  scope.store.commit('root/setMylife', true);
 
                   // 도장 제거
                   for (let player of scope.state.participantsList) {
