@@ -1,6 +1,9 @@
 package com.ssafy.api.service;
 
 import com.ssafy.db.entity.ConferenceHistory;
+import com.ssafy.db.entity.MatchHistory;
+import com.ssafy.db.repository.MatchHistoryRepository;
+import com.ssafy.db.repository.MatchHistoryRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,6 +13,7 @@ import com.ssafy.db.entity.User;
 import com.ssafy.db.repository.UserRepository;
 import com.ssafy.db.repository.UserRepositorySupport;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -25,7 +29,14 @@ public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	PasswordEncoder passwordEncoder;
-	
+
+	@Autowired
+	MatchHistoryRepositorySupport matchHistoryRepositorySupport;
+
+	@Autowired
+	MatchHistoryRepository matchHistoryRepository;
+
+	@Transactional
 	@Override
 	public User createUser(UserRegisterPostReq userRegisterInfo) {
 		User user = new User();
@@ -60,5 +71,10 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public List<ConferenceHistory> getUserHistory(long id) {
 		return userRepositorySupport.getUserHistory(id);
+	}
+
+	@Override
+	public List<MatchHistory> getUserMatchHistory(long id) {
+		return matchHistoryRepositorySupport.getMatchHistory(id);
 	}
 }

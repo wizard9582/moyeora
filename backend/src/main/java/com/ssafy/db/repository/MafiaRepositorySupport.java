@@ -20,6 +20,14 @@ public class MafiaRepositorySupport {
     @Autowired
     MafiaRepository mafiaRepository;
 
+    public List<Mafia> getAllPlayerByRoomId(long roomId){
+        List<Mafia> result = jpaQueryFactory.select(qMafia).from(qMafia)
+                // 현재 게임 방에 참여하고 있는 모든 사람
+                .where(qMafia.userConference.conference.id.eq(roomId))
+                        .fetch();
+        return result;
+    }
+
     public List<Mafia> getPlayerByRoomId(long roomId){
         List<Mafia> result = jpaQueryFactory.select(qMafia).from(qMafia)
                 // 현재 게임 방에 참여하고 살아있는 사람

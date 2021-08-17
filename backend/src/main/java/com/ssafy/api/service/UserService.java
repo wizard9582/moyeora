@@ -2,6 +2,7 @@ package com.ssafy.api.service;
 
 import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.db.entity.ConferenceHistory;
+import com.ssafy.db.entity.MatchHistory;
 import com.ssafy.db.entity.User;
 
 import java.util.List;
@@ -15,4 +16,5 @@ public interface UserService {
 	long updateUserByUserId(User userInfo, String userId);
 	long deleteUserByUserId(String userId);
 	List<ConferenceHistory > getUserHistory(long id);
+	List<MatchHistory> getUserMatchHistory(long id);
 }

@@ -1,8 +1,11 @@
 package com.ssafy.api.controller;
 
 
+import com.ssafy.api.response.UserHistoryRes;
 import com.ssafy.db.entity.ConferenceHistory;
+import com.ssafy.db.entity.MatchHistory;
 import com.ssafy.db.entity.Post;
+import com.ssafy.db.repository.MatchHistoryRepositorySupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -29,7 +32,7 @@ import com.ssafy.common.auth.SsafyUserDetails;
 import com.ssafy.common.model.response.BaseResponseBody;
 import com.ssafy.common.util.JwtTokenUtil;
 import com.ssafy.db.entity.User;
-import com.ssafy.db.repository.UserRepositorySupport;
+import com.ssafy.db.repository.MatchHistoryRepository;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -53,6 +56,9 @@ public class UserController {
 
 	@Autowired
 	UserService userService;
+
+	@Autowired
+	MatchHistoryRepository matchHistoryRepository;
 	
 	@PostMapping()
 	@ApiOperation(value = "회원 가입", notes = "<strong>아이디와 패스워드</strong>를 통해 회원가입 한다.") 
@@ -67,6 +73,18 @@ public class UserController {
 		
 		//임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
 		User user = userService.createUser(registerInfo);
+		if (user != null) {
+			// matchHistory 초기화
+			String[] role = {"mafia", "doctor", "police", "citizen"};
+			for (String r : role) {
+				MatchHistory matchHistory = new MatchHistory();
+				matchHistory.setType(r);
+				matchHistory.setTotal(0);
+				matchHistory.setWin(0);
+				matchHistory.setUser(user);
+				matchHistoryRepository.save(matchHistory);
+			}
+		}
 		
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
@@ -175,6 +193,65 @@ public class UserController {
 		
 		long result = userService.deleteUserByUserId(userId);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(204, "Success"));
+	}
+
+	/// API 어떻게 매핑할지?
+	@GetMapping("/matchHistory")
+	@ApiOperation(value = "회원 본인 정보 조회", notes = "로그인한 회원 본인의 정보를 응답한다.")
+	public UserHistoryRes getMatchHistory(@ApiIgnore Authentication authentication) {
+		/**
+		 * 유저 게임 전적 정보를 조회한다.
+		 * 전적 조회
+		 */
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		User user = userDetails.getUser();
+		List<MatchHistory> result = userService.getUserMatchHistory(user.getId());
+
+		UserHistoryRes userHistoryRes = new UserHistoryRes();
+		int sumTotal = 0;
+		int sumWin = 0;
+		for (MatchHistory m : result) {
+			String role = m.getType();
+			sumTotal+=m.getTotal();
+			sumWin+=m.getWin();
+			if (role.equals("mafia")) {
+				userHistoryRes.setMTotal(m.getTotal());
+				userHistoryRes.setMWin(m.getWin());
+				userHistoryRes.setMLose(m.getTotal() - m.getWin());
+				if (m.getTotal() != 0) {
+					userHistoryRes.setMRate(Math.round((float) m.getWin() / m.getTotal()*1000)/10);
+				}
+			} else if (role.equals("doctor")) {
+				userHistoryRes.setDTotal(m.getTotal());
+				userHistoryRes.setDWin(m.getWin());
+				userHistoryRes.setDLose(m.getTotal() - m.getWin());
+				if (m.getTotal() != 0) {
+					userHistoryRes.setDRate(Math.round((float) m.getWin() / m.getTotal()*1000)/10);
+				}
+			} else if (role.equals("police")) {
+				userHistoryRes.setPTotal(m.getTotal());
+				userHistoryRes.setPWin(m.getWin());
+				userHistoryRes.setPLose(m.getTotal() - m.getWin());
+				if (m.getTotal() != 0) {
+					userHistoryRes.setPRate(Math.round((float) m.getWin() / m.getTotal()*1000)/10);
+				}
+			} else {
+				userHistoryRes.setCTotal(m.getTotal());
+				userHistoryRes.setCWin(m.getWin());
+				userHistoryRes.setCLose(m.getTotal() - m.getWin());
+				if (m.getTotal() != 0) {
+					userHistoryRes.setCRate(Math.round((float) m.getWin() / m.getTotal()*1000)/10);
+				}
+			}
+		}
+		if (sumTotal != 0) {
+			float totalWinRate = Math.round((float) sumWin / sumTotal * 1000) / 10;
+			userHistoryRes.setTWinRate(totalWinRate);
+		}
+		userHistoryRes.setTWin(sumWin);
+		userHistoryRes.setTLose(sumTotal - sumWin);
+
+		return userHistoryRes;
 	}
 
 }
