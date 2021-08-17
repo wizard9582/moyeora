@@ -6,7 +6,6 @@
       <el-button icon="el-icon-close" type="danger" @click="clickGameClose"></el-button>
       <el-button :icon="state.chatIcon" type="primary" @click="clickChat"></el-button>
     </div>
-    <el-button class="player-list-button"  @click="clickPlayerList">참가자</el-button>
 </template>
 
 <script>
@@ -71,11 +70,6 @@ export default {
       gameTimerStart();
     }
 
-    // 참가자 확인
-    const clickPlayerList = () => {
-      console.log('참가자 명단')
-    }
-
     // 게임방 나가기
     const clickGameClose = () => {
       state.chatClicked = false
@@ -135,7 +129,7 @@ export default {
     };
 
 
-    return { state, clickGameStart, clickPlayerList, clickChat, clickGameClose, micOff, cameraOff, gameTimerStart, isOwner, canStart }
+    return { state, clickGameStart, clickChat, clickGameClose, micOff, cameraOff, gameTimerStart, isOwner, canStart }
   }
 }
 </script>
