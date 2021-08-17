@@ -24,6 +24,8 @@ public class QPost extends EntityPathBase<Post> {
 
     public final QBaseEntity _super = new QBaseEntity(this);
 
+    public final StringPath date = createString("date");
+
     public final StringPath description = createString("description");
 
     //inherited

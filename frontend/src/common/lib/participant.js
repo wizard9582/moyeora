@@ -8,18 +8,23 @@ const PARTICIPANT_CLASS = 'participant el-col el-col-6 is-guttered';
 function Participant(name) {
 	this.name = name;
 	var container = document.createElement('div');
-  container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
-	container.id = name;
-	var div = document.createElement('div');
+  // container.className = isPresentMainParticipant() ? PARTICIPANT_CLASS : PARTICIPANT_MAIN_CLASS;
+  container.className = PARTICIPANT_CLASS;
+  container.id = name;
+  container.style.paddingLeft = '10px'
+  container.style.paddingRight = '10px'
+  var div = document.createElement('div');
+  var namespace = document.createElement('div');
 	var span = document.createElement('span');
-	var span2 = document.createElement('span');
+	var voteStamp = document.createElement('div');
 	var video = document.createElement('video');
 	var img = document.createElement('img');
 	var rtcPeer;
 
-	container.appendChild(div);
-	container.appendChild(span);
-	container.appendChild(span2);
+  container.appendChild(div);
+  container.appendChild(namespace);
+	namespace.appendChild(span);
+	namespace.appendChild(voteStamp);
 	div.appendChild(img);
 	div.appendChild(video);
   container.onclick = switchContainerClass;
@@ -28,16 +33,22 @@ function Participant(name) {
 
 	div.style = 'position:relative;'
 	img.src = require('@/assets/img-dead.png');
-	img.style = 'height:50%;opacity:0;position:absolute;'
+  img.style = 'height:50%;opacity:0;position:absolute;'
 
+  // 이름 스타일
+  span.style.float = 'left'
+  span.style.paddingLeft = '10px'
+  span.style.fontWeight = 'bold'
   span.appendChild(document.createTextNode(name));
-  span2.style.color = 'red'
-  span2.style.fontSize = '20px'
-  span2.style.fontWeight = 'bold'
 
+  voteStamp.style.position = 'relative'
+
+  // 비디오 스타일
 	video.id = 'video-' + name;
 	video.autoplay = true;
-	video.controls = false;
+  video.controls = false;
+  video.style.height = '100%'
+  video.style.width = '100%'
 
 
 	this.getElement = function() {

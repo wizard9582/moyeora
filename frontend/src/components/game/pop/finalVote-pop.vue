@@ -47,7 +47,8 @@ export default {
 
     const clickKill = function () {
       //store.commit('root/voteFinalVote', 'kill')
-      document.querySelector('.kill-button').style.backgroundColor = 'red'
+      // document.querySelector('.kill-button').style.backgroundColor = 'red'
+      // document.querySelector('.kill-button').style.filter = 'brightness(50%)'
       state.selected = !state.selected
       if (state.stompClient && state.stompClient.connected) {
         const msg = { round : 1, fromName: 'final', toName: 'kill' }
@@ -58,7 +59,7 @@ export default {
 
     const clickSave = function () {
       //store.commit('root/voteFinalVote', 'save')
-      document.querySelector('.save-button').style.backgroundColor = 'blue'
+      // document.querySelector('.save-button').style.backgroundColor = 'blue'
       state.selected = !state.selected
       if (state.stompClient && state.stompClient.connected) {
         const msg = { round : 1, fromName: 'final', toName: 'save' }

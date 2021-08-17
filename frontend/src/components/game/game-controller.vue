@@ -1,5 +1,5 @@
 <template>
-    <el-button class="game-start-button" v-if="isOwner() && state.roomType=='mafia'" :disabled="!canStart" @click="clickGameStart">게임 시작</el-button>
+    <el-button class="game-start-button" v-if="isOwner() && state.roomType=='mafia' && !state.gameStarted" :disabled="!canStart" @click="clickGameStart">게임 시작</el-button>
     <div class="main-controller">
       <el-button :icon="state.micIcon" @click="micOff" v-bind:class="{ 'el-button--primary': !state.micOff }" >음소거</el-button>
       <el-button :icon="state.videoIcon" @click="cameraOff" v-bind:class="{ 'el-button--primary': !state.videoOff }" >비디오</el-button>
@@ -32,7 +32,8 @@ export default {
       micOff: false,
       micIcon: 'el-icon-microphone',
       videoOff: false,
-      videoIcon: 'el-icon-camera-solid'
+      videoIcon: 'el-icon-camera-solid',
+      gameStarted: computed(() => store.getters['root/getGameStarted']),
     })
 
     const roomId = route.params.no;
@@ -114,7 +115,7 @@ export default {
         const msg = {
           round: 0,
           desc: "morning",
-          second : 90,
+          second : 30,
           userId : state.userName,
         };
         state.stompClient.send("/pub/game/morning/"+ roomId, JSON.stringify(msg), {});

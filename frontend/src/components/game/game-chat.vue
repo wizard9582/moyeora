@@ -19,7 +19,7 @@
         :value="player.userId"
       ></el-option>
     </el-select>
-    <!-- <el-button @click="openDoctorVote">확인</el-button> -->
+    <!-- <el-button @click="openFinalVote">확인</el-button> -->
     <!-- <el-input placeholder="모두에게" v-model="toName"></el-input> -->
     <el-input
       type="textarea"
@@ -74,6 +74,8 @@ export default {
       didMafiaKillPlayer: false,
     })
 
+    const voteIndex = ref(0)
+
     const openFinalVote = () => {
       emit('openFinalVotePop')
     }
@@ -87,9 +89,10 @@ export default {
     }
 
     // 타이머 시간 조정
-    const morningTime = 90;
-    const judgeTime = 90;
-    const nightTime = 90;
+
+    const morningTime = 30;
+    const judgeTime = 30;
+    const nightTime = 30;
 
     return { count, disabled, load, roomId, router, store, state, openFinalVote, openDoctorVote, openMafiaVote, morningTime, judgeTime, nightTime };
   },
@@ -275,8 +278,23 @@ export default {
               scope.store.commit('root/voteTo', voteResult['toName'])
 
               // 받은 투표 수를 화면에 표시
-              const voteSpan = document.querySelector(`#${voteResult['toName']}`).children[2]
-              voteSpan.innerText = scope.state.voteCountList[voteResult['toName']][0]
+              const voteSpace = document.querySelector(`#${voteResult['toName']}`).children[1].children[1]
+              console.log(document.querySelector(`#${voteResult['toName']}`).children[1])
+              let voteImg = document.createElement('img');
+              let leftIndex = 100 + 25*scope.state.voteCountList[voteResult['toName']][0]
+              voteImg.src = require('@/assets/favicon-white.png');
+
+              voteImg.style.position = 'absolute'
+              voteImg.style.top = '-8px'
+              voteImg.style.width = '40px'
+              voteImg.style.height = '40px'
+              voteImg.style.left = `${leftIndex}px`
+
+              voteImg.id = `vote-${voteResult['toName']}-${leftIndex}`
+              voteSpace.appendChild(voteImg)
+	            // let voteImg = document.createElement('img');
+              // voteImg.src = require('@/assets/favicon.png');
+              // voteImg.style = 'height:50%; opacity:1; position:absolute;'
             }
           });
 
@@ -300,14 +318,30 @@ export default {
               msg += "\n마피아 목록: "
               msg += rchat.same.substr(1,rchat.same.length-2)
             }
-            ElMessage({
-              message: h('p', null, [
-                h('strong', null, '당신의 직업은 '),
-                h('i', { style: ['color: tomato', 'font-weight: bold'] }, rchat.role),
-                h('strong', null, '입니다.'),
-              ]),
-              duration: 10000,
-            })
+            if(rchat.same){
+              msg += "\n마피아 목록: "
+              msg += rchat.same.substr(1,rchat.same.length-2)
+              ElMessage({
+                message:  h('p', null, [
+                  h('strong', null, '당신의 직업은 '),
+                  h('i', { style: ['color: tomato', 'font-weight: bold'] }, rchat.role),
+                  h('strong', null, ' 입니다.\n'),
+                  h('strong', null, '같은 마피아는  '),
+                  h('i', { style: ['color: tomato', 'font-weight: bold'] }, rchat.same.substr(1,rchat.same.length-2)),
+                  h('strong', null, ' 입니다.'),
+                ]),
+                duration: 10000,
+              })
+            }else{
+              ElMessage({
+                message: h('p', null, [
+                  h('strong', null, '당신의 직업은 '),
+                  h('i', { style: ['color: tomato', 'font-weight: bold'] }, rchat.role),
+                  h('strong', null, ' 입니다.'),
+                ]),
+                duration: 10000,
+              })
+            }
             // ElMessage({
             //   dangerouslyUseHTMLString: true,
             //   message: '<strong>당신의 직업은 <i>' + msg + '</i>입니다</strong>',
@@ -436,8 +470,12 @@ export default {
                   }
                 }
                 scope.store.commit('root/setDeath',finalVotePlayer);
-                let img = document.querySelector(`#${finalVotePlayer}`).children[0].children[0];
-                img.style = 'height:50%;opacity:1;position:absolute;'
+                try{
+                  let img = document.querySelector(`#${finalVotePlayer}`).children[0].children[0];
+                  img.style = 'height:50%;opacity:1;position:absolute;'
+                }catch{
+                  console.log('유령 도장')
+                }
                 // 죽은 사람 직업 찾기
                 let roles = scope.store.getters['root/getMafiaRoles'];
                 let deadRole = '';
@@ -447,16 +485,16 @@ export default {
                     break
                   }
                 }
-                if(deadRole == 'mafia') deadRole = "마피아"
-                else if(deadRole == 'police') deadRole = "무고한 경찰"
-                else if(deadRole == 'doctor') deadRole = "무고한 의사"
-                else deadRole = "무고한 시민"
+                if(deadRole == 'mafia') deadRole = "마피아 "
+                else if(deadRole == 'police') deadRole = "무고한 경찰 "
+                else if(deadRole == 'doctor') deadRole = "무고한 의사 "
+                else deadRole = "무고한 시민 "
 
                 ElMessage({
                   message: h('p', null, [
                     h('strong', null, '최종투표에서 '),
-                    h('i', { style: ['color: tomato', 'font-weight: bold'] }, deadRole),
-                    h('strong', null, '가 죽었습니다.'),
+                    h('i', { style: ['color: tomato', 'font-weight: bold'] }, deadRole+finalVotePlayer),
+                    h('strong', null, ' 가 죽었습니다.'),
                   ]),
                   type: 'danger',
                   duration: 10000,
@@ -477,7 +515,7 @@ export default {
                   message: h('p', null, [
                     h('strong', null, '최종투표에서 '),
                     h('i', { style: ['color: tomato', 'font-weight: bold'] }, finalVotePlayer),
-                    h('strong', null, '가 구사일생 했습니다.'),
+                    h('strong', null, ' 가 구사일생 했습니다.'),
                   ]),
                   type: 'success',
                   duration: 10000,
@@ -545,8 +583,12 @@ export default {
                 // 마피아가 제거하는 경우
                 console.log('마피아가 죽인 사람: ',mafiaSelectPlayer);
                 scope.store.commit('root/setDeath',mafiaSelectPlayer);
-                let img = document.querySelector(`#${mafiaSelectPlayer}`).children[0].children[0];
-                img.style = 'height:50%;opacity:1;position:absolute;'
+                try{
+                  let img = document.querySelector(`#${mafiaSelectPlayer}`).children[0].children[0];
+                  img.style = 'height:50%;opacity:1;position:absolute;'
+                }catch{
+                  console.log('도장 유령')
+                }
                 // 그게 나라면...!!!ㅠㅠㅠㅠㅠㅠ
                 if(mafiaSelectPlayer == scope.userName){
                   scope.store.commit('root/setMylife', false);
@@ -559,17 +601,17 @@ export default {
                     break
                   }
                 }
-                if(deadRole == 'mafia') deadRole = "마피아"
-                else if(deadRole == 'police') deadRole = "경찰"
-                else if(deadRole == 'doctor') deadRole = "의사"
-                else deadRole = "시민"
+                if(deadRole == 'mafia') deadRole = "마피아 "
+                else if(deadRole == 'police') deadRole = "무고한 경찰 "
+                else if(deadRole == 'doctor') deadRole = "무고한 의사 "
+                else deadRole = "무고한 시민 "
 
                 ElMessage({
                   message: h('p', null, [
-                    h('strong', null, '마피아가 무고한 '),
+                    h('strong', null, '마피아가 '),
                     h('i', { style: ['color: black', 'font-weight: bold'] }, deadRole),
                     h('i', { style: ['color: tomato', 'font-weight: bold'] }, mafiaSelectPlayer),
-                    h('strong', null, '를 죽였습니다.'),
+                    h('strong', null, ' 를 죽였습니다.'),
                   ]),
                   type: 'danger',
                   duration: 10000,
@@ -581,8 +623,12 @@ export default {
             } else if(rchat.desc=='end'){
                 for (let player of scope.state.participantsList) {
                   if (player.death){
-                    let img = document.querySelector(`#${player.userId}`).children[0].children[0];
-                    img.style = 'height:50%;opacity:1;position:absolute;'
+                    try{
+                      let img = document.querySelector(`#${player.userId}`).children[0].children[0];
+                      img.style = 'height:50%;opacity:1;position:absolute;'
+                    }catch{
+                      console.log('도장유령')
+                    }
                   }
                 }
 
@@ -634,7 +680,8 @@ export default {
                 }
               }else if(resMessage[1]=='citizen'){
                 //시민 이김
-                if (scope.state.gameStarted) {
+                console.log('시민 이겻을 때 state : ',scope.state.gameStarted)
+                //if (scope.state.gameStarted) {
                   ElMessage({
                     message: h('strong', null, '시민 승!!'),
                     type: 'success',
@@ -642,9 +689,20 @@ export default {
                   })
                   // alert('시민 승!!!')
                   scope.store.commit('root/resetDeath');
-                }
+                  scope.store.commit('root/endGame');
+
+                  // 도장 제거
+                  for (let player of scope.state.participantsList) {
+                    try{
+                      let img = document.querySelector(`#${player.userId}`).children[0].children[0];
+                      img.style = 'height:50%;opacity:0;position:absolute;'
+                    }catch{
+                      console.log('도장유령')
+                    }
+                  }
+                //}
               }else{
-                if (scope.state.gameStarted) {
+                //if (scope.state.gameStarted) {
                   //마피아 이김
                   ElMessage({
                     message: h('strong', null, '마피아 승!!'),
@@ -653,7 +711,18 @@ export default {
                   })
                   // alert('마피아 승!!!')
                   scope.store.commit('root/resetDeath');
-                }
+                  scope.store.commit('root/endGame');
+
+                  // 도장 제거
+                  for (let player of scope.state.participantsList) {
+                    try{
+                      let img = document.querySelector(`#${player.userId}`).children[0].children[0];
+                      img.style = 'height:50%;opacity:0;position:absolute;'
+                    }catch{
+                      console.log('도장유령')
+                    }
+                  }
+                //}
               }
           });
         },
