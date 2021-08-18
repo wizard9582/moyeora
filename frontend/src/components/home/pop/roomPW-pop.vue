@@ -20,7 +20,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    pw:"",
+    type:"",
     id:"",
     },
   setup(props, { emit }) {
@@ -32,13 +32,21 @@ export default {
       popupVisible: computed(() => props.open),
     })
     const checkPW = ()=>{
-      if(state.input === props.pw){
+      store.dispatch('root/checkRoomPwd', {roomId:props.id, pwd:state.input})
+      .then(function (result) {
+        //console.log(result.data)
+        if(result.data.statusCode == 200){
+          emit('closePwPopup')
+          router.push("/game/" + props.type + "/" + props.id)
+        }else{
+          alert("비밀번호가 틀립니다!")
+          emit('closePwPopup')
+        }
+      })
+      .catch(function () {
+        alert("서버오류")
         emit('closePwPopup')
-        router.push("/game/" + props.id)
-      }else{
-        alert("잘못입력하셨습니다!")
-        emit('closePwPopup')
-      }
+      })
     }
 
     const handleClose = function () {

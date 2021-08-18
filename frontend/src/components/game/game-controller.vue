@@ -65,7 +65,7 @@ export default {
 
     // 게임 시작 버튼
     const clickGameStart = () => {
-      console.log('게임 시작!!')
+      //console.log('게임 시작!!')
       store.commit('root/startGame')
       gameTimerStart();
     }
@@ -79,14 +79,14 @@ export default {
 
     // 마이크 버튼
     const micOff = () => {
-      console.log('마이크 끄기 클릭')
+      //console.log('마이크 끄기 클릭')
       state.micOff = !state.micOff
       if(!state.micOff){
         store.commit('root/setMicOff', false);
         state.micIcon = 'el-icon-microphone'
         muteMic(state.userName, false);
       }else{
-        //console.log('마이크 스토어 확인: ', store.getters['root/getMicOff'])
+        ////console.log('마이크 스토어 확인: ', store.getters['root/getMicOff'])
         store.commit('root/setMicOff', true);
         state.micIcon = 'el-icon-close'
         muteMic(state.userName, true);
@@ -95,7 +95,7 @@ export default {
 
     // 카메라 버튼
     const cameraOff = () => {
-      console.log('카메라 끄기 클릭')
+      //console.log('카메라 끄기 클릭')
       state.videoOff = !state.videoOff
       if(!state.videoOff){
         store.commit('root/setVideoOff', false);
@@ -110,7 +110,7 @@ export default {
 
     // 게임 시작 시 타이머 시작
     const gameTimerStart = () => {
-      console.log("Send message To Start game timer ");
+      //console.log("Send message To Start game timer ");
       if (state.stompClient && state.stompClient.connected) {
         const msg = {
           round: 0,

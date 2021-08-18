@@ -1,10 +1,10 @@
 <template>
   <el-dialog title="방 만들기" v-model="state.popupVisible" @close="handleClose">
     <el-form :model="state.form" :rules="state.rules" ref="createRoomForm" :label-position="state.form.align" @change="checkValidation" v-loading private="state.popupLoading">
-      <el-form-item prop="title" label="방제" :label-width="state.formLabelWidth">
+      <el-form-item prop="title" label="방 이름" :label-width="state.formLabelWidth">
         <el-input v-model="state.form.title" autocomplete="off" maxlength="20" show-word-limit></el-input>
       </el-form-item>
-      <el-form-item label="게임" :label-width="state.formLabelWidth">
+      <el-form-item label="종류" :label-width="state.formLabelWidth">
         <el-select v-model="state.form.category">
           <el-option v-for="item in state.games" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled">
           </el-option>

@@ -19,7 +19,7 @@
   </el-container>
   <filter-pop :open="state.filterPopupOpen" @closeFilterPopup="onCloseFilterPopup" />
   <create-room-pop :open="state.roomPopupOpen" @closeRoomPopup="onCloseRoomPopup" />
-  <room-pw-pop :open="state.pwPopupOpen" @closePwPopup="onClosePwPopup" :pw="state.data[0]" :id="state.data[1]"/>
+  <room-pw-pop :open="state.pwPopupOpen" @closePwPopup="onClosePwPopup" :type="state.data[0]" :id="state.data[1]"/>
   <setting-pop :open="state.settingPopupOpen" @closeSettingPopup="onCloseSettingPopup" />
 </template>
 

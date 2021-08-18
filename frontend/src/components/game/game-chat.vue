@@ -109,7 +109,7 @@ export default {
   methods: {
     sendMessage (e) {
       if(e.keyCode === 13 && this.userName !== '' && this.message !== ''){
-        console.log('----------toName---------- ', this.toName)
+        //console.log('----------toName---------- ', this.toName)
         if(this.toName == '' || this.toName == '모두')
           this.sendToRoom()
         else
@@ -120,7 +120,7 @@ export default {
     },
 
     sendToRoom() {
-      console.log("Send message To Room "+ this.roomId +" :" + this.message);
+      //console.log("Send message To Room "+ this.roomId +" :" + this.message);
       if (this.stompClient && this.stompClient.connected) {
         const msg = {
           roomId: this.roomId,
@@ -133,7 +133,7 @@ export default {
     },
 
     sendToPerson() {
-      console.log("Send message To Perseon "+ this.toName +" : " + this.message);
+      //console.log("Send message To Perseon "+ this.toName +" : " + this.message);
       if (this.stompClient && this.stompClient.connected) {
         const msg = {
           roomId: this.roomId,
@@ -147,7 +147,7 @@ export default {
     },
 
     sendToLeave() {
-      console.log("Send message To Leave ");
+      //console.log("Send message To Leave ");
       if (this.stompClient && this.stompClient.connected) {
         const msg = {
           roomId: this.roomId,
@@ -158,7 +158,7 @@ export default {
     },
 
     gameTimerStart() {
-      console.log("Send message To Start game timer ");
+      //console.log("Send message To Start game timer ");
       if (this.stompClient && this.stompClient.connected) {
         const msg = {
           round: 1,
@@ -170,7 +170,7 @@ export default {
     },
 
     waitSecond(room, name) {
-        console.log('기다리고')
+        //console.log('기다리고')
         let random = Math.floor(Math.random() * (1001 - 0)) + 0 - 500;
         setTimeout(function () {
               register(room, name);
@@ -194,7 +194,7 @@ export default {
       const serverURL = "/websocket"
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
-      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
+      //console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`)
       // socketConnect()
       // stompClient = Stomp.over(socket);
 
@@ -203,7 +203,7 @@ export default {
         frame => {
           // 소켓 연결 성공
           this.connected = true;
-          console.log('소켓 연결 성공', frame);
+          //console.log('소켓 연결 성공', frame);
 
           this.store.commit('root/setStompClient', this.stompClient)
 
@@ -217,10 +217,10 @@ export default {
 
           // 구독 결과
           this.stompClient.subscribe('/sub/greetings/room/'+this.roomId, function (chat) {
-            console.log("새로운 참가자 등장!!", chat.body);
+            //console.log("새로운 참가자 등장!!", chat.body);
             scope.store.dispatch('root/requestRoomInfo', { roomId: scope.roomId })
             .then((result) => {
-              console.log('새로운 목록: ',result.data.member)
+              //console.log('새로운 목록: ',result.data.member)
               scope.store.commit('root/setParticipantsList', result.data.member)
 
               // // voteCount 세팅하기
@@ -230,17 +230,17 @@ export default {
               //   let greetingUserId = player.userId
               //   votePlayerList[greetingUserId] = [0, player.id]
               // }
-              // console.log('votePlayerList', votePlayerList)
+              // //console.log('votePlayerList', votePlayerList)
               // scope.store.commit('root/setVoteCount', votePlayerList)
             })
           });
 
           this.stompClient.subscribe('/sub/bye/room/'+this.roomId, function (chat) {
-            console.log("참가자 퇴장!!", chat.body);
+            //console.log("참가자 퇴장!!", chat.body);
             //this.participantsList.push(chat.body);
             scope.store.dispatch('root/requestRoomInfo', { roomId: scope.roomId })
             .then((result) => {
-              console.log('새로운 목록: ',result.data.member)
+              //console.log('새로운 목록: ',result.data.member)
               scope.store.commit('root/setParticipantsList', result.data.member)
             })
           });
@@ -255,7 +255,7 @@ export default {
           // for문을 사용하여 참가자 아이디 별로 구독할지, 전체 구독으로 사용자에 따른
           this.stompClient.subscribe('/sub/vote/room/'+this.roomId, function (chat) {
             let voteResult = JSON.parse(chat.body)
-            console.log("투표 받았다", voteResult)
+            //console.log("투표 받았다", voteResult)
 
             if (voteResult.fromName === 'doctor') {
               scope.store.commit('root/setDoctorSelectPlayer', voteResult.toName)
@@ -279,7 +279,7 @@ export default {
 
               // 받은 투표 수를 화면에 표시
               const voteSpace = document.querySelector(`#${voteResult['toName']}`).children[1].children[1]
-              console.log(document.querySelector(`#${voteResult['toName']}`).children[1])
+              //console.log(document.querySelector(`#${voteResult['toName']}`).children[1])
               let voteImg = document.createElement('img');
               let leftIndex = 100 + 25*scope.state.voteCountList[voteResult['toName']][0]
               voteImg.src = require('@/assets/favicon-white.png');
@@ -300,7 +300,7 @@ export default {
 
           this.stompClient.subscribe('/sub/leave/'+this.roomId, function (chat) {
             scope.disconnectSocket()
-            console.log("나가라")
+            //console.log("나가라")
             scope.router.push("/home/" + 'all')
             leaveRoom()
           });
@@ -311,7 +311,7 @@ export default {
           this.stompClient.subscribe('/sub/game/start/'+this.roomId+"/"+this.userName, function (chat) {
             scope.store.commit('root/setMylife', true);
             // 직업 연동 아직 안됨
-            console.log("타이머 0 (직업 분배 결과) : ", JSON.parse(chat.body))
+            //console.log("타이머 0 (직업 분배 결과) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
             let msg = "당신의 직업은 "+ rchat.role +"입니다.";
             if(rchat.same){
@@ -353,18 +353,18 @@ export default {
             //if(myRole == "police"){
               scope.store.dispatch('root/requestByPolice', { roomId: scope.roomId })
               .then((result) => {
-                //console.log("경찰이 얻어온 직업들 : ", result.data)
+                ////console.log("경찰이 얻어온 직업들 : ", result.data)
                 scope.store.commit('root/setMafiaRoles', result.data);
-                console.log('참가자들의 직업 뷰엑스 확인, 모닝x : ',scope.store.getters['root/getMafiaRoles'])
+                //console.log('참가자들의 직업 뷰엑스 확인, 모닝x : ',scope.store.getters['root/getMafiaRoles'])
               })
               .catch((error) => {
-                console.log(error)
+                //console.log(error)
               })
             //}
           });
           // 메세지를 받을 때마다 게임 승리여부 판단과 라운드 체크를 해주어야 합니다.
           this.stompClient.subscribe('/sub/game/morning/'+this.roomId, function (chat) {
-            console.log("타이머 1 (아침, 투표) : ", JSON.parse(chat.body))
+            //console.log("타이머 1 (아침, 투표) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
             scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second-1})
 
@@ -420,13 +420,13 @@ export default {
                    scope.stompClient.send("/pub/game/judge/"+ scope.roomId, JSON.stringify(msg), {});
                  }
               }
-              console.log(tiebreaker, msg)
+              //console.log(tiebreaker, msg)
             }
 
             // 투표들 지우기
             for (let player of scope.state.participantsList) {
               let playerVoteSpace = document.querySelector(`#vote-space-${player.userId}`)
-              console.log('투표 진행 상황 지우기!!! : ', playerVoteSpace)
+              //console.log('투표 진행 상황 지우기!!! : ', playerVoteSpace)
               while (playerVoteSpace.hasChildNodes) {
                 playerVoteSpace.removeChild(playerVoteSpace.firstChild)
               }
@@ -434,7 +434,7 @@ export default {
           });
 
           this.stompClient.subscribe('/sub/game/judge/'+this.roomId, function (chat) {
-            console.log("타이머 2 (변론, 투표) : ", JSON.parse(chat.body))
+            //console.log("타이머 2 (변론, 투표) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
             scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second-1})
 
@@ -456,16 +456,16 @@ export default {
                   // 투표들 지우기
                   for (let player of scope.state.participantsList) {
                     let playerVoteSpace = document.querySelector(`#vote-space-${player.userId}`)
-                    console.log('투표 진행 상황 지우기!!! : ', playerVoteSpace)
+                    //console.log('투표 진행 상황 지우기!!! : ', playerVoteSpace)
                     while (playerVoteSpace.hasChildNodes) {
                       playerVoteSpace.removeChild(playerVoteSpace.firstChild)
                     }
                   }
-                  // console.log('확인: ',document.querySelector(`#${player.userId}`))
+                  // //console.log('확인: ',document.querySelector(`#${player.userId}`))
                   // const voteSpan = document.querySelector(`#${player.userId}`).children[2]
                   // voteSpan.innerText = '';
                 }catch{
-                  // console.log('유령')
+                  // //console.log('유령')
                 }
 
               }
@@ -474,8 +474,8 @@ export default {
               scope.store.commit('root/endVote');
               let msg = {}
               let playerPK = ''
-              console.log("최종 투표 사람1 : ",scope.store.getters['root/getFinalVotePlayer'])
-              console.log("최종 투표 사람2 : ",computed(() => scope.store.getters['root/getFinalVotePlayer']))
+              //console.log("최종 투표 사람1 : ",scope.store.getters['root/getFinalVotePlayer'])
+              //console.log("최종 투표 사람2 : ",computed(() => scope.store.getters['root/getFinalVotePlayer']))
               let finalVotePlayer = scope.store.getters['root/getFinalVotePlayer'];
               if (scope.state.finalVoteCount[0] > scope.state.finalVoteCount[1]) {
                 // 죽이기로 결정
@@ -491,7 +491,7 @@ export default {
                   let img = document.querySelector(`#${finalVotePlayer}`).children[0].children[0];
                   img.style = 'height:50%;opacity:1;position:absolute;'
                 }catch{
-                  console.log('유령 도장')
+                  //console.log('유령 도장')
                 }
                 // 죽은 사람 직업 찾기
                 let roles = scope.store.getters['root/getMafiaRoles'];
@@ -517,7 +517,7 @@ export default {
                   duration: 10000,
                 })
                 // scope.recvList.push({message:`최종투표에서 ${finalVotePlayer}가 죽었습니다.`})
-                console.log('죽은사람 처리 확인: ', scope.store.getters['root/getParticipantsList']);
+                //console.log('죽은사람 처리 확인: ', scope.store.getters['root/getParticipantsList']);
                 // 만약 죽은게 나라면...ㅠㅠㅠㅠㅠ
                 if(finalVotePlayer == scope.userName){
                   scope.store.commit('root/setMylife', false);
@@ -548,7 +548,7 @@ export default {
           });
 
           this.stompClient.subscribe('/sub/game/night/'+this.roomId, function (chat) {
-            console.log("타이머 3 (저녁, 결과) : ", JSON.parse(chat.body))
+            //console.log("타이머 3 (저녁, 결과) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
             scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second-1})
             if (rchat.desc === 'night') {
@@ -556,7 +556,7 @@ export default {
               // 살아있으면
               if(scope.state.mylife){
                 leaveRoom()
-                console.log("내 직업",myRole)
+                //console.log("내 직업",myRole)
                 if(myRole=='mafia' && scope.state.mylife){
                   // 마피아인 경우 : 마피아끼리 모임
                   scope.waitSecond(scope.roomId+"/mafia",scope.userName)
@@ -598,13 +598,13 @@ export default {
                 scope.state.didMafiaKillPlayer = false
               } else {
                 // 마피아가 제거하는 경우
-                console.log('마피아가 죽인 사람: ',mafiaSelectPlayer);
+                //console.log('마피아가 죽인 사람: ',mafiaSelectPlayer);
                 scope.store.commit('root/setDeath',mafiaSelectPlayer);
                 try{
                   let img = document.querySelector(`#${mafiaSelectPlayer}`).children[0].children[0];
                   img.style = 'height:50%;opacity:1;position:absolute;'
                 }catch{
-                  console.log('도장 유령')
+                  //console.log('도장 유령')
                 }
                 // 그게 나라면...!!!ㅠㅠㅠㅠㅠㅠ
                 if(mafiaSelectPlayer == scope.userName){
@@ -644,7 +644,7 @@ export default {
                       let img = document.querySelector(`#${player.userId}`).children[0].children[0];
                       img.style = 'height:50%;opacity:1;position:absolute;'
                     }catch{
-                      console.log('도장유령')
+                      //console.log('도장유령')
                     }
                   }
                 }
@@ -680,7 +680,7 @@ export default {
 
           //게임 종료 판단하기
           this.stompClient.subscribe('/sub/game/end/'+this.roomId, function (res) {
-              console.log("게임 진행 상황 : "+res.body);
+              //console.log("게임 진행 상황 : "+res.body);
               const resMessage = res.body.split(',')
               if(resMessage[1]=='on'){
                 //게임 계속 진행
@@ -697,7 +697,7 @@ export default {
                 }
               }else if(resMessage[1]=='citizen'){
                 //시민 이김
-                console.log('시민 이겻을 때 state : ',scope.state.gameStarted)
+                //console.log('시민 이겻을 때 state : ',scope.state.gameStarted)
                 //if (scope.state.gameStarted) {
                   ElMessage({
                     message: h('strong', null, '시민 승!!'),
@@ -716,7 +716,7 @@ export default {
                       let img = document.querySelector(`#${player.userId}`).children[0].children[0];
                       img.style = 'height:50%;opacity:0;position:absolute;'
                     }catch{
-                      console.log('도장유령')
+                      //console.log('도장유령')
                     }
                   }
                 //}
@@ -740,7 +740,7 @@ export default {
                       let img = document.querySelector(`#${player.userId}`).children[0].children[0];
                       img.style = 'height:50%;opacity:0;position:absolute;'
                     }catch{
-                      console.log('도장유령')
+                      //console.log('도장유령')
                     }
                   }
                 //}
@@ -749,7 +749,7 @@ export default {
         },
         error => {
           // 소켓 연결 실패
-          console.log('소켓 연결 실패', error);
+          //console.log('소켓 연결 실패', error);
           this.connected = false;
         }
       );
@@ -760,7 +760,7 @@ export default {
         this.stompClient.disconnect();
       }
       this.store.commit('root/setStompClient', null);
-      console.log("Disconnected");
+      //console.log("Disconnected");
     },
 
   },

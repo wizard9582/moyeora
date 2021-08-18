@@ -40,12 +40,11 @@ export default {
         index:  0
       })
       const clickRoom = function(room) {
-        let route = room.type + "/" + room.id
         if(room.state == "accessable"){
           if(room.lock){
-            emit('openPwCheck', ["1234", route])
+            emit('openPwCheck', [room.type, room.id])
           }else{
-            router.push("/game/" + route)
+            router.push("/game/" + room.type + "/" + room.id)
           }
         }
       }

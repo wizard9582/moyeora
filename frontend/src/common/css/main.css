@@ -9,26 +9,26 @@
   --main-light: white;
   --main-default: #F4F9F9;
   --main-dark: lightgray;
-  --main-button: #0F52BA;
+  --main-button: #4380db;
   --main-font: black;
   /*다크테마*/
   --dark-light: #082032;
   --dark-default: #2C394B;
   --dark-dark: #334756;
-  --dark-button: #FF4C29;
+  --dark-button: #574680;
   --dark-font: whitesmoke;
   /*레트로펑크테마*/
-  --punk-light: #334756;
+  --punk-light: #1cc4bb; /*#334756;*/
   --punk-default: #3D087B;
   --punk-dark: #11052C;
-  --punk-button: #F43B86;
-  --punk-font: #FFC947;
+  --punk-button: #FF577F;
+  --punk-font: #f7e182;
   /*여름테마*/
   --summer-light: #A2DBFA;
   --summer-default: #39A2DB;
-  --summer-dark: #185ADB;
-  --summer-button: #FFC947;
-  --summer-font: wheat;
+  --summer-dark: #dbba6e;
+  --summer-button: #283d99;
+  --summer-font: white;
   /*핑크테마*/
   --pink-light: #FABFDF;
   --pink-default: #F8A1D1;;
@@ -42,7 +42,12 @@
   --color-button: var(--main-button);
   --color-font: var(--main-font);
 }
-
+i{
+  color: var(--color-font);
+}
+.el-menu-item i {
+  color: var(--color-font);
+}
 .body {
   margin: 0;
 }
@@ -91,7 +96,29 @@ body > .el-container {
   text-align: center;
   width: 100%;
 }
-
+.el-button{
+  background-color: var(--color-button);
+  border-color: var(--color-font);
+  color: var(--color-font);
+}
+.el-button:hover{
+  background-color: var(--color-light);
+  border-color: var(--color-font);
+  color: var(--color-font);
+}
+.el-button:focus{
+  background-color: var(--color-light);
+  border-color: var(--color-font);
+  color: var(--color-font);
+}
+.el-dropdown-menu{
+  background-color: var(--color-button);
+  border-color: var(--color-font);
+  color: var(--color-font);
+}
+.el-dropdown-menu__item {
+  color: var(--color-font);
+}
 .el-message{
   position: absolute;
   top: 300px;
@@ -99,6 +126,7 @@ body > .el-container {
  }
 
  .el-menu-item{
+  color: var(--color-font);
   cursor: pointer;
   margin-left: 0px;
   background: var(--color-default);
@@ -121,8 +149,15 @@ body > .el-container {
   transform:scale(1.2);
   z-index: 200;
 }
-
+.el-dialog{
+  background-color: var(--color-light);
+  color: var(--color-font);
+  border-color: var(--color-default);
+}
 .el-card {
+  background-color: var(--color-light);
+  color: var(--color-font);
+  border-color: 2px solid var(--color-default);
   margin: 0 8px;
   margin-bottom: 20px;
 }
@@ -203,7 +238,7 @@ body > .el-container {
 
 .main-header {
   padding: 10px 20px;
-  border-bottom: 2px solid var(--color-dark);
+  border-bottom: 2px solid var(--color-button);
   display: flex;
   justify-content: space-between;
   align-items: center;

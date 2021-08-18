@@ -129,15 +129,7 @@ export default {
 </script>
 
 <style scoped>
-.day{
-  background: white;
-}
-.night{
-  background: black;
-}
 .el-footer {
-  background-color: gray;
-  color: #333;
   text-align: center;
   position: fixed;
   left: 0;

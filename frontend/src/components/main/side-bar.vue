@@ -1,7 +1,7 @@
 <template>
-  <el-menu :default-active="state.activeIndex" class="el-menu-vertical-demo">
+  <el-menu :default-active="state.activeIndex" class="el-menu-vertical-demo" :active-text-color="state.activeColor">
     <el-menu-item @click="clickFilterPop" index="1">
-      <i class="el-icon-menu"/>
+      <i class="el-icon-menu" color="red"/>
       <span>Game</span>
     </el-menu-item>
     <el-menu-item @click="clickRoomPop">
@@ -32,7 +32,9 @@ export default {
   setup(props, {emit}){
     const state = reactive({
       fullscreenLoading: false,
-      activeIndex: 1
+      activeIndex: 1,
+      activeColor: document.documentElement.style.getPropertyValue('--color-dark'),
+      defaultColor: document.documentElement.style.getPropertyValue('--color-light')
     })
 
     const clickFilterPop = () => {
