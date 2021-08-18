@@ -275,6 +275,8 @@ export default {
       state.round = 0
       state.stage = 0
       state.stageTitle = stages[0]
+      emit('startDay')
+      state.statusIcon = "el-icon-sunny"
     })
 
     return { state, clickPass, clickInvite, clickOnQuestion, padMinute, padSecond, startTimer, nextStage, clickDetectPlayer, detectChoose, openJob }

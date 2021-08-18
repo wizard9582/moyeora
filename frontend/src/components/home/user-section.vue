@@ -32,7 +32,7 @@
           <el-table-column prop="job" label="직업"></el-table-column>
           <el-table-column prop="win" label="승리" width="150"></el-table-column>
           <el-table-column prop="lose" label="패배" width="150"></el-table-column>
-          <el-table-column prop label="승률" width="150"></el-table-column>
+          <el-table-column prop="rate" label="승률" width="150"></el-table-column>
         </el-table>
       </div>
       <div class="sub-title">최근 게임</div>
@@ -132,51 +132,24 @@ export default {
         userId: "",
         userDepartment: "",
         friendList: [],
-        myStat:[
-          {
-            job: "총합",
-            win: 163,
-            lose: 54
-          },
-          {
-            job: "마피아",
-            win: 15,
-            lose: 7
-          },
-          {
-            job: "경찰",
-            win: 15,
-            lose: 7
-          },
-          {
-            job: "의사",
-            win: 15,
-            lose: 7
-          },
-          {
-            job: "시민",
-            win: 15,
-            lose: 7
-          }
-        ],
-        historyData: [{
-          no: 13921,
-          tag: 'mafia',
-          title: '김철수의 마피아게임',
-          date: '2016-05-03',
-          result: 'Win',
-          job: 'mafia'},],
-          rankingData: [
-            {
-              nickName: "김철수",
-              win: 123,
-              lose: 35,
-            },
-            ],
+        myStat:[],
+        historyData: [],
+        rankingData: [],
       })
 
       const getmyStat = () => {
+        store.dispatch('root/requestMyStat', { token: localStorage.getItem('jwt') })
+        .then((result)=>{
+          let total = {job:"종합", win:result.data.twin, lose:result.data.tlose, rate: result.data.twin/(result.data.twin+result.data.tlose).toFixed(2)}
+          let citizen = {job:"시민", win:result.data.cwin, lose:result.data.close, rate:result.data.crate}
+          let doctor = {job:"의사", win:result.data.dwin, lose:result.data.dlose, rate:result.data.drate}
+          let police = {job:"경찰", win:result.data.pwin, lose:result.data.plose, rate:result.data.prate}
+          let mafia = {job:"마피아", win:result.data.mwin, lose:result.data.mlose, rate:result.data.mrate}
+          state.myStat.push(total,citizen,doctor,police,mafia)
+        })
+        .catch((err)=>{
 
+        })
       }
       const getHistoryData = () => {
 
@@ -187,6 +160,7 @@ export default {
       const getFriendList = () => {
         store.dispatch('root/requestFriendList', { token: localStorage.getItem('jwt') })
         .then((result)=>{
+          //console.log(result)
           state.friendList = result.data
         })
         .catch((err)=>{

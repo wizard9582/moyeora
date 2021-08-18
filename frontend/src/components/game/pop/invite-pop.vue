@@ -1,7 +1,17 @@
 <template>
   <el-dialog title="친구 초대하기" v-model="state.popupVisible" @close="handleClose">
     <el-form :label-position="state.align">
-      <el-form-item prop="friend" label="초대할친구" :label-width="state.formLabelWidth">
+      <el-form-item prop="friend" label="친구초대" :label-width="state.formLabelWidth">
+        <el-select v-model="state.friendName" placeholder="Select">
+          <el-option
+            v-for="item in state.friendList"
+            :key="item"
+            :label="item"
+            :value="item">
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item prop="friend" label="유저검색" :label-width="state.formLabelWidth">
         <el-input v-model="state.friendName"></el-input>
         <el-card v-if="state.isSetRecommands">
           <div v-for="o in state.recommands" :key="o" @click="selectRecommand(o)">{{o}}</div>
@@ -41,6 +51,8 @@ export default {
     const router = useRouter()
 
     const state = reactive({
+      value: "",
+      friendList: [],
       formLabelWidth: '120px',
       inviteLink: window.location.href,
       align: 'left',
@@ -53,7 +65,7 @@ export default {
     watch(
       () =>state.friendName,
       (friendName)=>{
-        
+
         if(friendName.length==0){
           state.recommands = []
           state.isSetRecommands=false;
@@ -63,7 +75,7 @@ export default {
         store.dispatch('root/requestRecommandFriendList',{friendName: friendName})
         .then((res) => {
           if(res.data.length==0){
-            state.isSetRecommands=false;    
+            state.isSetRecommands=false;
             return;
           }
           state.recommands=res.data;
@@ -101,8 +113,17 @@ export default {
 
           alert(state.friendName+"님에게 초대를 완료했습니다.")
         })
-        
+
     }
+
+      store.dispatch('root/requestFriendList', { token: localStorage.getItem('jwt') })
+      .then((result)=>{
+        state.friendList = result.data
+      })
+      .catch((err)=>{
+
+      })
+
     return { state, copyLink, handleClose,selectRecommand,invite }
   },
 }

@@ -122,7 +122,7 @@ export default {
       }
         store.dispatch('root/requestInviteList', { token: localStorage.getItem('jwt') })
           .then((result) => {
-            console.log(result)
+            //console.log(result)
             let today = new Date();
             let month = today.getMonth() + 1;  // 월
             let day = today.getDate();  // 날짜

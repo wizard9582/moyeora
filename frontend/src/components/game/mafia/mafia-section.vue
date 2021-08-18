@@ -96,13 +96,6 @@ export default {
 </script>
 
 <style>
-.chat {
-  background-color: white;
-}
-
-video {
-  border-radius: 5px;
-}
 /* .el-col {
   height: 100%;
 } */

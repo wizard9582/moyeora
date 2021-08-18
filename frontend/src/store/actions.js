@@ -196,7 +196,7 @@ export function requestFriend ({ state }, payload) {
   console.log('requestFriend', state, payload)
   const url = '/relation'
   //body => { toUser : 친구할 사람 }
-  let body = payload 
+  let body = payload
   let token = localStorage.getItem('jwt')
 
   return $axios({
@@ -212,9 +212,9 @@ export function requestMakeFriend ({ state }, payload) {
   console.log('requestMakeFriend', state, payload)
   const url = '/relation/make'
   //body => { toUser : 친구할 사람 }
-  let body = payload 
+  let body = payload
   let token = localStorage.getItem('jwt')
-  
+
   return $axios({
     method:'post',
     url: url,
@@ -223,15 +223,15 @@ export function requestMakeFriend ({ state }, payload) {
   })
 }
 
-//친구 삭제 하기 
+//친구 삭제 하기
 export function requestDeleteFriend ({ state }, payload) {
   console.log('requestDeleteFriend', state, payload)
   const url = '/relation/delete'
 
    //body => { toUser : 친구할 사람 }
-  let body = payload 
+  let body = payload
   let token = localStorage.getItem('jwt')
-  
+
   return $axios({
     method:'delete',
     url: url,
@@ -240,3 +240,12 @@ export function requestDeleteFriend ({ state }, payload) {
   })
 }
 // ----------------친구 요청 API 끝----------------------
+// ----------------전적 API 시작 -----------------------
+export function requestMyStat ({ state }, payload) {
+  const url = '/users/matchHistory'
+  const headers = {
+    'Authorization': 'Bearer ' + payload.token
+  }
+  // const params = { roomId: payload.roomId }
+  return $axios.get(url, {headers})
+}
