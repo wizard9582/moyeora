@@ -71,23 +71,18 @@ export default {
           sendToLeave()
         }
         if (state.stompClient && state.stompClient.connected) {
-          // 방에서 떠남
-          const msg2 = {
-              name: state.userName,
-          };
-          state.stompClient.send("/pub/bye/room/"+ roomId, JSON.stringify(msg2), {});
-
           // 마피아 게임일 때 나가면 죽음 처리
+          console.log('게임 시작 여부: ',state.getGameStarted);
           if (route.params.type === 'mafia' && state.getGameStarted) {
-            let playerPK = '';
-            for (let player of state.participantsList) {
-                  if (player.userId === state.userName) {
-                    playerPK = player.id
-                    break
-                  }
-                }
+            // let playerPK = '';
+            // for (let player of state.participantsList) {
+            //       if (player.userId === state.userName) {
+            //         playerPK = player.id
+            //         break
+            //       }
+            //     }
             const msg3 = {
-                name: "bye,"+playerPK,
+                name: "bye,",
             };
             state.stompClient.send("/pub/game/end/"+ roomId, JSON.stringify(msg3), {});
             store.commit('root/resetDeath');
@@ -96,6 +91,12 @@ export default {
             store.commit('root/setMylife', true);
             store.commit('root/setMyJob', 'reset');
           }
+          // 방에서 떠남
+          const msg2 = {
+              name: state.userName,
+          };
+          state.stompClient.send("/pub/bye/room/"+ roomId, JSON.stringify(msg2), {});
+
         }
         store.commit('root/removeRoomOwner')
         // for (let player of state.participantsList) {
