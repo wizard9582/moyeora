@@ -281,7 +281,7 @@ export default {
               const voteSpace = document.querySelector(`#${voteResult['toName']}`).children[1].children[1]
               //console.log(document.querySelector(`#${voteResult['toName']}`).children[1])
               let voteImg = document.createElement('img');
-              let leftIndex = 100 + 25*scope.state.voteCountList[voteResult['toName']][0]
+              let leftIndex = 75 + 25*scope.state.voteCountList[voteResult['toName']][0]
               voteImg.src = require('@/assets/favicon-white.png');
 
               voteImg.style.position = 'absolute'
@@ -302,13 +302,19 @@ export default {
             scope.disconnectSocket()
             //console.log("나가라")
             scope.router.push("/home/" + 'all')
+            scope.store.commit('root/resetDeath');
             leaveRoom()
+            scope.store.commit('root/endGame');
+            scope.store.commit('root/setMafiaRoles', null);
+            scope.store.commit('root/setMylife', true);
+            scope.store.commit('root/setMyJob', 'reset');
           });
 
           ////////////// 게임 로직 ///////////////
           var myRole = "";
           // 직업 분배 결과
           this.stompClient.subscribe('/sub/game/start/'+this.roomId+"/"+this.userName, function (chat) {
+            scope.store.commit('root/startGame')
             scope.store.commit('root/setMylife', true);
             // 직업 연동 아직 안됨
             //console.log("타이머 0 (직업 분배 결과) : ", JSON.parse(chat.body))
@@ -422,21 +428,22 @@ export default {
               }
               //console.log(tiebreaker, msg)
             }
-
-            // 투표들 지우기
-            for (let player of scope.state.participantsList) {
-              let playerVoteSpace = document.querySelector(`#vote-space-${player.userId}`)
-              //console.log('투표 진행 상황 지우기!!! : ', playerVoteSpace)
-              while (playerVoteSpace.hasChildNodes) {
-                playerVoteSpace.removeChild(playerVoteSpace.firstChild)
-              }
-            }
           });
 
           this.stompClient.subscribe('/sub/game/judge/'+this.roomId, function (chat) {
             //console.log("타이머 2 (변론, 투표) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
             scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second-1})
+
+            // 투표들 지우기
+            for (let player of scope.state.participantsList) {
+              let playerVoteSpace = document.querySelector(`#vote-space-${player.userId}`)
+              console.log(`${player.userId} 투표 진행 상황 지우기!!! : `, playerVoteSpace)
+              console.log('playerVoteSpace.hasChildNodes() : ', playerVoteSpace.hasChildNodes())
+              while (playerVoteSpace.hasChildNodes()) {
+                playerVoteSpace.removeChild(playerVoteSpace.firstChild)
+              }
+            }
 
             let judgePerson = scope.store.getters['root/getFinalVotePlayer']
             if(rchat.desc == 'judge'){
@@ -456,8 +463,9 @@ export default {
                   // 투표들 지우기
                   for (let player of scope.state.participantsList) {
                     let playerVoteSpace = document.querySelector(`#vote-space-${player.userId}`)
-                    //console.log('투표 진행 상황 지우기!!! : ', playerVoteSpace)
-                    while (playerVoteSpace.hasChildNodes) {
+                    console.log(`${player.userId} 투표 진행 상황 지우기!!! : `, playerVoteSpace)
+                    console.log('playerVoteSpace.hasChildNodes() : ', playerVoteSpace.hasChildNodes())
+                    while (playerVoteSpace.hasChildNodes()) {
                       playerVoteSpace.removeChild(playerVoteSpace.firstChild)
                     }
                   }
@@ -510,7 +518,8 @@ export default {
                 ElMessage({
                   message: h('p', null, [
                     h('strong', null, '최종투표에서 '),
-                    h('i', { style: ['color: tomato', 'font-weight: bold'] }, deadRole+finalVotePlayer),
+                    // h('i', { style: ['color: tomato', 'font-weight: bold'] }, deadRole+finalVotePlayer),
+                    h('i', { style: ['color: tomato', 'font-weight: bold'] }, finalVotePlayer),
                     h('strong', null, ' 가 죽었습니다.'),
                   ]),
                   type: 'danger',
@@ -551,6 +560,16 @@ export default {
             //console.log("타이머 3 (저녁, 결과) : ", JSON.parse(chat.body))
             let rchat = JSON.parse(chat.body);
             scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second-1})
+
+            // 투표들 지우기
+            for (let player of scope.state.participantsList) {
+              let playerVoteSpace = document.querySelector(`#vote-space-${player.userId}`)
+              console.log(`${player.userId} 투표 진행 상황 지우기!!! : `, playerVoteSpace)
+              console.log('playerVoteSpace.hasChildNodes() : ', playerVoteSpace.hasChildNodes())
+              while (playerVoteSpace.hasChildNodes()) {
+                playerVoteSpace.removeChild(playerVoteSpace.firstChild)
+              }
+            }
             if (rchat.desc === 'night') {
               ElMessage({message: h('strong', null, '밤이 되었습니다.'),duration: 10000,})
               // 살아있으면
@@ -626,7 +645,7 @@ export default {
                 ElMessage({
                   message: h('p', null, [
                     h('strong', null, '마피아가 '),
-                    h('i', { style: ['color: black', 'font-weight: bold'] }, deadRole),
+                    // h('i', { style: ['color: black', 'font-weight: bold'] }, deadRole),
                     h('i', { style: ['color: tomato', 'font-weight: bold'] }, mafiaSelectPlayer),
                     h('strong', null, ' 를 죽였습니다.'),
                   ]),
@@ -705,6 +724,7 @@ export default {
                     duration: 10000,
                   })
                   // alert('시민 승!!!')
+                  scope.store.commit('root/setMyJob', 'reset');
                   scope.store.commit('root/resetDeath');
                   scope.store.commit('root/endGame');
                   scope.store.commit('root/setMafiaRoles', null);
@@ -729,6 +749,7 @@ export default {
                     duration: 10000,
                   })
                   // alert('마피아 승!!!')
+                  scope.store.commit('root/setMyJob', 'reset');
                   scope.store.commit('root/resetDeath');
                   scope.store.commit('root/endGame');
                   scope.store.commit('root/setMafiaRoles', null);

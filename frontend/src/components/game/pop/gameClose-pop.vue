@@ -90,6 +90,11 @@ export default {
                 name: "bye,"+playerPK,
             };
             state.stompClient.send("/pub/game/end/"+ roomId, JSON.stringify(msg3), {});
+            store.commit('root/resetDeath');
+            store.commit('root/endGame');
+            store.commit('root/setMafiaRoles', null);
+            store.commit('root/setMylife', true);
+            store.commit('root/setMyJob', 'reset');
           }
         }
         store.commit('root/removeRoomOwner')
