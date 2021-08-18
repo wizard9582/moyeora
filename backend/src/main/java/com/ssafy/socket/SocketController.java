@@ -141,13 +141,19 @@ public class SocketController {
 		if(liveMafiaCnt==0){
 			gameStatus="citizen";
 			mafiaRepositorySupport.deleteMafia(Long.parseLong(roomId));
-			if(timerZip.containsKey(Long.parseLong(roomId)))
+			if(timerZip.containsKey(Long.parseLong(roomId))) {
+				Timer timer = timerZip.get(Long.parseLong(roomId));
+				timer.cancel();
 				timerZip.remove(Long.parseLong(roomId));
+			}
 		}else if(liveMafiaCnt>=liveCitizenCnt){
 			gameStatus="mafia";
 			mafiaRepositorySupport.deleteMafia(Long.parseLong(roomId));
-			if(timerZip.containsKey(Long.parseLong(roomId)))
+			if(timerZip.containsKey(Long.parseLong(roomId))) {
+				Timer timer = timerZip.get(Long.parseLong(roomId));
+				timer.cancel();
 				timerZip.remove(Long.parseLong(roomId));
+			}
 		}
 
 		if (!gameStatus.equals("on")) {
@@ -222,9 +228,9 @@ public class SocketController {
 				}else if(check[0] == 3){
 					// 타이머 끝!! 최후 변론 또는 밤으로 넘어가자
 					template.convertAndSend("/sub/game/morning/"+roomId,gameTimer(chat.getRound(), descs.length-1, 0, roomId));
+					timer.cancel();
 					if(timerZip.containsKey(Long.parseLong(roomId)))
 						timerZip.remove(Long.parseLong(roomId));
-					timer.cancel();
 				}
 				check[0] = check[0]+1;
 			}
@@ -255,9 +261,9 @@ public class SocketController {
 				}else if(check[0] == 3){
 					// 타이머 끝!! 밤으로 넘어가자
 					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), descs.length-1, 0, roomId));
+					timer.cancel();
 					if(timerZip.containsKey(Long.parseLong(roomId)))
 						timerZip.remove(Long.parseLong(roomId));
-					timer.cancel();
 				}
 				check[0] = check[0]+1;
 			}
@@ -288,9 +294,9 @@ public class SocketController {
 				}else if(check[0] == 3){
 					// 타이머 끝!! 게임 끝 또는 아침으로 넘어가자
 					template.convertAndSend("/sub/game/night/"+roomId,gameTimer(chat.getRound(), descs.length-1, 0, roomId));
+					timer.cancel();
 					if(timerZip.containsKey(Long.parseLong(roomId)))
 						timerZip.remove(Long.parseLong(roomId));
-					timer.cancel();
 				}
 				check[0] = check[0]+1;
 			}
