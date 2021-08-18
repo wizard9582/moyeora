@@ -435,15 +435,6 @@ export default {
             let rchat = JSON.parse(chat.body);
             scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second-1})
 
-            // 투표들 지우기
-            for (let player of scope.state.participantsList) {
-              let playerVoteSpace = document.querySelector(`#vote-space-${player.userId}`)
-              console.log(`${player.userId} 투표 진행 상황 지우기!!! : `, playerVoteSpace)
-              console.log('playerVoteSpace.hasChildNodes() : ', playerVoteSpace.hasChildNodes())
-              while (playerVoteSpace.hasChildNodes()) {
-                playerVoteSpace.removeChild(playerVoteSpace.firstChild)
-              }
-            }
 
             let judgePerson = scope.store.getters['root/getFinalVotePlayer']
             if(rchat.desc == 'judge'){
@@ -452,6 +443,15 @@ export default {
 
             // 최종 투표 팝업 오픈
             if(rchat.desc === 'finalvote') {
+              // 투표들 지우기
+              for (let player of scope.state.participantsList) {
+                let playerVoteSpace = document.querySelector(`#vote-space-${player.userId}`)
+                console.log(`${player.userId} 투표 진행 상황 지우기!!! : `, playerVoteSpace)
+                console.log('playerVoteSpace.hasChildNodes() : ', playerVoteSpace.hasChildNodes())
+                while (playerVoteSpace.hasChildNodes()) {
+                  playerVoteSpace.removeChild(playerVoteSpace.firstChild)
+                }
+              }
               ElMessage({message: h('strong', null, judgePerson+'님의 운명을 결정할 투표가 시작되었습니다.')})
               scope.store.commit('root/startVote');
               scope.store.commit('root/setFinalVoteCount')
@@ -561,16 +561,16 @@ export default {
             let rchat = JSON.parse(chat.body);
             scope.store.commit('root/setGameRound', {round: rchat.round, second: rchat.second-1})
 
-            // 투표들 지우기
-            for (let player of scope.state.participantsList) {
-              let playerVoteSpace = document.querySelector(`#vote-space-${player.userId}`)
-              console.log(`${player.userId} 투표 진행 상황 지우기!!! : `, playerVoteSpace)
-              console.log('playerVoteSpace.hasChildNodes() : ', playerVoteSpace.hasChildNodes())
-              while (playerVoteSpace.hasChildNodes()) {
-                playerVoteSpace.removeChild(playerVoteSpace.firstChild)
-              }
-            }
             if (rchat.desc === 'night') {
+              // 투표들 지우기
+              for (let player of scope.state.participantsList) {
+                let playerVoteSpace = document.querySelector(`#vote-space-${player.userId}`)
+                console.log(`${player.userId} 투표 진행 상황 지우기!!! : `, playerVoteSpace)
+                console.log('playerVoteSpace.hasChildNodes() : ', playerVoteSpace.hasChildNodes())
+                while (playerVoteSpace.hasChildNodes()) {
+                  playerVoteSpace.removeChild(playerVoteSpace.firstChild)
+                }
+              }
               ElMessage({message: h('strong', null, '밤이 되었습니다.'),duration: 10000,})
               // 살아있으면
               if(scope.state.mylife){
