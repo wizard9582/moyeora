@@ -17,7 +17,7 @@
     </div>
     <div class="button-wrapper">
       <el-button icon="el-icon-message" @click="clickInvite" :disabled="state.gameStarted">초대하기</el-button>
-      <el-tooltip class="item" effect="dark" content="도움말" placement="bottom">
+      <el-tooltip v-if="state.roomType=='mafia'" class="item" effect="dark" content="도움말" placement="bottom">
         <el-button icon="el-icon-question" circle @click="clickOnQuestion" ></el-button>
       </el-tooltip>
     </div>
@@ -44,7 +44,7 @@
     </template>
   </el-dialog>
   <!-- 도움말 다이얼로그 -->
-  <el-dialog title="도움말" v-model="state.questionOpen" width="30%" :before-close="handleClose">
+  <el-dialog title="도움말" v-model="state.questionOpen" width="40%" :before-close="handleClose">
     <el-image style="width: 100%; height: auto" :src="require('@/assets/img-mafia-rule.png')" :fit="contain"></el-image>
   </el-dialog>
 </template>
@@ -102,7 +102,9 @@ export default {
       stage: 0,
       stageTitle: stages[0]
     })
-
+    if(state.roomType=="mafia"){
+      state.questionOpen = true
+    }
     const skyloop = require('@/assets/sounds/skyloop.mp3')
     let audio = new Audio(skyloop);
     audio.volume = 0.3

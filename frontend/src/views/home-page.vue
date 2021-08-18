@@ -14,7 +14,7 @@
       <router-view :key="$route.fullPath"
       @openPwCheck="onOpenPwPopup"
       />
-      <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
+      <el-footer>Copyright © MOYEORA All Rights Reserved.</el-footer>
     </el-container>
   </el-container>
   <filter-pop :open="state.filterPopupOpen" @closeFilterPopup="onCloseFilterPopup" />

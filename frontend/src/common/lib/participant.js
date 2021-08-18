@@ -64,7 +64,7 @@ function Participant(name) {
   function sendVoteMessage(toName) {
     let pathname = window.location.pathname.split('/');
     let roomNum = 0
-    console.log(root.state.userId + " voted To " + toName);
+    //console.log(root.state.userId + " voted To " + toName);
     if (pathname[1] === 'game') {
       roomNum = parseInt(pathname[3])
       if (root.state.stompClient && root.state.stompClient.connected) {
@@ -80,7 +80,7 @@ function Participant(name) {
   }
 
   function votePlayer() {
-    console.log('투표할 수 있나요?? ', root.state.voteStarted)
+    //console.log('투표할 수 있나요?? ', root.state.voteStarted)
     if (root.state.voteStarted) {
         if (!root.state.mylife) {
           ElMessage({
@@ -101,7 +101,7 @@ function Participant(name) {
                   });
                     // alert('죽은 사람에게는 투표할 수 없습니다!')
                 } else {
-                  console.log('check!!! : ', container.id, root.state.userId)
+                  //console.log('check!!! : ', container.id, root.state.userId)
                   sendVoteMessage(container.id)
                 }
                 break;
@@ -122,9 +122,9 @@ function Participant(name) {
   function switchContainerClass() {
     if (container.className === PARTICIPANT_CLASS) {
       var elements = Array.prototype.slice.call(document.getElementsByClassName(PARTICIPANT_MAIN_CLASS));
-      //   console.log('elements : ', elements)
+      //   //console.log('elements : ', elements)
       elements.forEach(function (item) {
-          console.log('ITEM : ', item)
+          //console.log('ITEM : ', item)
           item.className = PARTICIPANT_CLASS;
       });
       container.className = PARTICIPANT_MAIN_CLASS;
@@ -139,8 +139,8 @@ function Participant(name) {
   }
 
   this.offerToReceiveVideo = function(error, offerSdp, wp){
-    if (error) return console.error ("sdp offer error")
-    // console.log('Invoking SDP offer callback function');
+    if (error) return //console.error ("sdp offer error")
+    // //console.log('Invoking SDP offer callback function');
     var msg =  { id : "receiveVideoFrom",
           sender : name,
           sdpOffer : offerSdp
@@ -150,7 +150,7 @@ function Participant(name) {
 
 
   this.onIceCandidate = function (candidate, wp) {
-      //   console.log("Local candidate" + JSON.stringify(candidate));
+      //   //console.log("Local candidate" + JSON.stringify(candidate));
     var message = {
       id: 'onIceCandidate',
       candidate: candidate,
@@ -162,12 +162,12 @@ function Participant(name) {
   Object.defineProperty(this, 'rtcPeer', { writable: true});
 
   this.dispose = function() {
-    console.log('Disposing participant ' + this.name);
+    //console.log('Disposing participant ' + this.name);
     this.rtcPeer.dispose();
     try{
       container.parentNode.removeChild(container);
     } catch {
-      console.log('removeChild 오류 발생')
+      //console.log('removeChild 오류 발생')
     }
   };
 }

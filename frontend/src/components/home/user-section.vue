@@ -57,7 +57,7 @@
           </el-table-column>
           <el-table-column prop="conference.title" label="방제목"></el-table-column>
           <el-table-column prop="conference.ownerId.name" label="방장" width="150"></el-table-column>
-          <el-table-column prop="conference.callStartTime" label="시작시간" width="150"></el-table-column>
+          <el-table-column prop="conference.callStartTime" label="시작시간" width="200"></el-table-column>
         </el-table>
       </div>
       <div class="sub-title">랭킹</div>
@@ -126,11 +126,12 @@ export default {
       const getmyStat = () => {
         store.dispatch('root/requestMyStat', { token: localStorage.getItem('jwt') })
         .then((result)=>{
-          let total = {job:"종합", win:result.data.twin, lose:result.data.tlose, rate: result.data.twin/(result.data.twin+result.data.tlose).toFixed(2)}
-          let citizen = {job:"시민", win:result.data.cwin, lose:result.data.close, rate:result.data.crate}
-          let doctor = {job:"의사", win:result.data.dwin, lose:result.data.dlose, rate:result.data.drate}
-          let police = {job:"경찰", win:result.data.pwin, lose:result.data.plose, rate:result.data.prate}
-          let mafia = {job:"마피아", win:result.data.mwin, lose:result.data.mlose, rate:result.data.mrate}
+          //console.log(result.data)
+          let total = {job:"종합", win:result.data.twin + "승", lose:result.data.tlose + "패", rate:result.data.twinRate + "%"}
+          let citizen = {job:"시민", win:result.data.cwin + "승", lose:result.data.close + "패", rate:result.data.crate + "%"}
+          let doctor = {job:"의사", win:result.data.dwin + "승", lose:result.data.dlose + "패", rate:result.data.drate + "%"}
+          let police = {job:"경찰", win:result.data.pwin + "승", lose:result.data.plose + "패", rate:result.data.prate + "%"}
+          let mafia = {job:"마피아", win:result.data.mwin + "승", lose:result.data.mlose + "패", rate:result.data.mrate + "%"}
           state.myStat.push(total,citizen,doctor,police,mafia)
         })
         .catch((err)=>{
@@ -149,7 +150,13 @@ export default {
         .then((result)=>{
           //console.log(result.data.slice(19))
           state.historyData = result.data.slice(result.data.length-10)
-          console.log(state.historyData)
+          state.historyData.forEach(item => {
+            let arrangeDate = item.conference.callStartTime.substring(0,10)
+            arrangeDate += " "
+            arrangeDate += item.conference.callStartTime.substring(11,19)
+            item.conference.callStartTime = arrangeDate
+          })
+          //console.log(state.historyData)
         })
         .catch((err)=>{
 

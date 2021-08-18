@@ -1,11 +1,7 @@
 <template>
   <el-card :body-style="{ padding: '0px' }" shadow="hover">
-    <div class="image-wrapper">
-      <el-skeleton style="width: 100%">
-        <template #template>
-          <el-skeleton-item variant="image" style="width: 100%; height: 150px" />
-        </template>
-      </el-skeleton>
+    <div class="image-wrapper" style="width: 100%; height: 150px; background-color: white;">
+      <img :src="require(`@/assets/img-${roomData.type}.png`)" class="img-game" alt="yet" style="width: auto; height: 150px; border: 0px"/>
     </div>
     <div class="title-wrapper">
       <span class="title">{{ roomData.title }}&nbsp;&nbsp;</span>
@@ -29,7 +25,7 @@ export default {
     props:{
       roomData:{
         type: Object,
-        default: {title: "빈 방", member: 0, lock: true, state: "empty", desc: "빈 방입니다."},
+        default: {title: "빈 방", member: 0, lock: true, state: "empty", desc: "빈 방입니다.", type: "video"},
       }
     },
   setup () {},

@@ -83,11 +83,13 @@ export default {
             if(state.type === "all"){
               state.filteredData = state.roomData;
             }else{
+              let data = []
               state.roomData.forEach(item => {
                 if(item.type === state.type){
-                  state.filteredData.push(item);
+                  data.push(item);
                 }
               })
+              state.filteredData = data
             }
             //console.log("filteredData",filteredData)
 
@@ -106,7 +108,7 @@ export default {
           })
       }
       clickRefresh()
-      //setInterval(function(){clickRefresh()},10000);
+      setInterval(function(){clickRefresh()},10000);
       return { state, clickRoom , handleCurrentChange, clickRefresh, mouseOver, mouseOut }
     },
 }

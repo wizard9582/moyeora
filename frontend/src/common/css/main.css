@@ -95,6 +95,7 @@ body > .el-container {
 }
 .el-footer {
   min-height: 200px;
+  line-height: 200px;
   background-color: var(--color-dark);
   color: var(--color-font);
   text-align: center;
@@ -168,7 +169,7 @@ body > .el-container {
   border-color: var(--color-default);
 }
 .el-card {
-  background-color: var(--color-light);
+  background-color: var(--color-default);
   color: var(--color-font);
   border-color: 2px solid var(--color-default);
   margin: 0 8px;
@@ -521,10 +522,12 @@ a:hover {
 }
 
 .chat {
-  background-color: var(--color-light);
+  background-color: var(--color-default);
   color: var(--color-font);
 }
-
+.chat-main {
+  background-color: whitesmoke;
+}
 video {
   border-radius: 5px;
 }

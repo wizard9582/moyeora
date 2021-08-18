@@ -127,7 +127,7 @@ export default {
     }else{
       state.form.theme = "기본테마"
       state.form.fontSize = 10
-      state.form.alarm = "off"
+      state.form.alarm = "on"
     }
 
     return { settingForm, state, handleClose, clickAccept, preview, fontChange, reset}

@@ -23,7 +23,7 @@
           <el-input v-model="state.search" size="mini" placeholder="Type to search" clearable/>
         </div>
         <div class="select-wrapper">
-          <el-pagination :page-size="10" :pager-count="5" layout="prev, pager, next" :total="1000"></el-pagination>
+          <el-pagination layout="prev, pager, next" :page-size="1" @current-change="handleCurrentChange" :total="state.index"></el-pagination>
         </div>
         <el-button class="btn-write" type="success" icon="el-icon-edit-outline" size="small" @click="clickWrite()">공지사항 작성</el-button>
       </div>
@@ -42,13 +42,21 @@ export default {
       const store = useStore()
 
       const state = reactive({
-        tableData : [],
+        listData: [],
+        tableData: [],
+        page: 1,
+        index: 0,
       })
 
       store.dispatch('root/requestNotice')
       .then(function (result){
         //console.log(result)
-        state.tableData = result.data
+        state.listData = result.data
+        state.tableData = state.listData.slice((state.page-1)*8, state.page*8 );
+        state.index = parseInt(state.listData.length / 8);
+        if(state.listData.length % 8 != 0){
+          state.index = state.index + 1;
+        }
       })
       .catch(function (err){
 
@@ -76,8 +84,11 @@ export default {
           alert("권한이 없습니다!")
         }
       }
-
-      return { state, clickBoard, filterTag, filterHandler, clickWrite }
+      const handleCurrentChange = function(val) {
+        state.page = val;
+        state.tableData = state.listData.slice((state.page-1)*8, state.page*8 );
+      }
+      return { state, clickBoard, filterTag, filterHandler, clickWrite, handleCurrentChange }
     }
 }
 </script>
