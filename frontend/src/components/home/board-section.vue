@@ -2,7 +2,7 @@
 	<el-main>
     <div class="space"></div>
     <h1>게시판</h1>
-    <el-descriptions class="board-text" :title="state.id" :column="3" border>
+    <el-descriptions class="board-text" :column="3" border>
       <template #extra>
         <el-button type="info" icon="el-icon-tickets" size="small" @click="clickList()">목록으로</el-button>
         <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="clickEdit()">수정</el-button>
@@ -18,7 +18,7 @@
     <el-divider></el-divider>
     <div class="board-text">
       <div class="context-text">
-        {{state.context}}
+        {{state.description}}
       </div>
         <el-button type="info" icon="el-icon-tickets" size="small" @click="clickList()">목록으로</el-button>
         <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="clickEdit()">수정</el-button>
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import { reactive } from '@vue/reactivity'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
 
@@ -37,16 +38,33 @@ export default {
   setup(){
     const router = useRouter()
     const store = useStore()
-    const state = {
+    const state = reactive({
       id: 0,
       writer: "",
       tag: "",
       date: "",
       title: "",
-      context: ""
-    }
+      description: ""
+    })
 
     state.id = router.currentRoute.value.params.id
+    store.dispatch('root/requestBoard')
+    .then(function (result){
+      //console.log(result)
+      let content;
+      result.data.forEach(item => {
+        if(item.id == state.id){ content = item }
+      })
+      console.log(content)
+      state.writer = content.userId
+      state.date = content.date
+      state.title = content.title
+      state.description = content.description
+    })
+    .catch(function (err){
+
+    })
+
 
     const clickList = function(){
       router.push("/home/board/list")

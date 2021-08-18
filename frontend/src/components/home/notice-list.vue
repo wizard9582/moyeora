@@ -6,7 +6,7 @@
         :data="state.tableData.filter(data => !search || data.name.toLowerCase().includes(search.toLowerCase()))"
         @row-click="clickBoard"
         :default-sort = "{prop: 'date', order: 'descending'}" border stripe>
-          <el-table-column type="index" label="글번호" width="150"></el-table-column>
+          <el-table-column prop="id" label="글번호" width="150"></el-table-column>
           <el-table-column prop="tag" label="태그" width="100"
           :filters="[{ text: '자유', value: 'free' }, { text: 'mafia', value: 'mafia' },]"
           :filter-method="filterTag" filter-placement="bottom-end">
@@ -56,7 +56,7 @@ export default {
 
       const clickBoard = function(row){
         //console.log(row)
-        router.push("/home/notice/" + row.id.toString())
+        router.push("/home/notice/" + row.id)
       }
 
       const filterTag = function(value, row) {

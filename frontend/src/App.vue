@@ -17,6 +17,7 @@ export default {
 
   setup(){
     let theme = localStorage.getItem('theme')
+    let fontSize = localStorage.getItem('fontSize')
     if(theme == null){
       theme = "main"
     }else if(theme == "기본테마"){
@@ -37,6 +38,7 @@ export default {
     style.setProperty('--color-dark', 'var(--'+theme+'-dark)');
     style.setProperty('--color-button', 'var(--'+theme+'-button)');
     style.setProperty('--color-font', 'var(--'+theme+'-font)');
+    style.setProperty('--font-size', fontSize);
   }
 };
 </script>

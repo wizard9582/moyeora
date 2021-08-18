@@ -12,7 +12,8 @@ import lombok.Setter;
 @Setter
 @ApiModel("PostRegisterPostRequest")
 public class PostRegisterPostReq {
-
+	@ApiModelProperty(name="공지사항", example="post id")
+	Long id;
 	@ApiModelProperty(name="공지사항", example="공지사항일 경우 값은 1, 일반게시물일 경우 0을 표기함")
 	Integer notice;
 	@ApiModelProperty(name="게시물 제목", example="게시물 제목 입니다.")

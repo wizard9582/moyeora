@@ -69,7 +69,7 @@ export default {
     }
 
     const getUserId = function (token) {
-      store.dispatch('root/requestUserInfo', token)
+      store.dispatch('root/requestUserInfo', {token :token})
       .then((result) => {
         store.commit('root/setUserId', result.data.userId)
       })
@@ -88,10 +88,10 @@ export default {
         // 로그인 클릭 시 validate 체크 후 그 결과 값에 따라, 로그인 API 호출 또는 경고창 표시
         loginForm.value.validate((valid) => {
           if (valid) {
-            console.log('submit')
+            //console.log('submit')
             store.dispatch('root/requestLogin', { id: state.form.id, password: state.form.password })
             .then(function (result) {
-              console.log("--------->", result)
+              //console.log("--------->", result)
               store.commit('root/setToken', result.data.accessToken)
               // 해당 유저의 정보를 받아오는 axios
               getUserId(result.data.accessToken)

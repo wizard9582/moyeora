@@ -41,6 +41,10 @@
   --color-dark: var(--main-dark);
   --color-button: var(--main-button);
   --color-font: var(--main-font);
+  --font-size: 14;
+}
+*{
+  font-size: var(--font-size);
 }
 i{
   color: var(--color-font);
@@ -99,17 +103,26 @@ body > .el-container {
 .el-button{
   background-color: var(--color-button);
   border-color: var(--color-font);
-  color: var(--color-font);
+  color: white;
+}
+.el-button i{
+  color: white;
 }
 .el-button:hover{
   background-color: var(--color-light);
   border-color: var(--color-font);
-  color: var(--color-font);
+  color: var(--color-button);
 }
 .el-button:focus{
   background-color: var(--color-light);
   border-color: var(--color-font);
-  color: var(--color-font);
+  color: var(--color-button);
+}
+.el-button:hover i{
+  color: var(--color-button);
+}
+.el-button:focus i{
+  color: var(--color-button);
 }
 .el-dropdown-menu{
   background-color: var(--color-button);
@@ -276,16 +289,16 @@ body > .el-container {
    text-align: center;
    border-radius: 6px;
    color: var(--color-font);
-   font-size: 15px;
+   font-size: var(--font-size) - 1;
    background-color: var(--color-default);
  }
  .game-timer{
-   font-size: 20px;
+   font-size: var(--font-size) + 6;
  }
 
  .job-info {
    border-radius: 6px;
-   font-size: 15px;
+   font-size: var(--font-size);
  }
 
  .danger{
@@ -367,11 +380,11 @@ a:hover {
 .board-text{
   margin-left: 15%;
   width: 70%;
+  background: var(--color-default);
   margin-right: 15%;
 }
 .board-text .context-text{
   text-align: left;
-  margin: 5%;
   padding: 5%;
   background: var(--color-light);
   min-height: 500px;

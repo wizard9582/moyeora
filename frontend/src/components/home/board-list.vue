@@ -75,7 +75,7 @@ export default {
 
       const clickBoard = function(row){
         //console.log(row)
-        router.push("/home/board/" + row.id.toString())
+        router.push("/home/board/" + row.id)
       }
 
       const filterTag = function(value, row) {

@@ -177,8 +177,14 @@ export default {
         audio = new Audio(nightSound)
         audio.volume = 0.2
         audio.play()
+        let gun = new Audio(mafiaSound)
+        let police = new Audio(policeSound)
+        setTimeout(()=>{gun.play()}, 5000)
+        setTimeout(()=>{police.play()}, 8000)
       }else if(val == 8){
         state.stage = 5
+        let amb = new Audio(doctorSound)
+        setTimeout(()=>{amb.play()}, 1000)
       }
       state.stageTitle = stages[state.stage]
       if(state.stage == 4){

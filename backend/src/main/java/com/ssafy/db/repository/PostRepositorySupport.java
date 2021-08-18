@@ -29,6 +29,7 @@ public class PostRepositorySupport {
 
         for(Post p : posts){
             PostRegisterPostReq pr= new PostRegisterPostReq();
+            pr.setId(p.getId());
             pr.setTitle(p.getTitle());
             pr.setNotice(p.getNotice());
             pr.setDescription(p.getDescription());
@@ -48,6 +49,7 @@ public class PostRepositorySupport {
 
         for(Post p : Notices){
             PostRegisterPostReq pr= new PostRegisterPostReq();
+            pr.setId(p.getId());
             pr.setTitle(p.getTitle());
             pr.setNotice(p.getNotice());
             pr.setDescription(p.getDescription());

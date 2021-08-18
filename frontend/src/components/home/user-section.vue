@@ -23,6 +23,7 @@
       <el-divider></el-divider>
       <div class="info-item" id="myInfo">
         <el-avatar id="img-profile" icon="el-icon-user-solid" shape="square" :size="100"></el-avatar>
+        {{state.userId}}
         <!-- <el-avatar id="img-profile" shape="square" :size="100" :src="require('@/assets/img-vue.png')"></el-avatar> -->
       </div>
       <div class="sub-title">내 전적</div>
@@ -35,7 +36,7 @@
           <el-table-column prop="rate" label="승률" width="150"></el-table-column>
         </el-table>
       </div>
-      <div class="sub-title">최근 게임</div>
+      <div class="sub-title">최근 회의</div>
       <el-divider></el-divider>
       <div class="info-item" id="recentGame">
         <el-table
@@ -45,33 +46,18 @@
           :default-sort="{prop: 'date', order: 'descending'}"
           stripe
         >
-          <el-table-column prop="no" label="방번호" width="100"></el-table-column>
-          <el-table-column prop="tag" label="게임" width="100">
+          <el-table-column prop="conference.id" label="방번호" width="100"></el-table-column>
+          <el-table-column prop="conference.conferenceCategory" label="타입" width="100">
             <template #default="scope">
               <el-tag
-                :type="scope.row.tag === '자유' ? 'primary' : 'danger'"
+                :type="scope.row.conference.conferenceCategory === 'video' ? 'primary' : 'danger'"
                 disable-transitions
-              >{{scope.row.tag}}</el-tag>
+              >{{scope.row.conference.conferenceCategory}}</el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="title" label="방제목"></el-table-column>
-          <el-table-column prop="date" label="날짜" width="150"></el-table-column>
-          <el-table-column prop="result" label="결과" width="100">
-            <template #default="scope">
-              <el-tag
-                :type="scope.row.result === 'Win' ? 'primary' : 'danger'"
-                disable-transitions
-              >{{scope.row.result}}</el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column prop="job" label="내 직업" width="100">
-            <template #default="scope">
-              <el-tag
-                :type="scope.row.job === 'police' ? 'primary' : (scope.row.job === 'citizen' ? 'default' : 'danger')"
-                disable-transitions
-              >{{scope.row.job}}</el-tag>
-            </template>
-          </el-table-column>
+          <el-table-column prop="conference.title" label="방제목"></el-table-column>
+          <el-table-column prop="conference.ownerId.name" label="방장" width="150"></el-table-column>
+          <el-table-column prop="conference.callStartTime" label="시작시간" width="150"></el-table-column>
         </el-table>
       </div>
       <div class="sub-title">랭킹</div>
@@ -150,9 +136,24 @@ export default {
         .catch((err)=>{
 
         })
+        store.dispatch('root/requestUserInfo', { token: localStorage.getItem('jwt') })
+        .then((result)=>{
+          state.userId = result.data.userId
+        })
+        .catch((err)=>{
+
+        })
       }
       const getHistoryData = () => {
+        store.dispatch('root/requestMyHistory', { token: localStorage.getItem('jwt') })
+        .then((result)=>{
+          //console.log(result.data.slice(19))
+          state.historyData = result.data.slice(result.data.length-10)
+          console.log(state.historyData)
+        })
+        .catch((err)=>{
 
+        })
       }
       const getRankingData = () => {
 

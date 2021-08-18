@@ -164,7 +164,7 @@ export default {
           })
     }
     getInvite()
-    setInterval(function(){getInvite()},5000);
+    //setInterval(function(){getInvite()},5000);
 
       return { state, isLoggedIn, clickLogin, clickSignup, clickLogout, clickUserInfo, clickInvite, clickAccept, clickDelete }
   },

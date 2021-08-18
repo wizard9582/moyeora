@@ -23,11 +23,19 @@ export function requestCheckID ({ state }, payload) {
   return $axios.get(url)
 }
 
-export function requestUserInfo ({ state }, token) {
+export function requestUserInfo ({ state }, payload) {
   //console.log('requestUserInfo', state, token)
   const url = `/users/me`
   const headers = {
-    'Authorization': 'Bearer ' + token
+    'Authorization': 'Bearer ' + payload.token
+  }
+  return $axios.get(url, {headers})
+}
+export function requestMyHistory ({ state }, payload) {
+  //console.log('requestUserInfo', state, token)
+  const url = `/users/history`
+  const headers = {
+    'Authorization': 'Bearer ' + payload.token
   }
   return $axios.get(url, {headers})
 }
