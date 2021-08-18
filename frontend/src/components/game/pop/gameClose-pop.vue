@@ -79,8 +79,15 @@ export default {
 
           // 마피아 게임일 때 나가면 죽음 처리
           if (route.params.type === 'mafia' && state.getGameStarted) {
+            let playerPK = '';
+            for (let player of state.participantsList) {
+                  if (player.userId === state.userName) {
+                    playerPK = player.id
+                    break
+                  }
+                }
             const msg3 = {
-                name: "bye,"+state.userName,
+                name: "bye,"+playerPK,
             };
             state.stompClient.send("/pub/game/end/"+ roomId, JSON.stringify(msg3), {});
           }
