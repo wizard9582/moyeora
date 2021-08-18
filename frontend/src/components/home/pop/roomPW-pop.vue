@@ -11,6 +11,7 @@
 <script>
 import { reactive, computed } from 'vue'
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex'
 
 export default {
   name:"RoomPWPop",
@@ -24,6 +25,7 @@ export default {
     },
   setup(props, { emit }) {
     const router = useRouter()
+    const store = useStore()
 
     const state = reactive({
       input: "",

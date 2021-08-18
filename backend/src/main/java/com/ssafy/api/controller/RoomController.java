@@ -68,6 +68,27 @@ public class RoomController {
 		return ResponseEntity.status(200).body(response);
 	}
 
+	@GetMapping("/roompwd")
+	@ApiOperation(value = "방에 입장", notes = "방의 정보와 참가자 목록을 가져온다. (room/{roomId}와 동일 결과 리턴")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "비밀번호 일치"),
+			@ApiResponse(code = 401, message = "비밀번호 불일치"),
+			@ApiResponse(code = 404, message = "방 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<? extends BaseResponseBody> checkRoomPwd(@RequestParam Long roomId, @RequestParam String pwd) {
+		boolean same = false;
+		if(passwordZip.containsKey(roomId))
+			same = passwordZip.get(roomId).equals(pwd);
+		else
+			return ResponseEntity.status(200).body(BaseResponseBody.of(404, "존재하는 방이 아닙니다."));
+
+		if(same)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "비밀번호가 일치합니다."));
+		else
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401, "비밀번호가 일치하지 않습니다."));
+	}
+
 	@GetMapping("/enter")
 	@ApiOperation(value = "방에 입장", notes = "방의 정보와 참가자 목록을 가져온다. (room/{roomId}와 동일 결과 리턴")
 	@ApiResponses({

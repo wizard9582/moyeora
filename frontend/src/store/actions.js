@@ -32,6 +32,12 @@ export function requestUserInfo ({ state }, token) {
   return $axios.get(url, {headers})
 }
 
+export function checkRoomPwd ({ state }, payload) {
+  console.log('checkRoomPwd', state, payload)
+  const url = `/room/roompwd?roomId=${payload.roomId}&pwd=${payload.pwd}`
+  return $axios.get(url)
+}
+
 //---------- 이 밑으로 게시판 관련 api ----------
 
 export function requestPostBoard ({ state }, payload) {
