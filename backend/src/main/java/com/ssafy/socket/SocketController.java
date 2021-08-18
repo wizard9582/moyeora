@@ -98,6 +98,9 @@ public class SocketController {
 			{"mafia","mafia","mafia","police","doctor","citizen","citizen","citizen","citizen","citizen"}, //10명 기준
 	};
 
+	// 회의방 비밀번호 모음집
+	static Map<Long, Timer> timerZip = new HashMap<>();
+
 	// 게임 끝났는지 판단
 	@MessageMapping("/game/end/{roomId}")
 	public void getGameStatus(@DestinationVariable String roomId, HelloMessage helloMessage) {
@@ -138,9 +141,13 @@ public class SocketController {
 		if(liveMafiaCnt==0){
 			gameStatus="citizen";
 			mafiaRepositorySupport.deleteMafia(Long.parseLong(roomId));
+			if(timerZip.containsKey(Long.parseLong(roomId)))
+				timerZip.remove(Long.parseLong(roomId));
 		}else if(liveMafiaCnt>=liveCitizenCnt){
 			gameStatus="mafia";
 			mafiaRepositorySupport.deleteMafia(Long.parseLong(roomId));
+			if(timerZip.containsKey(Long.parseLong(roomId)))
+				timerZip.remove(Long.parseLong(roomId));
 		}
 
 		if (!gameStatus.equals("on")) {
@@ -215,12 +222,15 @@ public class SocketController {
 				}else if(check[0] == 3){
 					// 타이머 끝!! 최후 변론 또는 밤으로 넘어가자
 					template.convertAndSend("/sub/game/morning/"+roomId,gameTimer(chat.getRound(), descs.length-1, 0, roomId));
+					if(timerZip.containsKey(Long.parseLong(roomId)))
+						timerZip.remove(Long.parseLong(roomId));
 					timer.cancel();
 				}
 				check[0] = check[0]+1;
 			}
 		};
 		// 실행된 후 0초뒤, 10초마다 실행
+		timerZip.put(Long.parseLong(roomId),timer);
 		timer.schedule(tt,0,(period*1000));
 	}
 
@@ -245,12 +255,15 @@ public class SocketController {
 				}else if(check[0] == 3){
 					// 타이머 끝!! 밤으로 넘어가자
 					template.convertAndSend("/sub/game/judge/"+roomId,gameTimer(chat.getRound(), descs.length-1, 0, roomId));
+					if(timerZip.containsKey(Long.parseLong(roomId)))
+						timerZip.remove(Long.parseLong(roomId));
 					timer.cancel();
 				}
 				check[0] = check[0]+1;
 			}
 		};
 		// 실행된 후 0초뒤, 10초마다 실행
+		timerZip.put(Long.parseLong(roomId),timer);
 		timer.schedule(tt,0,(period*1000));
 	}
 
@@ -275,12 +288,15 @@ public class SocketController {
 				}else if(check[0] == 3){
 					// 타이머 끝!! 게임 끝 또는 아침으로 넘어가자
 					template.convertAndSend("/sub/game/night/"+roomId,gameTimer(chat.getRound(), descs.length-1, 0, roomId));
+					if(timerZip.containsKey(Long.parseLong(roomId)))
+						timerZip.remove(Long.parseLong(roomId));
 					timer.cancel();
 				}
 				check[0] = check[0]+1;
 			}
 		};
 		// 실행된 후 0초뒤, 10초마다 실행
+		timerZip.put(Long.parseLong(roomId),timer);
 		timer.schedule(tt,0,(period*1000));
 	}
 
