@@ -302,13 +302,19 @@ export default {
             scope.disconnectSocket()
             //console.log("나가라")
             scope.router.push("/home/" + 'all')
+            scope.store.commit('root/resetDeath');
             leaveRoom()
+            scope.store.commit('root/endGame');
+            scope.store.commit('root/setMafiaRoles', null);
+            scope.store.commit('root/setMylife', true);
+            scope.store.commit('root/setMyJob', 'reset');
           });
 
           ////////////// 게임 로직 ///////////////
           var myRole = "";
           // 직업 분배 결과
           this.stompClient.subscribe('/sub/game/start/'+this.roomId+"/"+this.userName, function (chat) {
+            scope.store.commit('root/startGame')
             scope.store.commit('root/setMylife', true);
             // 직업 연동 아직 안됨
             //console.log("타이머 0 (직업 분배 결과) : ", JSON.parse(chat.body))
@@ -706,6 +712,7 @@ export default {
                     duration: 10000,
                   })
                   // alert('시민 승!!!')
+                  scope.store.commit('root/setMyJob', 'reset');
                   scope.store.commit('root/resetDeath');
                   scope.store.commit('root/endGame');
                   scope.store.commit('root/setMafiaRoles', null);
@@ -730,6 +737,7 @@ export default {
                     duration: 10000,
                   })
                   // alert('마피아 승!!!')
+                  scope.store.commit('root/setMyJob', 'reset');
                   scope.store.commit('root/resetDeath');
                   scope.store.commit('root/endGame');
                   scope.store.commit('root/setMafiaRoles', null);
