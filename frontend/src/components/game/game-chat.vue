@@ -510,7 +510,8 @@ export default {
                 ElMessage({
                   message: h('p', null, [
                     h('strong', null, '최종투표에서 '),
-                    h('i', { style: ['color: tomato', 'font-weight: bold'] }, deadRole+finalVotePlayer),
+                    // h('i', { style: ['color: tomato', 'font-weight: bold'] }, deadRole+finalVotePlayer),
+                    h('i', { style: ['color: tomato', 'font-weight: bold'] }, finalVotePlayer),
                     h('strong', null, ' 가 죽었습니다.'),
                   ]),
                   type: 'danger',
@@ -626,7 +627,7 @@ export default {
                 ElMessage({
                   message: h('p', null, [
                     h('strong', null, '마피아가 '),
-                    h('i', { style: ['color: black', 'font-weight: bold'] }, deadRole),
+                    // h('i', { style: ['color: black', 'font-weight: bold'] }, deadRole),
                     h('i', { style: ['color: tomato', 'font-weight: bold'] }, mafiaSelectPlayer),
                     h('strong', null, ' 를 죽였습니다.'),
                   ]),
