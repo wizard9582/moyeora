@@ -1,6 +1,7 @@
 import { Participant } from './participant';
 import { sendMessage, ws } from './webSocket';
 import kurentoUtils from 'kurento-utils'
+import root from '@/store/index.js'
 
 var participants = {};
 var name;
@@ -11,7 +12,7 @@ window.onbeforeunload = function() {
 
 ws.onmessage = function(message) {
 	var parsedMessage = JSON.parse(message.data);
-	console.info('Received message: ' + message.data);
+	// console.info('Received message: ' + message.data);
 
 	switch (parsedMessage.id) {
 	case 'existingParticipants':
@@ -35,7 +36,7 @@ ws.onmessage = function(message) {
 	    });
 	    break;
 	default:
-		console.error('Unrecognized message', parsedMessage);
+		// console.error('Unrecognized message', parsedMessage);
 	}
 }
 
@@ -44,11 +45,11 @@ function register(roomNum, userName) {
   var room = roomNum
 
   var message = {
-    id: 'joinRoom',
-    name: name,
-    room: room,
-  }
-  sendMessage(message);
+	  id: 'joinRoom',
+	  name: name,
+	  room: room,
+	}
+	sendMessage(message);
 }
 
 function onNewParticipant(request) {
@@ -58,12 +59,21 @@ function onNewParticipant(request) {
 function receiveVideoResponse(result) {
 	participants[result.name].rtcPeer.processAnswer (result.sdpAnswer, function (error) {
 		if (error) return console.error (error);
-	});
+  });
+
+  if (root.state.micOff) {
+    console.log('마이크가 꺼져있다면 시작 전에 꺼버리자 : ', participants[name].rtcPeer)
+    console.log('마이크가 꺼져있다면 시작 전에 꺼버리자 : ', participants[name].rtcPeer.peerConnection.getLocalStreams())
+    participants[name].rtcPeer.audioEnabled = false;
+  }
+  if (root.state.videoOff) {
+    participants[name].rtcPeer.videoEnabled = false;
+  }
 }
 
 function callResponse(message) {
 	if (message.response != 'accepted') {
-		console.info('Call not accepted by peer. Closing call');
+		// console.info('Call not accepted by peer. Closing call');
 		stop();
 	} else {
 		webRtcPeer.processAnswer(message.sdpAnswer, function (error) {
@@ -83,9 +93,10 @@ function onExistingParticipants(msg) {
 			}
 		}
 	};
-	console.log(name + " registered in room " + room);
+	// console.log(name + " registered in room " + room);
 	var participant = new Participant(name);
 	participants[name] = participant;
+	// console.log('in conference room : ', Object.keys(participants).length)
 	var video = participant.getVideoElement();
 
 	var options = {
@@ -109,12 +120,12 @@ function leaveRoom() {
 		id : 'leaveRoom'
 	});
 
-	for ( var key in participants) {
+  for (var key in participants) {
 		participants[key].dispose();
 	}
 
-	document.getElementById('join').style.display = 'block';
-	document.getElementById('room').style.display = 'none';
+	// document.getElementById('join').style.display = 'block';
+	// document.getElementById('room').style.display = 'none';
 
 	//ws.close();
 }
@@ -145,5 +156,20 @@ function onParticipantLeft(request) {
 	delete participants[request.name];
 }
 
+function muteMic(name, payload) {
+  console.log('마이크 끄기 .js : ', participants[name].rtcPeer)
+  if(payload)
+    participants[name].rtcPeer.audioEnabled = false;
+  else
+    participants[name].rtcPeer.audioEnabled = true;
+}
 
-export {register, leaveRoom, participants};
+function offCam(name, payload) {
+  if (payload)
+    participants[name].rtcPeer.videoEnabled = false;
+  else
+    participants[name].rtcPeer.videoEnabled = true;
+}
+
+
+export {register, leaveRoom, participants, muteMic, offCam};

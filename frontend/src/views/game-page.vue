@@ -2,12 +2,19 @@
   <el-container>
     <GameHeader
       @openInvitePopup="onOpenInvitePopup"
-      @openGameClosePopup="onOpenGameClosePopup"
+      @startNight="onStartNight"
+      @startDay="onStartDay"
+      v-bind:class="{ 'day': day, 'night':!day }"
     />
+    <div class="space"></div>
     <el-main>
       <MafiaSection
         :openChat="gameChatOpen"
+        v-bind:class="{ 'day': day, 'night':!day }"
         @closeGameChat="onCloseGameChat"
+        @openFinalVotePopup="onOpenFinalVotePopup"
+        @openDoctorVotePopup="onOpenDoctorVotePopup"
+        @openMafiaVotePopup="onOpenMafiaVotePopup"
       />
     </el-main>
     <el-footer height="80px">
@@ -26,30 +33,52 @@
     :open="gameClosePopupOpen"
     @closeGameClosePopup="onCloseGameClosePopup"
   />
+  <FinalVotePop
+    :open="finalVotePopupOpen"
+    @closeFinalVotePopup="onCloseFinalVotePopup"
+  />
+  <DoctorVotePop
+    :open="doctorVotePopupOpen"
+    @closeDoctorVotePopup="onCloseDoctorVotePopup"
+  />
+  <MafiaVotePop
+    :open="mafiaVotePopupOpen"
+    @closeMafiaVotePopup="onCloseMafiaVotePopup"
+  />
 </template>
 
 <script>
 import GameHeader from '@/components/game/game-header.vue'
-import InvitePop from '@/components/game/pop/invite-pop.vue'
-import GameClosePop from '@/components/game/pop/gameClose-pop.vue'
 import MafiaSection from '@/components/game/mafia/mafia-section.vue'
 import GameController from '../components/game/game-controller.vue'
+import InvitePop from '@/components/game/pop/invite-pop.vue'
+import GameClosePop from '@/components/game/pop/gameClose-pop.vue'
+import FinalVotePop from '@/components/game/pop/finalVote-pop.vue'
+import DoctorVotePop from '@/components/game/pop/doctorVote-pop.vue'
+import MafiaVotePop from '@/components/game/pop/mafiaVote-pop.vue'
 
 
 export default {
   name: 'GamePage',
   components: {
     GameHeader,
+    MafiaSection,
+    GameController,
     InvitePop,
     GameClosePop,
-    MafiaSection,
-    GameController
+    FinalVotePop,
+    DoctorVotePop,
+    MafiaVotePop,
   },
   data () {
     return {
       invitePopupOpen: false,
       gameClosePopupOpen: false,
+      finalVotePopupOpen: false,
+      doctorVotePopupOpen: false,
+      mafiaVotePopupOpen: false,
       gameChatOpen: false,
+      day: true,
     }
   },
   methods: {
@@ -65,42 +94,55 @@ export default {
     onCloseGameClosePopup () {
       this.gameClosePopupOpen = false
     },
+    onOpenFinalVotePopup () {
+      this.finalVotePopupOpen = true
+    },
+    onCloseFinalVotePopup () {
+      this.finalVotePopupOpen = false
+    },
+    onOpenMafiaVotePopup () {
+      this.mafiaVotePopupOpen = true
+    },
+    onCloseMafiaVotePopup () {
+      this.mafiaVotePopupOpen = false
+    },
+    onOpenDoctorVotePopup () {
+      this.doctorVotePopupOpen = true
+    },
+    onCloseDoctorVotePopup () {
+      this.doctorVotePopupOpen = false
+    },
     onOpenGameChat () {
       this.gameChatOpen = true
     },
     onCloseGameChat () {
       this.gameChatOpen = false
-    }
+    },
+    onStartNight(){
+      this.day = false
+    },
+    onStartDay(){
+      this.day = true
+    },
   }
 }
 </script>
 
 <style scoped>
-.el-header{
-  position: fixed;
-  top: 0;
-	left: 0;
-  width: 100%;
-  height: 70px;
-  /* border: solid; */
-  background: white;
-}
 .el-main {
-  background-color: #e8eef3;
-  color: #333;
-  text-align: center;
-  width: 100%;
-  height: 100%;
+  z-index: 1;
+  background-color: rgba(255,255,255,0);
 }
-
 .el-footer {
-  background-color: gray;
-  color: #333;
   text-align: center;
   position: fixed;
+  left: 0;
   bottom: 0;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
+  line-height: 0px;
+  min-height: 0px;
+  z-index: 50;
 }
 </style>

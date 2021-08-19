@@ -1,11 +1,11 @@
 <template>
   <el-dialog title="방 만들기" v-model="state.popupVisible" @close="handleClose">
     <el-form :model="state.form" :rules="state.rules" ref="createRoomForm" :label-position="state.form.align" @change="checkValidation" v-loading private="state.popupLoading">
-      <el-form-item prop="title" label="방제" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.title" autocomplete="off"></el-input>
+      <el-form-item prop="title" label="방 이름" :label-width="state.formLabelWidth">
+        <el-input v-model="state.form.title" autocomplete="off" maxlength="20" show-word-limit></el-input>
       </el-form-item>
-      <el-form-item label="게임" :label-width="state.formLabelWidth">
-        <el-select v-model="state.form.category" placeholder="Select">
+      <el-form-item label="종류" :label-width="state.formLabelWidth">
+        <el-select v-model="state.form.category">
           <el-option v-for="item in state.games" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled">
           </el-option>
         </el-select>
@@ -17,7 +17,7 @@
         <el-input v-model="state.form.password" autocomplete="off" show-password></el-input>
       </el-form-item>
       <el-form-item prop="description" label="방 설명" :label-width="state.formLabelWidth">
-        <el-input v-model="state.form.description" autocomplete="off"></el-input>
+        <el-input v-model="state.form.description" autocomplete="off" maxlength="30" show-word-limit></el-input>
       </el-form-item>
     </el-form>
     <template #footer>
@@ -30,6 +30,7 @@
 
 <script>
 import { reactive, computed, ref } from 'vue'
+import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 
 export default {
@@ -44,19 +45,20 @@ export default {
 
   setup(props, { emit }) {
     const store = useStore()
+    const router = useRouter()
     const createRoomForm = ref(null)
 
     const state = reactive({
       formLabelWidth: '120px',
       form: {
         title: '',
-        category: '',
+        category: 'video',
         private: false,
         password: '',
-        description: '',
+        description: '환영합니다.',
         align: 'left'
       },
-      games: [{value: 'video',label: '화상회의'}, {value: 'mafia',label: '마피아'}, {value: 'puzzle',label: '퍼즐',disabled: true},
+      games: [{value: 'video', label: '화상회의'}, {value: 'mafia',label: '마피아'}, {value: 'puzzle', label: '퍼즐',disabled: true},
               {value: 'catch-mind', label: '캐치마인드', disabled: true }, { value: 'word-mafia', label: '단어마피아', disabled: true }],
       rules: {
         title: [
@@ -95,9 +97,9 @@ export default {
           //console.log(state.form)
           store.dispatch('root/requestCreateRoom', { title: state.form.title, category: state.form.category, private: state.form.private, password: state.form.password, description: state.form.description})
           .then(function (result) {
-            console.log(result)
-            //생성된 방으로 이동하는 router push
-            //emit('closeSignupPopup')
+            //console.log(result)
+            emit('closeSignupPopup')
+            router.push("/game/"+ state.form.category + "/" + result.data.id)
           })
           .catch(function () {
 

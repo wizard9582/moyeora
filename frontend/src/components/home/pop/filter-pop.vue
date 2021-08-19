@@ -1,16 +1,18 @@
 <template>
   <el-dialog class="gameFilter" title="게임선택" v-model="state.popupVisible" @close="handleClose">
     <ul class="gameFilter-list">
-      <li v-for="i in 9" class="gameFilter-list-item" @click="clickGame(i)" :key="i">
-        <img :src="require(`@/assets/${state.imgsrc[i]}`)" alt="yet" style="width: 100%; height: 200px"/>
+      <li v-for="i in 3" class="gameFilter-list-item" @click="clickGame(i)" :key="i">
+        {{state.desc[i]}}
+        <img :src="require(`@/assets/${state.imgsrc[i]}`)" class="img-game" alt="yet"/>
+        <el-divider/>
       </li>
+      <h5>Coming Soon...</h5>
     </ul>
   </el-dialog>
 </template>
 
 <script>
 import { reactive, computed } from 'vue'
-import { useStore } from 'vuex'
 
 export default {
   name:"FilterPop",
@@ -20,12 +22,12 @@ export default {
   },
 
   setup(props, { emit }) {
-    const store = useStore()
     const state = reactive({
       formLabelWidth: '120px',
       popupVisible: computed(() => props.open),
-      imgsrc: ["img-vue.png","img-logo-chat.png","img-logo-mafia.png","img-logo-puzzle.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png",],
-      type: ["zero","all","mafia","puzzle","1","2","3","4","5","6",],
+      imgsrc: ["img-vue.png","img-all.png","img-logo-chat.png","img-logo-mafia.png","img-logo-puzzle.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png","img-vue.png",],
+      type: ["zero","all","video","mafia","puzzle","1","2","3","4","5",],
+      desc: ["index맞추기","ALL","화상회의","마피아","퍼즐","개발중","개발중","개발중","개발중","개발중",],
     })
 
     const handleClose = function () {
@@ -41,16 +43,4 @@ export default {
 </script>
 
 <style>
-.gameFilter-list {
-  border: 5px solid;
-}
-.gameFilter-list-item {
-  min-width: 200px;
-  max-width: 20%;
-  min-height: 200px;
-  max-height: 20%;
-  display: inline-block;
-  cursor: pointer;
-  margin: 10px;
-}
 </style>
