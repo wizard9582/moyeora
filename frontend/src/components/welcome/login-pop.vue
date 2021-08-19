@@ -18,7 +18,6 @@
 
 <script>
 import { reactive, computed, ref } from 'vue'
-import { useRouter } from 'vue-router';
 import { useStore } from 'vuex'
 
 export default {
@@ -28,15 +27,10 @@ export default {
     open: {
       type: Boolean,
       default: false
-    },
-    disabled: {
-      type: Boolean,
-      default: false
     }
   },
 
   setup(props, { emit }) {
-    const router = useRouter()
     const store = useStore()
     const loginForm = ref(null)
 
@@ -54,7 +48,7 @@ export default {
         ],
         password: [
           { required: true, message: '필수 입력 항목입니다.', trigger: 'change' },
-          { min: 8, message: '최소 9 글자를 입력해야 합니다.', trigger: 'change' },
+          { min: 8, message: '최소 8 글자를 입력해야 합니다.', trigger: 'change' },
           { max: 16, message: '최대 16 글자까지 입력 가능합니다.', trigger: 'change' },
           { required: true, pattern: /^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)\-_=+])/, message: '비밀번호는 영문, 숫자, 특수문자가 조합되어야합니다.', trigger: 'change' }
         ],
@@ -75,7 +69,7 @@ export default {
     }
 
     const getUserId = function (token) {
-      store.dispatch('root/requestUserInfo', token)
+      store.dispatch('root/requestUserInfo', {token :token})
       .then((result) => {
         store.commit('root/setUserId', result.data.userId)
       })
@@ -94,17 +88,24 @@ export default {
         // 로그인 클릭 시 validate 체크 후 그 결과 값에 따라, 로그인 API 호출 또는 경고창 표시
         loginForm.value.validate((valid) => {
           if (valid) {
-            console.log('submit')
+            //console.log('submit')
             store.dispatch('root/requestLogin', { id: state.form.id, password: state.form.password })
             .then(function (result) {
+              //console.log("--------->", result)
               store.commit('root/setToken', result.data.accessToken)
               // 해당 유저의 정보를 받아오는 axios
               getUserId(result.data.accessToken)
               emit('closeLoginPopup')
-              router.push("/home/all")
             })
             .catch(function (err) {
-              alert(err)
+              //console.log(err.response.status);
+
+              if(err.response.status == 401){
+                alert('비밀번호를 잘못 입력하셨습니다.')
+              }
+              else if(err.response.status == 500){
+                alert('존재하지 않는 회원입니다.')
+              }
             })
           } else {
             alert('Validate error!')
@@ -113,7 +114,7 @@ export default {
       }, 1000);
     }
 
-    console.log(store)
+    //console.log(store)
     const handleClose = function () {
       state.form.id = ''
       state.form.password = ''

@@ -45,7 +45,7 @@ import com.google.gson.JsonPrimitive;
 public class Room implements Closeable {
   private final Logger log = LoggerFactory.getLogger(Room.class);
 
-  private final ConcurrentMap<String, UserSession> participants = new ConcurrentHashMap<>();
+  public final ConcurrentMap<String, UserSession> participants = new ConcurrentHashMap<>();
   private final MediaPipeline pipeline;
   private final String name;
 

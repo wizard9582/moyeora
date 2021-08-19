@@ -1,19 +1,15 @@
 package com.ssafy.api.controller;
 
 import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import com.ssafy.common.model.response.BaseResponseBody;
+import com.ssafy.db.entity.User;
+import com.ssafy.db.entity.UserConference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.ssafy.api.request.RoomPostReq;
 import com.ssafy.api.response.RoomRes;
@@ -51,8 +47,92 @@ public class RoomController {
 			@ApiResponse(code = 404, message = "사용자 없음"),
 			@ApiResponse(code = 500, message = "서버 오류")
 	})
-	public ResponseEntity<List<Conference>> getRoomInfo() {
+	public ResponseEntity<List<RoomRes>> getRoomInfo() {
 		return ResponseEntity.status(200).body(roomService.findRooms());
+	}
+
+	@GetMapping("/{roomId}")
+	@ApiOperation(value = "회의 방 번호로 조회", notes = "방의 정보와 참가자 목록을 가져온다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "방 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<RoomRes> getRoomById(@PathVariable Long roomId) {
+		Optional<Conference> conf = roomService.findByRoomId(roomId);
+		if(!conf.isPresent())
+			return ResponseEntity.status(404).body(new RoomRes());
+		Optional<List<User>> member = roomService.findUserByRoomId(roomId);
+		RoomRes response = RoomRes.of(conf.get(), member.get(), member.get().size());
+		return ResponseEntity.status(200).body(response);
+	}
+
+	@GetMapping("/roompwd")
+	@ApiOperation(value = "방에 입장", notes = "방의 정보와 참가자 목록을 가져온다. (room/{roomId}와 동일 결과 리턴")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "비밀번호 일치"),
+			@ApiResponse(code = 401, message = "비밀번호 불일치"),
+			@ApiResponse(code = 404, message = "방 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<? extends BaseResponseBody> checkRoomPwd(@RequestParam Long roomId, @RequestParam String pwd) {
+		boolean same = false;
+		if(passwordZip.containsKey(roomId))
+			same = passwordZip.get(roomId).equals(pwd);
+		else
+			return ResponseEntity.status(200).body(BaseResponseBody.of(404, "존재하는 방이 아닙니다."));
+
+		if(same)
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "비밀번호가 일치합니다."));
+		else
+			return ResponseEntity.status(200).body(BaseResponseBody.of(401, "비밀번호가 일치하지 않습니다."));
+	}
+
+	@GetMapping("/enter")
+	@ApiOperation(value = "방에 입장", notes = "방의 정보와 참가자 목록을 가져온다. (room/{roomId}와 동일 결과 리턴")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "사용자 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<RoomRes> enterRoom(@ApiIgnore Authentication authentication, @RequestParam Long roomId) {
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		User user = userDetails.getUser();
+		Conference conf = roomService.findByRoomId(roomId).get();
+		UserConference uc = new UserConference();
+		uc.setUser(user);
+		uc.setConference(conf);
+		roomService.enter(uc);
+
+		return getRoomById(roomId);
+	}
+
+	@DeleteMapping("/leave")
+	@ApiOperation(value = "방에서 나감", notes = "방에서 나간다.")
+	@ApiResponses({
+			@ApiResponse(code = 200, message = "성공"),
+			@ApiResponse(code = 401, message = "인증 실패"),
+			@ApiResponse(code = 404, message = "방 없음"),
+			@ApiResponse(code = 500, message = "서버 오류")
+	})
+	public ResponseEntity<BaseResponseBody> leaveRoom(@ApiIgnore Authentication authentication, @RequestParam Long roomId) {
+		SsafyUserDetails userDetails = (SsafyUserDetails)authentication.getDetails();
+		User user = userDetails.getUser();
+		Conference conf = roomService.findByRoomId(roomId).get();
+		UserConference uc = new UserConference();
+		uc.setUser(user);
+		uc.setConference(conf);
+		roomService.leave(uc);
+
+		// 나간 사람이 방장이라면
+		if(conf.getOwnerId().getId() == user.getId()){
+			roomService.popRoom(roomId);
+			return ResponseEntity.status(200).body(BaseResponseBody.of(200, "방장 권한으로 방을 나오며 닫았습니다."));
+		}
+
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "방에서 나왔습니다."));
 	}
 	
 	@PostMapping()
@@ -63,7 +143,7 @@ public class RoomController {
         @ApiResponse(code = 404, message = "사용자 없음"),
         @ApiResponse(code = 500, message = "서버 오류")
     })
-	public ResponseEntity<RoomRes> createRoom(
+	public ResponseEntity<Conference> createRoom(
 			@ApiIgnore Authentication authentication,
 			@RequestBody @ApiParam(value="생성할 방 정보", required = true) RoomPostReq req) {
 
@@ -84,6 +164,6 @@ public class RoomController {
 			passwordZip.put(newRoom.getId(), req.getPassword());
 		}
 
-		return ResponseEntity.status(200).body(RoomRes.of(conf));
+		return ResponseEntity.status(200).body(conf);
 	}
 }

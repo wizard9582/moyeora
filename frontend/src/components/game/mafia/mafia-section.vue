@@ -1,21 +1,16 @@
 <template>
   <div class="player-list">
     <el-row :gutter="20">
-      <el-col :span="state.colSize">
-        <el-row :gutter="20">
-          <!-- <el-col :span="6" v-for="idx in playerList.length" :key="idx"> -->
-          <el-col :span="6">
-            <div id="room">
-              <h2 id="room-header"></h2>
-              <div id="participants"></div>
-              <input type="button" id="button-leave" @mouseup="leaveRoom" value="Leave room" />
-            </div>
-            <!-- <MafiaPlayer/> -->
-          </el-col>
+      <el-col :span="state.colSize" id="room">
+        <el-row :gutter="20" id="participants">
         </el-row>
       </el-col>
       <el-col v-show="chatVisible" :span="state.chatSize" class="chat">
-        <GameChat/>
+        <GameChat
+          @openFinalVotePop="startFinalVotePopup"
+          @openDoctorVotePop="startDoctorVotePopup"
+          @openMafiaVotePop="startMafiaVotePopup"
+        />
       </el-col>
     </el-row>
   </div>
@@ -27,7 +22,7 @@ import GameChat from '@/components/game/game-chat.vue'
 import { watch, reactive, computed, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from 'vuex'
-import { register, leaveRoom, participants } from '@/common/lib/conferenceroom'
+import { register } from '@/common/lib/conferenceroom'
 
 export default {
   name: "MafiaSection",
@@ -40,22 +35,6 @@ export default {
       type: Boolean,
     },
   },
-  // data () {
-  //   return {
-  //     playerList: [
-  //       {playerId: '1', playerName: 'Player1', job: 'citizen', dead: false},
-  //       {playerId: '2', playerName: 'Player2', job: 'citizen', dead: false},
-  //       {playerId: '3', playerName: 'Player3', job: 'citizen', dead: false},
-  //       {playerId: '4', playerName: 'Player4', job: 'citizen', dead: false},
-  //       {playerId: '5', playerName: 'Player5', job: 'citizen', dead: false},
-  //       {playerId: '6', playerName: 'Player6', job: 'citizen', dead: false},
-  //       {playerId: '7', playerName: 'Player7', job: 'citizen', dead: false},
-  //       {playerId: '8', playerName: 'Player8', job: 'doctor', dead: false},
-  //       {playerId: '9', playerName: 'Player9', job: 'mafia', dead: false},
-  //       {playerId: '10', playerName: 'Player10', job: 'police', dead: false},
-  //     ]
-  //   }
-  // },
   setup(props, {emit}) {
     const route = useRoute()
     const store = useStore()
@@ -78,25 +57,46 @@ export default {
       }
     }
 
+    const enterRoom = () => {
+      let token = localStorage.getItem('jwt')
+      store.dispatch('root/requestEnterRoom', { token: token, roomId: state.roomNum })
+      .then((result) => {
+        console.log('result : ', result)
+        store.commit('root/setRoomOwner', result.data.ownerId.userId)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    }
+
+    const startFinalVotePopup = () => {
+      emit('openFinalVotePopup')
+    }
+
+    const startDoctorVotePopup = () => {
+      emit('openDoctorVotePopup')
+    }
+
+    const startMafiaVotePopup = () => {
+      emit('openMafiaVotePopup')
+    }
+
+
     register(state.roomNum, state.userName)
-    // console.log('participants', participants)
+    enterRoom()
 
     // props로 넘어온 데이터가 변하면 size를 바꿔준다
     watch(chatVisible, () => {
       changeSize()
     })
 
-    return { state, chatVisible }
+    return { state, chatVisible, startFinalVotePopup, startDoctorVotePopup, startMafiaVotePopup }
   }
 }
 </script>
 
 <style>
-.chat {
-  background-color: white;
+#participants {
+  background-color: rgba(255,255,255,0);
 }
-
-/* .el-col {
-  height: 100%;
-} */
 </style>

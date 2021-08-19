@@ -1,21 +1,25 @@
 <template>
   <el-container>
-    <el-aside>
+    <el-aside width="120">
       <side-bar
         @openFilterPopup="onOpenFilterPopup"
         @openRoomPopup="onOpenRoomPopup"
         @openSettingPopup="onOpenSettingPopup"
+        @openBoard="onOpenBoard"
+        @openNotice="onOpenNotice"
       ></side-bar>
     </el-aside>
     <el-container>
       <main-header></main-header>
-      <router-view :key="$route.fullPath"/>
-      <el-footer>Copyright © SAMSUNG All Rights Reserved.</el-footer>
+      <router-view :key="$route.fullPath"
+      @openPwCheck="onOpenPwPopup"
+      />
+      <el-footer>Copyright © MOYEORA All Rights Reserved.</el-footer>
     </el-container>
   </el-container>
   <filter-pop :open="state.filterPopupOpen" @closeFilterPopup="onCloseFilterPopup" />
   <create-room-pop :open="state.roomPopupOpen" @closeRoomPopup="onCloseRoomPopup" />
-  <room-pw-pop :open="state.pwPopupOpen" @closePwPopup="onClosePwPopup" />
+  <room-pw-pop :open="state.pwPopupOpen" @closePwPopup="onClosePwPopup" :type="state.data[0]" :id="state.data[1]"/>
   <setting-pop :open="state.settingPopupOpen" @closeSettingPopup="onCloseSettingPopup" />
 </template>
 
@@ -48,12 +52,15 @@ export default {
       UserSection
     },
   setup () {
+    document.body.className = 'white'
     const router = useRouter()
     const state = reactive({
       settingPopupOpen: false,
       pwPopupOpen: false,
       filterPopupOpen: false,
       roomPopupOpen: false,
+      loginPopupOpen: false,
+      data: []
     })
     const onOpenSettingPopup = function(){
       state.settingPopupOpen = true
@@ -76,61 +83,26 @@ export default {
     const onCloseRoomPopup = function(){
       state.roomPopupOpen = false
     }
-    const onOpenPwPopup = function(){
+    const onOpenPwPopup = function(data){
+      //console.log("data-------->",data)
+      state.data = data
       state.pwPopupOpen = true
     }
     const onClosePwPopup = function(){
+      state.data = []
       state.pwPopupOpen = false
     }
-    return {state, onOpenSettingPopup, onCloseSettingPopup, onOpenFilterPopup, onCloseFilterPopup,
-            onOpenRoomPopup, onCloseRoomPopup, onOpenPwPopup, onClosePwPopup}
+    const onOpenNotice = function(){
+      router.push("/home/notice/list")
+    }
+    const onOpenBoard = function(){
+      router.push("/home/board/list")
+    }
+    return { state, onOpenSettingPopup, onCloseSettingPopup, onOpenFilterPopup, onCloseFilterPopup, onOpenRoomPopup, onCloseRoomPopup,
+            onOpenPwPopup, onClosePwPopup, onOpenNotice, onOpenBoard}
   }
 };
 </script>
 
 <style>
-@import "https://unpkg.com/element-plus/lib/theme-chalk/index.css";
-.space {
-  height: 100px;
-  width: 100%;
-}
-.el-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 70px;
-  /* border: solid; */
-  background: white;
-  opacity: 0.9;
-}
-.el-aside {
-  position: fixed;
-  top: 70px;
-  left: 0;
-  width: 120px;
-  height: 100%;
-  /* border: solid; */
-  background: whitesmoke;
-}
-.el-main {
-  width: 100% - 100px;
-  /* margin-left: 100px; */
-  background-color: #e8eef3;
-  color: #333;
-  text-align: center;
-}
-
-body > .el-container {
-  margin-bottom: 40px;
-}
-.el-footer {
-  background-color: #e9eef3;
-  color: #333;
-  text-align: center;
-  width: 100%;
-  /* height: 200px; */
-  line-height: 150px;
-}
-/* 차후 main.css로 통합? */
 </style>
