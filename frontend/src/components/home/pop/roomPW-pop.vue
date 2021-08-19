@@ -2,6 +2,7 @@
   <el-dialog width="30%" title="비밀번호 확인" v-model="state.popupVisible" @close="handleClose">
     <div class="pwPopup" >
       <el-input label="PW:" class="pwInput" placeholder="비밀번호를 입력하세요." v-model="state.input" clearable></el-input>
+      <br/>
       <el-button type="primary" @click="checkPW">제출</el-button>
       <el-button type="danger" @click="handleClose">취소</el-button>
     </div>

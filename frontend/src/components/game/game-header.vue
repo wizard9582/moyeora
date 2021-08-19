@@ -168,6 +168,7 @@ export default {
         audio = new Audio(morningSound)
         audio.volume = 0.2
         audio.play()
+        document.body.className = 'morning'
       }else if(val == 15){
         state.stage = 1
       }else if(val == 23){

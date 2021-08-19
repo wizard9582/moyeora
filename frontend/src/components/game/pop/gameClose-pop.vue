@@ -63,6 +63,7 @@ export default {
     }
 
     const leaveGame = function () {
+      document.body.className = 'white'
       let token = localStorage.getItem('jwt')
       let roomNum = route.params.no
       store.dispatch('root/requestLeaveRoom', { token: token, roomId: roomNum })

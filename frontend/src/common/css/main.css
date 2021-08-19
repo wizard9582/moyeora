@@ -20,23 +20,23 @@
   --dark-button: #574680;
   --dark-font: whitesmoke;
   /*레트로펑크테마*/
-  /* --punk-light: #1cc4bb; #334756; */
-  --punk-light: linear-gradient(-20deg, #d558c8 0%, #24d292 100%);
+  --punk-light: #1cc4bb;
+  /* --punk-light: linear-gradient(-20deg, #d558c8 0%, #24d292 100%); */
   --punk-default: #3d087b;
   --punk-dark: #11052c;
   --punk-button: #ff577f;
   --punk-font: #f7e182;
   /*여름테마*/
-  /* --summer-light: #a2dbfa; */
-  --summer-light: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%);
+  --summer-light: #a2dbfa;
+  /* --summer-light: linear-gradient(120deg, #a1c4fd 0%, #c2e9fb 100%); */
   --summer-default: #39a2db;
   --summer-dark: #dbba6e;
   --summer-button: #283d99;
   --summer-font: white;
   /* --summer-font: #0d1b63; */
   /*핑크테마*/
-  /* --pink-light: #f9e0ec; */
-  --pink-light: linear-gradient(to top, #fdcbf1 0%, #fdcbf1 1%, #e6dee9 100%);
+  --pink-light: #f9e0ec;
+  /* --pink-light: linear-gradient(to top, #fdcbf1 0%, #fdcbf1 1%, #e6dee9 100%); */
   --pink-default: #f8a1d1;
   --pink-dark: #e36bae;
   --pink-button: #c82f62;
@@ -61,9 +61,12 @@ body {
   margin: 0;
   width: 100%;
   height: 100%;
-  background: url('../../assets/error404.png');
+  background: var(--color-light);
   background-repeat: no-repeat;
   background-size: cover;
+}
+#app{
+  height: 100%;
 }
 .morning {
   margin: 0;
@@ -85,14 +88,13 @@ body {
   margin: 0;
   width: 100%;
   height: 100%;
-  background: var(--color-default);
+  background: var(--color-light);
   background-repeat: no-repeat;
   background-size: cover;
 }
-.container {
-  width: 100vw;
-  height: 100vh;
-  background: pink;
+.el-container {
+  width: 100%;
+  height: 100%;
 }
 .space {
   height: 60px;
@@ -123,7 +125,7 @@ i {
 }
 .el-main {
   width: 100% - 100px;
-  min-height: 600px;
+  height: 100%;
   /* margin-left: 100px; */
   background-color: var(--color-light);
   color: var(--color-font);
@@ -134,10 +136,13 @@ i {
 body > .el-container {
   margin-bottom: 40px;
 }
+
 .el-footer {
-  min-height: 200px;
-  line-height: 200px;
+  min-height: 150px;
+  line-height: 150px;
   background-color: var(--color-dark);
+  position: fixed;
+  bottom: 0px;
   color: var(--color-font);
   text-align: center;
   width: 100%;
