@@ -71,5 +71,15 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
+.el-footer {
+  min-height: 150px;
+  line-height: 150px;
+  background-color: var(--color-dark);
+  position: relative;
+  bottom: 0px;
+  color: var(--color-font);
+  text-align: center;
+  width: 100%;
+}
 </style>
