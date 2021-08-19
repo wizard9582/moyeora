@@ -99,9 +99,7 @@ export default {
             if(state.filteredData.length % 8 != 0){
               state.index = state.index + 1;
             }
-            if(state.filteredData.length == 0){
-              state.noRoom = true;
-            }
+            state.noRoom = (state.filteredData.length == 0) ? true : false;
           })
           .catch(function (err) {
             alert(err)
