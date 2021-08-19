@@ -1,6 +1,7 @@
 package com.ssafy;
 
 import java.nio.charset.Charset;
+import java.util.TimeZone;
 
 import org.apache.catalina.connector.Connector;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,8 +14,16 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import javax.annotation.PostConstruct;
+
 @SpringBootApplication
 public class GroupCallApplication {
+
+    @PostConstruct
+    void started() {
+        TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"));
+    }
+
 	public static void main(String[] args) {
 	    SpringApplication.run(GroupCallApplication.class, args);
     }
