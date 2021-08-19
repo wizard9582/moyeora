@@ -608,7 +608,7 @@ export default {
               }
             } else if (rchat.desc === 'result') {
               /////////////////////////////////////////// 세션 합치기
-              if(myRole=='mafia'){
+              if(myRole=='mafia'&& scope.state.mylife){
                 // 마피아인 경우 : 마피아끼리 모임
                 leaveRoom()
               }
