@@ -52,6 +52,7 @@ export default {
       UserSection
     },
   setup () {
+    document.body.className = 'white'
     const router = useRouter()
     const state = reactive({
       settingPopupOpen: false,

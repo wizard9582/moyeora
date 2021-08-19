@@ -106,7 +106,7 @@ export default {
           })
       }
       clickRefresh()
-      setInterval(function(){clickRefresh()},10000);
+      //setInterval(function(){clickRefresh()},10000);
       return { state, clickRoom , handleCurrentChange, clickRefresh, mouseOver, mouseOut }
     },
 }

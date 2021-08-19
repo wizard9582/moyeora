@@ -11,7 +11,7 @@
           </el-badge>
           <template #dropdown>
             <el-dropdown-menu style="overflow:auto">
-              <el-dropdown-item v-if="state.inviteCount==0" icon="el-icon-check">알림이 없습니다.</el-dropdown-item>
+              <el-dropdown-item v-if="state.inviteCount==0" icon="el-icon-check" @click="getInvite">알림이 없습니다.</el-dropdown-item>
               <el-dropdown-item v-else v-for="item in state.inviteData" :key="item.id" >
                 <div v-if="item.type == 'invite'">
                   <i class="el-icon-bell"></i>{{item.fromUser}}님이 {{item.toUser}}님을 초대하셨습니다.
@@ -164,9 +164,9 @@ export default {
           })
     }
     getInvite()
-    setInterval(function(){getInvite()},5000);
+    //setInterval(function(){getInvite()},5000);
 
-      return { state, isLoggedIn, clickLogin, clickSignup, clickLogout, clickUserInfo, clickInvite, clickAccept, clickDelete }
+      return { state, isLoggedIn, clickLogin, clickSignup, clickLogout, clickUserInfo, clickInvite, clickAccept, clickDelete, getInvite }
   },
 }
 </script>

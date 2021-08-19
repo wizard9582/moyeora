@@ -40,6 +40,7 @@ export default {
   },
 
     setup(){
+    document.body.className = 'white'
     const store = useStore()
     const router = useRouter()
     const state = reactive({
