@@ -3,11 +3,12 @@
     <div class="space"></div>
       <el-divider/>
       <h3>MOYEORA<br> 프로젝트 소개 UCC</h3>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/-FMHYjqC4iA" title="YouTube video player"
-        frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-        <br>
-        <el-button v-if="isLoggedIn()" type="danger" @click="clickStart">바로 시작하기<i class="el-icon-right"></i></el-button>
-        <el-button v-if="!isLoggedIn()" type="primary" @click="clickSignup">지금 가입하기 <i class="el-icon-edit-outline"></i></el-button>
+      <video playsinline autoplay muted loop poster='@/assets/0-0.png'>
+        <source :src='require("@/assets/MOYEORA-ucc.mp4")' type='video/mp4'>
+      </video>
+      <br>
+      <el-button v-if="isLoggedIn()" type="danger" @click="clickStart">바로 시작하기<i class="el-icon-right"></i></el-button>
+      <el-button v-if="!isLoggedIn()" type="primary" @click="clickSignup">지금 가입하기 <i class="el-icon-edit-outline"></i></el-button>
       <div style="background-color: var(--color-default)">
       <el-divider/>
       <el-row class="sub-content">
@@ -195,6 +196,8 @@ export default {
   setup(props, {emit}){
     const router = useRouter()
     const store = useStore()
+    const url = '@/assets/MOYEORA-ucc.mp4'
+    const type = 'video/mp4'
 
     const clickStart = function(){
       router.push("/home/all")
@@ -208,7 +211,7 @@ export default {
       emit('openSignupPopup')
     }
 
-    return { clickStart, isLoggedIn, clickSignup }
+    return { clickStart, isLoggedIn, clickSignup, url, type }
   }
 }
 </script>
