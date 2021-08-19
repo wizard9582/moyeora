@@ -3,6 +3,7 @@
 ## Project setup
 ```
 npm install
+npm install webstomp
 ```
 
 ### Compiles and hot-reloads for development

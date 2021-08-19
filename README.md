@@ -1,152 +1,86 @@
-프로젝트 명
+## 프로젝트명 : 모여라 MOYEORA   
 
-목차
+# 목차   
+1. [프로젝트 소개](#프로젝트-소개)   
+2. [프로젝트 명세](#프로젝트-명세)    
+    - [배포 환경](#배포-환경)   
+    - [개발 환경](#개발-환경)   
+    - [Design Resources](#Design-Resources)   
+    - [핵심라이브러리](#핵심라이브러리)   
 
-프로젝트 소개
-텍스트 ... 
+# 프로젝트 소개   
+MOYEORA 프로젝트는 Makes You Re-active 라는 슬로건을 가진, 코로나로 인한 비대면 시대에 필요한 영상회의 및 게임 웹 사이트입니다.   
+webRTC kurento를 이용한 영상회의와 이를 응용한 마피아 게임을 사람들과 즐길 수 있습니다.   
+   
+   
 
-프로젝트 명세
 
-배포 환경
-개발 환경
-Design Resources
-핵심 라이브러리
+# 프로젝트 명세   
 
+### 팀원 역할   
+노진혁 - frontend 게임로직 외 기능, 디자인 구현   
+박상욱 - frontend Websocket, 게임로직 구현   
+이재상 - backend 게임로직 외 API 구현, AWS 배포   
+이진영 - backend 게임로직 API, frontend 디자인 구현   
+최성훈 - backend 게임로직 외 API 구현    
 
+### 배포 환경   
+URL : [MOYEORA](https://i5a306.p.ssafy.io/) - [https://i5a306.p.ssafy.io/]   
+배포 여부 : O   
+접속 가능 : 접속 가능   
+HTTPS 적용 : O   
 
 
 
-프로젝트 소개
-소개 입력
 
+### 개발 환경   
+   
+Front-end   
+Framework : Vue.js   
+지원 환경 : Web   
+담당자 : 노진혁, 박상욱   
 
-프로젝트 명세
 
-배포 환경
 
+Back-end   
+Framework : Spring boot   
+Database : MySQL   
+담당자 : 이재상, 이진영, 최성훈   
 
-URL :
 
-배포 여부 : O / X
 
-접속 가능 : 접속 가능 / 수정 중
+Design   
+Framework : Element Plus   
+Design Tool 사용 : X   
+담당자 : 노진혁, 이진영   
 
-HTTPS 적용 : O / X
 
-PORT : // 3rd Party에서 사용하는 포트가 있다면 기입해주세요. <- 기입 후 해당 주석 삭제
 
+### Design Resources   
+외부 템플릿 또는 에셋   
+[Anton Vlasov - Our Summer] - ucc 배경음악으로 사용   
+-그 외 무료 이미지(PowerPoint 기본 아이콘, [Flaticon](https://www.flaticon.com/)의 무료 이미지), 사운드 소스, 폰트(배달의 민족 주아체) 사용   
 
 
-개발 환경
 
-Front-end / Android
 
 
-Framework : Vue.js / React / Android / Unity
+자체 제작 산출물 (필요시 이미지 또는 설명 첨부)   
+LOGO   
+web site 화면에서 보이는 메인 로고, favicon logo   
+![img-logo](/uploads/e78f05acbe3b97c833352e97afc30013/img-logo.png)
+![favicon-32x32](/uploads/c0de2f6a05ff94bf44597f194c379f15/favicon-32x32.png)   
 
-지원 환경 : Web / Mobile / Web App / Native App
+CardView    
+회의방 목록에서 보이는 이미지    
+![img-mafia](/uploads/fb25113034f0bfe73ce5593c65c94e06/img-mafia.png)
+![img-video](/uploads/e83b5668c6b411252cf47b569a569a55/img-video.png)    
+마피아 게임 방 관련 이미지 (투표카운트, 사망상태, 배경이미지, 룰 설명 이미지)    
+![favicon-white](/uploads/61d602921e530d1b16fe197f1419eaeb/favicon-white.png)
+![img-dead](/uploads/233e9351a3a0b6434b67e888ac031690/img-dead.png)   
+![img-mafia-rule](/uploads/3a030497fa17576987d3b876cf275678/img-mafia-rule.png)    
+    
 
-담당자 : 팀원 A, 팀원 B,
 
-
-
-Back-end
-
-
-Framework : Spring boot / Node.js / Django / Flask
-
-Database : MySQL / MariaDB
-
-담당자 : 팀원 A, 팀원 B,
-
-
-
-Design
-
-
-Framework 사용 : O / X
-
-Vuetify
-Element Plus
-
-
-
-Design Tool 사용 : Adobe XD, Photoshop, Blender, Zeplin 등 (없을 경우 빈칸)
-
-담당자 : 팀원 A, 팀원 B,
-
-
-
-Design Resources
-외부 템플릿 또는 에셋 (이미지 또는 링크 첨부)
-
-무료 이미지, 아이콘, 폰트 등은 제외
-
-Vue Argon Design System (무료)
-
-
-사용 기능 : 디자인 전반 적용
-
-
-
-Vue Black Dashboard Pro (유료)
-
-
-사용 기능 : 캘린더 컴포넌트 사용
-
-
-
-
-자체 제작 산출물 (필요시 이미지 또는 설명 첨부)
-
-LOGO
-CardView
-Button
-Calendar
-
-
-
-핵심 라이브러리
-기본 제공하는 라이브러리 외 핵심 기능 구현에 사용한 라이브러리가 있다면 작성해주세요.
-예시 ) VR/AR 라이브러리, 애니메이션 라이브러리, 텍스트/사진/동영상 지원, 편집 라이브러리 등
-
-
-AR CORE
-
-
-링크 : https://developers.google.com/ar
-
-
-소개 : 구글에서 제공하는 AR 지원 라이브러리
-
-사용 기능 : 이미지 인식, 이미지 위 영상 표시
-
-담당자 : 팀원 A,
-
-
-
-COLOR THIEF
-
-
-링크 : https://lokeshdhakar.com/projects/color-thief/
-
-
-소개 : 이미지에서 색상을 추출해주는 라이브러리
-
-사용 기능 : 커버 사진에서 색상 추출 -> 배경 색상 변경
-
-담당자 : 팀원 A,
-
-
-
-Animate.css
-
-
-링크 : https://animate.style/
-
-
-소개 : css 애니메이션 지원 라이브러리
-
-사용 기능 : 메인 페이지 진입 시 애니메이션 사용
-
-담당자 : 팀원 A,
+### 핵심 라이브러리    
+Kurento,WebStomp,JWT,JPA 등 기본 라이브러리 사용    
