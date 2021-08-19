@@ -154,7 +154,7 @@ export default {
           message: this.message
         };
         this.stompClient.send("/pub/chat/room/"+ this.roomId + "/" + this.toName, JSON.stringify(msg), {});
-        if(toName!= this.userName){
+        if(this.toName!= this.userName){
           this.recvList.push(msg)
         }
       }
