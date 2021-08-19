@@ -141,7 +141,7 @@ body > .el-container {
   min-height: 150px;
   line-height: 150px;
   background-color: var(--color-dark);
-  position: relative;
+  position: absolute;
   bottom: 0px;
   color: var(--color-font);
   text-align: center;

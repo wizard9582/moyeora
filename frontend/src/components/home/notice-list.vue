@@ -16,7 +16,7 @@
           </el-table-column>
           <el-table-column prop="title" label="제목"></el-table-column>
           <el-table-column prop="date" label="작성일" width="180"></el-table-column>
-          <el-table-column prop="name" label="글쓴이" width="180"></el-table-column>
+          <el-table-column prop="userId" label="글쓴이" width="180"></el-table-column>
         </el-table>
       <div class="board-under-wrapper">
         <div class="search-wrapper">
