@@ -3,14 +3,26 @@
     <div class="chat-header">채팅창</div>
     <div class="chat-main" style="overflow:auto">
       <ul class="list" v-infinite-scroll="load" infinite-scroll-disabled="disabled">
-        <li v-for="i in recvList" class="list-item" :key="i">
-          {{ i.fromName }} >> {{ i.toName }} :
-          <br />
-          {{ i.message }}
+        <li v-for="i in recvList" class="list-item" :key="i" style="background-color: rgba(255,255,255,0);">
+          <div v-if="i.fromName==this.userName && i.toName==this.userName" class="mychat-box">
+            나에게 보내는 메시지 :
+            <br />
+            {{ i.message }}
+          </div>
+          <div v-else-if="i.fromName==this.userName" class="mychat-box">
+            내가 {{ i.toName }}에게 :
+            <br />
+            {{ i.message }}
+          </div>
+          <div v-else class="chat-box">
+            {{ i.fromName }}님이 {{ i.toName }}에게 :
+            <br />
+            {{ i.message }}
+          </div>
         </li>
       </ul>
     </div>
-    <el-select v-model="toName" clearable>
+    <el-select v-model="toName" clearable style="text-align: left;">
       <el-option label="모두" value="모두"></el-option>
       <el-option
         v-for="player in state.participantsList"
@@ -142,7 +154,9 @@ export default {
           message: this.message
         };
         this.stompClient.send("/pub/chat/room/"+ this.roomId + "/" + this.toName, JSON.stringify(msg), {});
-        this.recvList.push(msg)
+        if(toName!= this.userName){
+          this.recvList.push(msg)
+        }
       }
     },
 
@@ -804,6 +818,26 @@ export default {
 
 .chat-main {
   height: 60vh;
+}
+.mychat-box{
+  background-color: #EDEDED;
+  color:#171717;
+  padding: 5px;
+  margin: 1px;
+  width: 100%;
+  text-align: right;
+  border-radius: 5px;
+  font-size: 8;
+}
+.chat-box{
+  background-color: #EDEDED;
+  color:#171717;
+  padding: 5px;
+  margin: 1px;
+  width: 100%;
+  text-align: left;
+  border-radius: 5px;
+  font-size: 8;
 }
 
 .list {

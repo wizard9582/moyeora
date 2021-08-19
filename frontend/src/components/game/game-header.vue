@@ -104,10 +104,12 @@ export default {
     })
     if(state.roomType=="mafia"){
       state.questionOpen = true
+      document.body.className = 'morning'
+    }else{
+      document.body.className = 'white'
     }
     const skyloop = require('@/assets/sounds/skyloop.mp3')
-    let audio = new Audio(skyloop);
-    audio.volume = 0.3
+    let audio = new Audio(skyloop)
     if(state.roomType == 'mafia'){
       audio.play();
     }
@@ -192,6 +194,7 @@ export default {
       if(state.stage == 4){
         emit('startNight')
         state.statusIcon = "el-icon-moon"
+        document.body.className = 'night'
         if(state.myJob == '경찰' && state.mylife){
           state.detectOpen = true
         }
@@ -227,7 +230,7 @@ export default {
     // 넘어가기 클릭
     const clickPass = () => {
       getRoomInfo()
-      console.log('PASS')
+      //console.log('PASS')
     }
 
     const openJob = () =>{
@@ -262,11 +265,10 @@ export default {
       state.detectOpen = false
     }
 
-
     watch(() => state.gameTime,
       (gameTime, prevGameTime) => {
         //console.log("---------->",queue)
-        console.log("&&&&*&*&*&*&&*&*&*&&*8---->",gameTime)
+        //console.log("&&&&*&*&*&*&&*&*&*&&*8---->",gameTime)
         if(!(gameTime <= 0)){
           if(queue._arr.length == 0){
             //console.log("new timer", queue)
@@ -285,6 +287,7 @@ export default {
       state.stageTitle = stages[0]
       emit('startDay')
       state.statusIcon = "el-icon-sunny"
+      document.body.className = 'morning'
     })
 
     return { state, clickPass, clickInvite, clickOnQuestion, padMinute, padSecond, startTimer, nextStage, clickDetectPlayer, detectChoose, openJob }

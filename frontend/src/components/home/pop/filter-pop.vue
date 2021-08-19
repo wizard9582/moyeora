@@ -1,11 +1,12 @@
 <template>
   <el-dialog class="gameFilter" title="게임선택" v-model="state.popupVisible" @close="handleClose">
     <ul class="gameFilter-list">
-      <li v-for="i in 9" class="gameFilter-list-item" @click="clickGame(i)" :key="i">
+      <li v-for="i in 3" class="gameFilter-list-item" @click="clickGame(i)" :key="i">
         {{state.desc[i]}}
         <img :src="require(`@/assets/${state.imgsrc[i]}`)" class="img-game" alt="yet"/>
         <el-divider/>
       </li>
+      <h5>Coming Soon...</h5>
     </ul>
   </el-dialog>
 </template>

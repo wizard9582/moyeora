@@ -49,8 +49,8 @@ function Participant(name) {
   video.id = 'video-' + name;
   video.autoplay = true;
   video.controls = false;
-  video.style.height = '100%'
-  video.style.width = '100%'
+  video.style.height = '80%'
+  video.style.width = '90%'
 
 
   this.getElement = function() {

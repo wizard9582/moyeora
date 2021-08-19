@@ -129,6 +129,10 @@ export default {
 </script>
 
 <style scoped>
+.el-main {
+  z-index: 1;
+  background-color: rgba(255,255,255,0);
+}
 .el-footer {
   text-align: center;
   position: fixed;
@@ -137,6 +141,8 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  line-height: 0px;
   min-height: 0px;
+  z-index: 50;
 }
 </style>

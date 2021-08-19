@@ -19,10 +19,10 @@
       <div class="context-text">
         {{state.description}}
       </div>
-      <el-divider></el-divider>
-      <el-button type="info" icon="el-icon-tickets" size="small" @click="clickList()">목록으로</el-button>
-      <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="clickEdit()">수정</el-button>
-      <el-button type="danger" icon="el-icon-delete-solid" size="small" @click="clickDelete()">삭제</el-button>
+    <el-divider></el-divider>
+    <el-button type="info" icon="el-icon-tickets" size="small" @click="clickList()">목록으로</el-button>
+    <el-button type="primary" icon="el-icon-edit-outline" size="small" @click="clickEdit()">수정</el-button>
+    <el-button type="danger" icon="el-icon-delete-solid" size="small" @click="clickDelete()">삭제</el-button>
     </div>
 	</el-main>
 </template>
