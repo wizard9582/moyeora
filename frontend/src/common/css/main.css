@@ -141,11 +141,12 @@ body > .el-container {
   min-height: 150px;
   line-height: 150px;
   background-color: var(--color-dark);
-  position: absolute;
+  position: fixed;
   bottom: 0px;
   color: var(--color-font);
   text-align: center;
   width: 100%;
+  z-index: 50;
 }
 .el-button {
   background-color: var(--color-button);
